@@ -1,18 +1,33 @@
-import { MetadataRoute } from 'next'
+import { MetadataRoute } from 'next';
+import { CALCULATORS } from '@/lib/calculators';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-    const baseUrl = 'https://taxsim.kr'
+    const baseUrl = 'https://taxsim.kr';
 
-    const routes = [
-        '',
-        '/vat-calculator',
-        '/income-tax-calculator',
-        '/withholding-calculator',
-        '/severance-calculator',
-    ]
+    const calculatorRoutes = CALCULATORS
+        .filter((item) => item.enabled)
+        .map((item) => ({
+            url: `${baseUrl}/${item.slug}`,
+            lastModified: new Date(),
+        }));
 
-    return routes.map((route) => ({
-        url: `${baseUrl}${route}`,
-        lastModified: new Date(),
-    }))
+    return [
+        {
+            url: baseUrl,
+            lastModified: new Date(),
+        },
+        {
+            url: `${baseUrl}/privacy`,
+            lastModified: new Date(),
+        },
+        {
+            url: `${baseUrl}/terms`,
+            lastModified: new Date(),
+        },
+        {
+            url: `${baseUrl}/contact`,
+            lastModified: new Date(),
+        },
+        ...calculatorRoutes,
+    ];
 }

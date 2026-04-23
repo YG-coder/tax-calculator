@@ -1,7 +1,10 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { CALCULATORS } from '@/lib/calculators';
 
 export default function HomePage() {
+    const enabledCalculators = CALCULATORS.filter((item) => item.enabled);
+
     return (
         <main className="container mx-auto py-24 px-4 max-w-5xl">
             <div className="text-center mb-16">
@@ -16,71 +19,22 @@ export default function HomePage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Link href="/vat-calculator" className="group border rounded-2xl p-6 hover:shadow-lg transition">
-                    <h2 className="text-xl font-bold mb-2">부가세 계산기</h2>
-                    <p className="text-slate-500 text-sm mb-4">
-                        공급가액, 부가세, 총금액 계산
-                    </p>
-                    <div className="flex items-center text-blue-600 font-semibold">
-                        계산하기
-                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
-                    </div>
-                </Link>
-
-                <Link href="/income-tax-calculator" className="group border rounded-2xl p-6 hover:shadow-lg transition">
-                    <h2 className="text-xl font-bold mb-2">종합소득세 계산기</h2>
-                    <p className="text-slate-500 text-sm mb-4">
-                        연 소득 기준 예상 세금 계산
-                    </p>
-                    <div className="flex items-center text-blue-600 font-semibold">
-                        계산하기
-                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
-                    </div>
-                </Link>
-
-                <Link href="/withholding-calculator" className="group border rounded-2xl p-6 hover:shadow-lg transition">
-                    <h2 className="text-xl font-bold mb-2">원천징수 계산기</h2>
-                    <p className="text-slate-500 text-sm mb-4">
-                        월 급여 기준 공제 및 실수령액 확인
-                    </p>
-                    <div className="flex items-center text-blue-600 font-semibold">
-                        계산하기
-                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
-                    </div>
-                </Link>
-
-                <Link href="/severance-calculator" className="group border rounded-2xl p-6 hover:shadow-lg transition">
-                    <h2 className="text-xl font-bold mb-2">퇴직금 계산기</h2>
-                    <p className="text-slate-500 text-sm mb-4">
-                        근속 연수 기준 퇴직금 및 실수령액 계산
-                    </p>
-                    <div className="flex items-center text-blue-600 font-semibold">
-                        계산하기
-                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
-                    </div>
-                </Link>
-
-                <Link href="/freelancer-tax-calculator" className="group border rounded-2xl p-6 hover:shadow-lg transition">
-                    <h2 className="text-xl font-bold mb-2">프리랜서 3.3% 계산기</h2>
-                    <p className="text-slate-500 text-sm mb-4">
-                        원천징수 3.3% 세금과 실수령액 계산
-                    </p>
-                    <div className="flex items-center text-blue-600 font-semibold">
-                        계산하기
-                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
-                    </div>
-                </Link>
-
-                <Link href="/insurance-calculator" className="group border rounded-2xl p-6 hover:shadow-lg transition">
-                    <h2 className="text-xl font-bold mb-2">4대보험 계산기</h2>
-                    <p className="text-slate-500 text-sm mb-4">
-                        국민연금, 건강보험 등 공제액 계산
-                    </p>
-                    <div className="flex items-center text-blue-600 font-semibold">
-                        계산하기
-                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
-                    </div>
-                </Link>
+                {enabledCalculators.map((item) => (
+                    <Link
+                        key={item.slug}
+                        href={`/${item.slug}`}
+                        className="group border rounded-2xl p-6 hover:shadow-lg transition"
+                    >
+                        <h2 className="text-xl font-bold mb-2">{item.title}</h2>
+                        <p className="text-slate-500 text-sm mb-4">
+                            {item.description}
+                        </p>
+                        <div className="flex items-center text-blue-600 font-semibold">
+                            계산하기
+                            <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
+                        </div>
+                    </Link>
+                ))}
             </div>
         </main>
     );

@@ -4,7 +4,7 @@ import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
-    metadataBase: new URL("https://세금계산기.kr"),
+    metadataBase: new URL("https://taxsim.kr"),
 
     title: {
         default: "세금계산기 | 부가세·종합소득세·원천징수 계산",
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
         title: "세금계산기 | 무료 세금 계산 서비스",
         description:
             "부가세, 종합소득세, 원천징수, 퇴직금 계산기를 한 번에 제공",
-        url: "https://세금계산기.kr",
+        url: "https://taxsim.kr",
         siteName: "세금계산기",
         locale: "ko_KR",
         type: "website",
@@ -37,6 +37,10 @@ export const metadata: Metadata = {
         title: "세금계산기 | 무료 세금 계산 서비스",
         description:
             "부가세, 종합소득세, 원천징수, 퇴직금 계산기를 한 번에 제공",
+    },
+
+    verification: {
+        google: "QVVkIsXBCgu9EREkYU9Yhk2Zd-UsdqPIfNnIa-m1_8E",
     },
 };
 
@@ -49,26 +53,21 @@ export default function RootLayout({
         <html lang="ko">
         <body className="bg-slate-50 text-slate-900 antialiased">
 
-        {/* 🔝 상단 네비 */}
         <nav className="sticky top-0 z-50 h-16 border-b bg-white/80 backdrop-blur-md flex items-center px-6">
             <div className="container mx-auto flex items-center">
                 <Link
                     href="/"
                     className="font-black text-xl tracking-tighter hover:opacity-80 transition-opacity"
                 >
-                    세금계산기.kr
+                    taxsim.kr
                 </Link>
             </div>
         </nav>
 
-        {/* 📄 페이지 내용 */}
         {children}
 
-        {/* 🔻 푸터 (SEO + 애드센스 핵심) */}
         <footer className="bg-white border-t py-10 mt-20">
             <div className="container mx-auto px-4 text-center text-slate-400 text-sm space-y-4">
-
-                {/* 정책 링크 */}
                 <div className="flex items-center justify-center gap-4 flex-wrap">
                     <Link href="/privacy" className="hover:text-slate-600">
                         개인정보처리방침
@@ -81,13 +80,11 @@ export default function RootLayout({
                     </Link>
                 </div>
 
-                {/* SEO 문장 */}
                 <p className="text-xs leading-relaxed max-w-xl mx-auto">
-                    © 2026 세금계산기.kr. 본 사이트는 부가세 계산기, 종합소득세 계산기,
+                    © 2026 taxsim.kr. 본 사이트는 부가세 계산기, 종합소득세 계산기,
                     원천징수 계산기, 퇴직금 계산기를 제공하며 모든 계산 결과는 참고용으로
                     실제 세금과 차이가 있을 수 있습니다.
                 </p>
-
             </div>
         </footer>
 

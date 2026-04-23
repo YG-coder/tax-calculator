@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import RelatedCalculators from '@/components/RelatedCalculators';
 
 function format(num: number) {
     return num.toLocaleString('ko-KR');
@@ -117,6 +118,7 @@ export default function FreelancerTaxCalculator() {
 
             </section>
 
+            <RelatedCalculators />
         </main>
     );
 }

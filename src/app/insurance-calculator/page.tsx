@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import RelatedCalculators from '@/components/RelatedCalculators';
 
 function format(num: number) {
     return num.toLocaleString('ko-KR');
@@ -103,6 +104,7 @@ export default function InsuranceCalculator() {
                 </p>
             </section>
 
+            <RelatedCalculators />
         </main>
     );
 }

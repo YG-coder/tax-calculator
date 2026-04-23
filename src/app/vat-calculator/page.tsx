@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import RelatedCalculators from '@/components/RelatedCalculators';
 
 function formatNumber(value: number) {
     return value.toLocaleString('ko-KR');
@@ -188,6 +189,7 @@ export default function VatCalculatorPage() {
 
             </section>
 
+            <RelatedCalculators />
         </main>
     );
 }

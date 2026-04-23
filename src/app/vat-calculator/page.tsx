@@ -12,7 +12,6 @@ export default function VatCalculatorPage() {
     const [mode, setMode] = useState<'inclusive' | 'exclusive'>('inclusive');
 
     const parsed = Number(amount.replace(/,/g, '')) || 0;
-
     const hasValue = parsed > 0;
 
     const supply = mode === 'inclusive'
@@ -38,12 +37,10 @@ export default function VatCalculatorPage() {
 
     return (
         <main className="container mx-auto px-4 py-12 max-w-4xl">
-
             <h1 className="text-3xl font-black mb-8">부가세 계산기</h1>
 
             {/* 입력 영역 */}
             <div className="bg-white border rounded-2xl p-6 shadow-sm space-y-6">
-
                 <div className="flex gap-4">
                     <button
                         onClick={() => setMode('inclusive')}
@@ -111,82 +108,93 @@ export default function VatCalculatorPage() {
                 </div>
             )}
 
-            {/* 🔥 SEO 영역 */}
-            <section className="mt-12 space-y-8">
-
-                <div className="text-sm text-slate-600 leading-relaxed space-y-4">
-                    <h2 className="text-lg font-bold text-slate-800">
-                        부가세 계산기란?
-                    </h2>
+            {/* SEO 본문 */}
+            <section className="mt-12 space-y-8 text-sm text-slate-600 leading-relaxed">
+                <div className="space-y-4">
+                    <h2 className="text-lg font-bold text-slate-800">부가세 계산기란?</h2>
                     <p>
                         부가세 계산기는 공급가액과 부가가치세를 쉽고 빠르게 계산하기 위한 도구입니다.
-                        사업자 거래에서는 부가세 포함 금액과 부가세 별도 금액이 혼용되기 때문에,
-                        실제 공급가액과 세액을 정확히 분리해서 확인하는 것이 중요합니다.
+                        사업자 거래에서는 부가세 포함 금액과 부가세 별도 금액이 함께 사용되기 때문에,
+                        실제 공급가액과 세액을 정확히 나눠서 확인하는 것이 중요합니다.
                     </p>
                     <p>
-                        본 계산기는 부가세 포함 금액을 입력하면 공급가액과 부가세를 자동으로 나누어 보여주고,
-                        반대로 공급가액 기준 입력 시 총 금액까지 계산할 수 있도록 설계되었습니다.
-                        세금계산서 발행 전 금액 검토, 견적 작성, 거래 금액 확인 등 다양한 상황에서 활용할 수 있습니다.
+                        특히 세금계산서 발행, 견적 작성, 거래 금액 검토, 비용 처리 검토 과정에서는
+                        공급가액과 부가세를 명확히 구분해야 합니다. 본 계산기는 입력한 금액을 기준으로
+                        부가세 포함 방식과 부가세 별도 방식을 모두 빠르게 계산할 수 있도록 구성했습니다.
                     </p>
                 </div>
 
-                <div className="text-sm text-slate-600">
-                    <h2 className="text-lg font-bold text-slate-800 mb-2">
-                        사용 방법
-                    </h2>
+                <div className="space-y-4">
+                    <h2 className="text-lg font-bold text-slate-800">언제 사용하는 계산기인가요?</h2>
+                    <p>
+                        부가세 계산기는 사업자가 거래 금액을 검토할 때 가장 자주 사용하는 계산기 중 하나입니다.
+                        예를 들어 총 금액만 알고 있을 때 공급가액을 나누거나,
+                        공급가액만 있을 때 실제 청구할 총 금액을 확인하는 데 유용합니다.
+                    </p>
+                    <p>
+                        부가세 신고 전 금액을 다시 확인하거나, 거래처에 금액을 안내하기 전에
+                        부가세 포함 여부를 점검할 때도 매우 실용적입니다.
+                    </p>
+                </div>
+
+                <div className="space-y-4">
+                    <h2 className="text-lg font-bold text-slate-800">계산 방법</h2>
+                    <p>
+                        본 계산기는 두 가지 방식을 지원합니다. 첫째, 부가세 포함 금액을 입력하면
+                        공급가액과 부가세를 자동으로 분리해 보여줍니다. 둘째, 부가세 별도 금액을 입력하면
+                        부가세 10%를 적용해 총 금액을 계산합니다.
+                    </p>
                     <ul className="list-disc pl-5 space-y-1">
-                        <li>금액을 입력합니다.</li>
-                        <li>부가세 포함 또는 별도를 선택합니다.</li>
-                        <li>공급가액과 부가세, 총 금액을 확인합니다.</li>
+                        <li>부가세 포함 금액 → 공급가액 = 총 금액 ÷ 1.1</li>
+                        <li>부가세 포함 금액 → 부가세 = 총 금액 - 공급가액</li>
+                        <li>부가세 별도 금액 → 부가세 = 공급가액 × 10%</li>
+                        <li>부가세 별도 금액 → 총 금액 = 공급가액 + 부가세</li>
                     </ul>
                 </div>
 
-                <div className="text-sm text-slate-600">
-                    <h2 className="text-lg font-bold text-slate-800 mb-3">
-                        자주 묻는 질문 (FAQ)
-                    </h2>
-
-                    <div className="space-y-4">
-
-                        <div>
-                            <p className="font-semibold">
-                                Q. 부가세는 몇 퍼센트인가요?
-                            </p>
-                            <p>
-                                A. 대한민국 부가가치세는 일반적으로 10%입니다.
-                            </p>
-                        </div>
-
-                        <div>
-                            <p className="font-semibold">
-                                Q. 공급가액이란 무엇인가요?
-                            </p>
-                            <p>
-                                A. 부가세를 제외한 실제 거래 금액입니다.
-                            </p>
-                        </div>
-
-                        <div>
-                            <p className="font-semibold">
-                                Q. 간이과세자도 동일하게 계산되나요?
-                            </p>
-                            <p>
-                                A. 본 계산기는 일반과세자 기준이며 참고용입니다.
-                            </p>
-                        </div>
-
-                        <div>
-                            <p className="font-semibold">
-                                Q. 계산 결과는 정확한 세금인가요?
-                            </p>
-                            <p>
-                                A. 참고용이며 실제 신고 금액과 차이가 있을 수 있습니다.
-                            </p>
-                        </div>
-
-                    </div>
+                <div className="space-y-4">
+                    <h2 className="text-lg font-bold text-slate-800">주의사항</h2>
+                    <p>
+                        본 계산기는 일반적인 10% 부가가치세율을 기준으로 동작합니다.
+                        따라서 간이과세자, 면세사업자, 업종별 특수 세율, 실제 계약 조건 등은 반영하지 않습니다.
+                    </p>
+                    <p>
+                        실제 세금계산서 발행 또는 신고 시에는 사업자 유형, 과세 기준, 거래 조건을 다시 확인하는 것이 좋습니다.
+                        본 페이지의 결과는 참고용 계산값으로 활용해야 합니다.
+                    </p>
                 </div>
 
+                <div className="space-y-4">
+                    <h2 className="text-lg font-bold text-slate-800">자주 묻는 질문 (FAQ)</h2>
+
+                    <div>
+                        <p className="font-semibold">Q. 부가세는 몇 퍼센트인가요?</p>
+                        <p>
+                            A. 일반적으로 대한민국 부가가치세는 10%입니다.
+                        </p>
+                    </div>
+
+                    <div>
+                        <p className="font-semibold">Q. 공급가액이란 무엇인가요?</p>
+                        <p>
+                            A. 부가세를 제외한 실제 거래 금액입니다.
+                        </p>
+                    </div>
+
+                    <div>
+                        <p className="font-semibold">Q. 간이과세자도 동일하게 계산되나요?</p>
+                        <p>
+                            A. 본 계산기는 일반과세자 기준 참고용이며, 간이과세자는 실제와 차이가 있을 수 있습니다.
+                        </p>
+                    </div>
+
+                    <div>
+                        <p className="font-semibold">Q. 세금계산서 금액 확인용으로 써도 되나요?</p>
+                        <p>
+                            A. 기본 검토용으로는 유용하지만, 실제 발행 전에는 거래 조건과 사업자 유형을 다시 확인하는 것이 좋습니다.
+                        </p>
+                    </div>
+                </div>
             </section>
 
             <RelatedCalculators />

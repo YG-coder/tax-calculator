@@ -71,9 +71,16 @@ export default function HomePage() {
                     </div>
                 </Link>
 
-                <div className="border-dashed border-2 rounded-2xl p-6 text-center text-slate-400">
-                    4대보험 계산기 준비중
-                </div>
+                <Link href="/insurance-calculator" className="group border rounded-2xl p-6 hover:shadow-lg transition">
+                    <h2 className="text-xl font-bold mb-2">4대보험 계산기</h2>
+                    <p className="text-slate-500 text-sm mb-4">
+                        국민연금, 건강보험 등 공제액 계산
+                    </p>
+                    <div className="flex items-center text-blue-600 font-semibold">
+                        계산하기
+                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
+                    </div>
+                </Link>
             </div>
         </main>
     );

@@ -16,11 +16,11 @@ export default function SeveranceCalculator() {
 
     const hasValue = monthly > 0 && workYears > 0;
 
-    // ✔ 실제 기준 공식 (단순화)
+    // 단순화된 참고용 계산
     const dailyWage = monthly / 30;
     const severance = Math.floor(dailyWage * 30 * workYears);
 
-    // ✔ 세금 (간이 추정)
+    // 참고용 단순 세금
     const tax = Math.floor(severance * 0.05);
     const net = severance - tax;
 
@@ -46,7 +46,7 @@ export default function SeveranceCalculator() {
                         value={salary}
                         onChange={handleSalary}
                         placeholder="예: 3,000,000"
-                        className="w-full mt-2 border rounded-lg p-3 text-xl font-bold"
+                        className="w-full mt-2 border rounded-lg p-3 text-xl font-bold focus:ring-2 focus:ring-slate-900 outline-none"
                     />
                 </div>
 
@@ -57,7 +57,7 @@ export default function SeveranceCalculator() {
                         value={years}
                         onChange={(e) => setYears(e.target.value)}
                         placeholder="예: 5"
-                        className="w-full mt-2 border rounded-lg p-3 text-xl font-bold"
+                        className="w-full mt-2 border rounded-lg p-3 text-xl font-bold focus:ring-2 focus:ring-slate-900 outline-none"
                     />
                 </div>
             </div>
@@ -90,56 +90,96 @@ export default function SeveranceCalculator() {
                 </div>
             )}
 
-            {/* SEO */}
-            <section className="mt-12 space-y-8">
-
-                <div className="text-sm text-slate-600 leading-relaxed space-y-4">
+            {/* SEO 본문 */}
+            <section className="mt-12 space-y-8 text-sm text-slate-600 leading-relaxed">
+                <div className="space-y-4">
                     <h2 className="text-lg font-bold text-slate-800">퇴직금 계산기란?</h2>
                     <p>
                         퇴직금 계산기는 근속 기간과 평균 임금을 기준으로 예상 퇴직금을 확인하는 도구입니다.
-                        퇴사 또는 이직을 준비하는 직장인이 예상 수령 금액을 미리 파악하는 데 유용합니다.
+                        퇴직이나 이직을 준비하는 직장인에게는 실제로 얼마를 받을 수 있는지 미리 확인하는 것이 매우 중요합니다.
+                        특히 퇴직 전 자금 계획이나 생활비 준비, 이직 시점 판단에 도움이 됩니다.
                     </p>
                     <p>
-                        일반적으로 퇴직금은 1년 근속 시 평균임금 30일분을 기준으로 계산되며,
-                        본 계산기는 이를 단순화하여 빠르게 결과를 확인할 수 있도록 구성되었습니다.
+                        일반적으로 퇴직금은 1년 이상 근무한 근로자에게 지급되며,
+                        기본 개념은 1년 근속당 평균임금 30일분입니다.
+                        본 계산기는 이 기준을 단순화하여 빠르게 예상 금액을 확인할 수 있도록 구성했습니다.
                     </p>
                 </div>
 
-                <div className="text-sm text-slate-600">
-                    <h2 className="text-lg font-bold text-slate-800 mb-2">사용 방법</h2>
-                    <ul className="list-disc pl-5 space-y-1">
-                        <li>월 평균 급여를 입력합니다.</li>
-                        <li>근속 연수를 입력합니다.</li>
-                        <li>예상 퇴직금과 실수령액을 확인합니다.</li>
-                    </ul>
+                <div className="space-y-4">
+                    <h2 className="text-lg font-bold text-slate-800">언제 사용하는 계산기인가요?</h2>
+                    <p>
+                        이 계산기는 퇴직 예정자, 이직 준비자, 인사·총무 실무자,
+                        그리고 자신의 예상 퇴직금을 미리 확인하고 싶은 직장인이 사용할 수 있습니다.
+                        근속 연수와 월 평균 급여만 입력하면 대략적인 퇴직금 규모와 세후 수령액을 빠르게 확인할 수 있습니다.
+                    </p>
+                    <p>
+                        특히 퇴사 전 협의, 중간정산 여부 검토, 이직 시 자금 계획을 세울 때
+                        대략적인 기준 금액을 파악하는 데 유용합니다.
+                    </p>
                 </div>
 
-                <div className="text-sm text-slate-600">
-                    <h2 className="text-lg font-bold text-slate-800 mb-3">자주 묻는 질문 (FAQ)</h2>
+                <div className="space-y-4">
+                    <h2 className="text-lg font-bold text-slate-800">계산 방법</h2>
+                    <p>
+                        본 계산기는 월 평균 급여를 바탕으로 평균임금 30일분을 계산하고,
+                        이를 근속 연수와 곱해 예상 퇴직금을 산출합니다.
+                        이후 참고용 단순 세율을 적용해 세후 수령액도 함께 보여줍니다.
+                    </p>
+                    <ul className="list-disc pl-5 space-y-1">
+                        <li>퇴직금 = 평균임금 30일분 × 근속 연수</li>
+                        <li>참고용 퇴직소득세 = 퇴직금 × 단순 비율</li>
+                        <li>예상 실수령액 = 퇴직금 - 세금</li>
+                    </ul>
+                    <p>
+                        실제 퇴직금 산정은 평균임금 계산 방식과 재직일수, 각종 수당 반영 여부에 따라 차이가 날 수 있습니다.
+                    </p>
+                </div>
 
-                    <div className="space-y-4">
-                        <div>
-                            <p className="font-semibold">Q. 퇴직금 계산 기준은 무엇인가요?</p>
-                            <p>A. 1년 근속당 평균임금 30일분 기준입니다.</p>
-                        </div>
+                <div className="space-y-4">
+                    <h2 className="text-lg font-bold text-slate-800">주의사항</h2>
+                    <p>
+                        본 계산기는 참고용 단순 계산기입니다. 실제 퇴직금은 평균임금 산정 기준,
+                        상여금·수당 반영 여부, 재직 기간, 퇴직소득세 계산 구조 등에 따라 달라질 수 있습니다.
+                    </p>
+                    <p>
+                        특히 퇴직소득세는 단순 비율이 아니라 여러 요소를 반영해 계산되므로,
+                        본 페이지의 세금 결과는 참고용으로만 보아야 합니다.
+                        최종 금액은 회사 정산 내역이나 전문가 확인을 통해 검토하는 것이 좋습니다.
+                    </p>
+                </div>
 
-                        <div>
-                            <p className="font-semibold">Q. 실제 금액과 차이가 나는 이유는?</p>
-                            <p>A. 평균임금 산정 방식, 수당, 근무일수 등에 따라 달라집니다.</p>
-                        </div>
+                <div className="space-y-4">
+                    <h2 className="text-lg font-bold text-slate-800">자주 묻는 질문 (FAQ)</h2>
 
-                        <div>
-                            <p className="font-semibold">Q. 세금은 정확한가요?</p>
-                            <p>A. 본 계산기는 참고용이며 실제 퇴직소득세와 차이가 있습니다.</p>
-                        </div>
+                    <div>
+                        <p className="font-semibold">Q. 퇴직금 계산 기준은 무엇인가요?</p>
+                        <p>
+                            A. 일반적으로 1년 근속당 평균임금 30일분을 기준으로 계산합니다.
+                        </p>
+                    </div>
 
-                        <div>
-                            <p className="font-semibold">Q. 중간정산하면 어떻게 되나요?</p>
-                            <p>A. 중간정산 이력에 따라 실제 퇴직금이 달라질 수 있습니다.</p>
-                        </div>
+                    <div>
+                        <p className="font-semibold">Q. 실제 금액과 왜 차이가 나나요?</p>
+                        <p>
+                            A. 평균임금 산정 방식, 수당 반영 여부, 재직일수, 중간정산 이력 등에 따라 달라질 수 있습니다.
+                        </p>
+                    </div>
+
+                    <div>
+                        <p className="font-semibold">Q. 세금은 정확한가요?</p>
+                        <p>
+                            A. 본 계산기의 세금은 참고용 단순 계산이며 실제 퇴직소득세와 차이가 있을 수 있습니다.
+                        </p>
+                    </div>
+
+                    <div>
+                        <p className="font-semibold">Q. 중간정산 이력이 있으면 어떻게 되나요?</p>
+                        <p>
+                            A. 중간정산 여부에 따라 실제 퇴직금 계산 결과가 달라질 수 있으므로 별도 확인이 필요합니다.
+                        </p>
                     </div>
                 </div>
-
             </section>
 
             <RelatedCalculators />

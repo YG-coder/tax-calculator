@@ -1,7 +1,6 @@
 /** @path src/app/layout.tsx */
 import type { Metadata } from "next";
 import Link from "next/link";
-import Script from "next/script";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -22,13 +21,11 @@ export default function RootLayout({
     return (
         <html lang="ko">
         <head>
-            {/* 애드센스 */}
-            <Script
+            <script
                 async
                 src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6405509957088169"
                 crossOrigin="anonymous"
-                strategy="afterInteractive"
-            />
+            ></script>
         </head>
 
         <body className="bg-slate-50 text-slate-900 antialiased">

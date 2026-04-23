@@ -59,6 +59,21 @@ export default function HomePage() {
                         <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
                     </div>
                 </Link>
+
+                <Link href="/freelancer-tax-calculator" className="group border rounded-2xl p-6 hover:shadow-lg transition">
+                    <h2 className="text-xl font-bold mb-2">프리랜서 3.3% 계산기</h2>
+                    <p className="text-slate-500 text-sm mb-4">
+                        원천징수 3.3% 세금과 실수령액 계산
+                    </p>
+                    <div className="flex items-center text-blue-600 font-semibold">
+                        계산하기
+                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition" />
+                    </div>
+                </Link>
+
+                <div className="border-dashed border-2 rounded-2xl p-6 text-center text-slate-400">
+                    4대보험 계산기 준비중
+                </div>
             </div>
         </main>
     );

@@ -7,7 +7,7 @@ export default function PrivacyPage() {
                 <section>
                     <h2 className="text-lg font-bold text-slate-800 mb-2">1. 개인정보 수집에 대한 안내</h2>
                     <p>
-                        세금계산기.kr은 기본적으로 사용자가 입력한 계산 정보 자체를 회원 식별 정보로 저장하지 않으며,
+                        texsim.kr은 기본적으로 사용자가 입력한 계산 정보 자체를 회원 식별 정보로 저장하지 않으며,
                         서비스 개선 및 접속 통계 확인을 위해 최소한의 기술적 정보가 수집될 수 있습니다.
                     </p>
                 </section>

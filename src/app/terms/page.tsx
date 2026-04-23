@@ -7,7 +7,7 @@ export default function TermsPage() {
                 <section>
                     <h2 className="text-lg font-bold text-slate-800 mb-2">1. 서비스 목적</h2>
                     <p>
-                        세금계산기.kr은 사용자가 세금 관련 금액을 쉽고 빠르게 확인할 수 있도록 돕는 참고용 계산 서비스입니다.
+                        texsim.kr은 사용자가 세금 관련 금액을 쉽고 빠르게 확인할 수 있도록 돕는 참고용 계산 서비스입니다.
                         본 사이트에서 제공하는 계산 결과는 일반적인 기준을 바탕으로 한 시뮬레이션이며,
                         실제 신고 및 납부 금액과 차이가 발생할 수 있습니다.
                     </p>

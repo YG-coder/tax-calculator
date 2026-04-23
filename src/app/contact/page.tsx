@@ -5,7 +5,7 @@ export default function ContactPage() {
 
             <div className="rounded-2xl border bg-white p-8 shadow-sm space-y-6">
                 <p className="text-sm leading-7 text-slate-600">
-                    세금계산기.kr 이용 중 오류가 발생했거나, 계산기 개선 제안, 광고 및 제휴 문의가 있다면 아래 안내를 참고해 주세요.
+                    texsim.kr 이용 중 오류가 발생했거나, 계산기 개선 제안, 광고 및 제휴 문의가 있다면 아래 안내를 참고해 주세요.
                 </p>
 
                 <div>
@@ -21,7 +21,7 @@ export default function ContactPage() {
                 <div>
                     <h2 className="text-lg font-bold text-slate-800 mb-2">이메일 문의</h2>
                     <p className="text-sm text-slate-600">
-                        support@세금계산기.kr
+                        support@texsim.kr
                     </p>
                     <p className="text-xs text-slate-400 mt-2">
                         실제 운영 이메일 주소가 준비되면 해당 주소로 변경하세요.

@@ -34,10 +34,12 @@ export default function RootLayout({
         </head>
 
         <body className="bg-slate-50 text-slate-900 antialiased">
-        <nav className="sticky top-0 z-50 h-14 border-b bg-white/80 backdrop-blur-md flex items-center px-4">
-            <div className="container mx-auto flex items-center justify-between">
 
-                {/* ✅ 한 줄 로고 (핵심 수정) */}
+        {/* ✅ 네비바 */}
+        <nav className="sticky top-0 z-50 h-14 border-b bg-white/80 backdrop-blur-md flex items-center px-4">
+            <div className="container mx-auto flex items-center gap-8">
+
+                {/* 로고 (한 줄) */}
                 <Link href="/" className="flex items-center gap-2 font-black text-base text-slate-900">
                     세금 계산기
                     <span className="text-xs font-medium text-slate-400">
@@ -57,13 +59,17 @@ export default function RootLayout({
 
         {children}
 
+        {/* ✅ 푸터 */}
         <footer className="bg-white border-t py-12 mt-20">
             <div className="container mx-auto px-4 text-center text-slate-500 text-sm space-y-6">
+
+                {/* SEO 설명 */}
                 <p className="max-w-xl mx-auto leading-relaxed">
                     세금 계산기는 부가세, 종합소득세, 원천징수, 4대보험 등
                     다양한 세금 계산을 간편하게 할 수 있도록 제공하는 무료 온라인 도구입니다.
                 </p>
 
+                {/* 링크 */}
                 <div className="flex justify-center gap-6 flex-wrap">
                     <Link href="/about">사이트 소개</Link>
                     <Link href="/privacy">개인정보처리방침</Link>
@@ -71,11 +77,13 @@ export default function RootLayout({
                     <Link href="/contact">문의</Link>
                 </div>
 
+                {/* 카피 */}
                 <p className="text-xs text-slate-400">
                     © {new Date().getFullYear()} 세금 계산기 (taxsim.kr). All rights reserved.
                 </p>
             </div>
         </footer>
+
         </body>
         </html>
     );

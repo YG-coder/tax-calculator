@@ -39,7 +39,7 @@ export default function RootLayout({
         <nav className="sticky top-0 z-50 h-14 border-b bg-white/80 backdrop-blur-md flex items-center px-4">
             <div className="max-w-5xl mx-auto flex items-center justify-between w-full">
 
-                <Link href="/" className="flex items-center gap-2 font-black text-base text-slate-900">
+                <Link href="/" className="flex items-center gap-2 font-black text-lg text-slate-900">
                     세금 계산기
                     <span className="text-xs font-medium text-slate-400">
         taxsim.kr

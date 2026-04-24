@@ -1,3 +1,4 @@
+// src/app/page.tsx
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { CALCULATORS } from '@/lib/calculators';
@@ -9,7 +10,7 @@ export default function HomePage() {
         <main className="container mx-auto py-24 px-4 max-w-5xl">
             {/* 헤드라인 */}
             <div className="text-center mb-16">
-                <h1 className="text-5xl font-black mb-6 leading-tight">
+                <h1 className="text-4xl md:text-5xl font-black mb-6 leading-snug">
                     내 세금, <br />
                     <span className="text-blue-600">데이터</span>로 명확하게.
                 </h1>

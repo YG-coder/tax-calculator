@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import RelatedCalculators from '@/components/RelatedCalculators';
 
@@ -195,6 +196,24 @@ export default function IncomeTaxCalculator() {
                         </p>
                     </div>
                 </div>
+            </section>
+
+            {/* 연봉계산기 연동 CTA */}
+            <section className="mt-12 rounded-2xl border bg-green-50 p-6">
+                <h2 className="text-xl font-bold mb-2 text-slate-900">
+                    연봉 실수령액도 확인해보세요
+                </h2>
+
+                <p className="text-slate-600 mb-4">
+                    세금 계산과 함께 연봉 기준 월 실수령액, 4대보험 공제 후 금액도 확인할 수 있습니다.
+                </p>
+
+                <Link
+                    href="https://연봉계산기.kr"
+                    className="inline-flex rounded-xl bg-green-600 px-5 py-3 font-semibold text-white hover:bg-green-700"
+                >
+                    연봉 계산기 바로가기 →
+                </Link>
             </section>
 
             <RelatedCalculators />

@@ -6,12 +6,11 @@ import "./globals.css";
 export const metadata: Metadata = {
     metadataBase: new URL("https://taxsim.kr"),
     title: {
-        default: "세금계산기 | 부가세·종합소득세·원천징수 계산",
-        template: "%s | 세금계산기",
+        default: "세금 계산기 | 부가세·종합소득세·원천징수 계산",
+        template: "%s | 세금 계산기",
     },
     description:
         "부가세 계산기, 종합소득세 계산기, 원천징수 계산기, 퇴직금 계산기, 프리랜서 3.3% 계산기, 4대보험 계산기를 무료로 제공합니다.",
-
     verification: {
         other: {
             "naver-site-verification": "0444aa9bcf56047cc159d6bfb14999f757aef63c",
@@ -36,23 +35,44 @@ export default function RootLayout({
 
         <body className="bg-slate-50 text-slate-900 antialiased">
         <nav className="sticky top-0 z-50 h-16 border-b bg-white/80 backdrop-blur-md flex items-center px-6">
-            <div className="container mx-auto flex items-center">
-                <Link href="/" className="font-black text-xl">
-                    taxsim.kr
+            <div className="container mx-auto flex items-center justify-between">
+                <Link href="/" className="flex flex-col leading-tight">
+                            <span className="font-black text-lg text-slate-900">
+                                세금 계산기
+                            </span>
+                    <span className="text-xs text-slate-400">
+                                taxsim.kr
+                            </span>
                 </Link>
+
+                <div className="hidden md:flex gap-6 text-sm text-slate-600">
+                    <Link href="/vat-calculator">부가세</Link>
+                    <Link href="/income-tax-calculator">종합소득세</Link>
+                    <Link href="/withholding-tax-calculator">원천징수</Link>
+                    <Link href="/four-insurance-calculator">4대보험</Link>
+                </div>
             </div>
         </nav>
 
         {children}
 
-        <footer className="bg-white border-t py-10 mt-20">
-            <div className="container mx-auto px-4 text-center text-slate-400 text-sm space-y-4">
-                <div className="flex justify-center gap-4 flex-wrap">
+        <footer className="bg-white border-t py-12 mt-20">
+            <div className="container mx-auto px-4 text-center text-slate-500 text-sm space-y-6">
+                <p className="max-w-xl mx-auto leading-relaxed">
+                    세금 계산기는 부가세, 종합소득세, 원천징수, 4대보험 등
+                    다양한 세금 계산을 간편하게 할 수 있도록 제공하는 무료 온라인 도구입니다.
+                </p>
+
+                <div className="flex justify-center gap-6 flex-wrap">
                     <Link href="/about">사이트 소개</Link>
                     <Link href="/privacy">개인정보처리방침</Link>
                     <Link href="/terms">이용안내</Link>
                     <Link href="/contact">문의</Link>
                 </div>
+
+                <p className="text-xs text-slate-400">
+                    © {new Date().getFullYear()} 세금 계산기 (taxsim.kr). All rights reserved.
+                </p>
             </div>
         </footer>
         </body>

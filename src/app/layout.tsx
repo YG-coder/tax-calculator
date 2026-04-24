@@ -11,6 +11,12 @@ export const metadata: Metadata = {
     },
     description:
         "부가세 계산기, 종합소득세 계산기, 원천징수 계산기, 퇴직금 계산기, 프리랜서 3.3% 계산기, 4대보험 계산기를 무료로 제공합니다.",
+
+    verification: {
+        other: {
+            "naver-site-verification": "0444aa9bcf56047cc159d6bfb14999f757aef63c",
+        },
+    },
 };
 
 export default function RootLayout({

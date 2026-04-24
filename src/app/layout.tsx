@@ -49,8 +49,8 @@ export default function RootLayout({
                 <div className="hidden md:flex gap-5 text-sm text-slate-600">
                     <Link href="/vat-calculator">부가세</Link>
                     <Link href="/income-tax-calculator">종합소득세</Link>
-                    <Link href="/withholding-tax-calculator">원천징수</Link>
-                    <Link href="/four-insurance-calculator">4대보험</Link>
+                    <Link href="/withholding-calculator">원천징수</Link>
+                    <Link href="/insurance-calculator">4대보험</Link>
                 </div>
 
             </div>

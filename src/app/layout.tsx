@@ -34,18 +34,18 @@ export default function RootLayout({
         </head>
 
         <body className="bg-slate-50 text-slate-900 antialiased">
-        <nav className="sticky top-0 z-50 h-16 border-b bg-white/80 backdrop-blur-md flex items-center px-6">
+        <nav className="sticky top-0 z-50 h-14 border-b bg-white/80 backdrop-blur-md flex items-center px-4">
             <div className="container mx-auto flex items-center justify-between">
                 <Link href="/" className="flex flex-col leading-tight">
-                            <span className="font-black text-lg text-slate-900">
-                                세금 계산기
-                            </span>
+      <span className="font-black text-base text-slate-900">
+        세금 계산기
+      </span>
                     <span className="text-xs text-slate-400">
-                                taxsim.kr
-                            </span>
+        taxsim.kr
+      </span>
                 </Link>
 
-                <div className="hidden md:flex gap-6 text-sm text-slate-600">
+                <div className="hidden md:flex gap-5 text-sm text-slate-600">
                     <Link href="/vat-calculator">부가세</Link>
                     <Link href="/income-tax-calculator">종합소득세</Link>
                     <Link href="/withholding-tax-calculator">원천징수</Link>

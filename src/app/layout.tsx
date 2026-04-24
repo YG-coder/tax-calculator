@@ -37,23 +37,22 @@ export default function RootLayout({
 
         {/* ✅ 네비바 */}
         <nav className="sticky top-0 z-50 h-14 border-b bg-white/80 backdrop-blur-md flex items-center px-4">
-            <div className="container mx-auto flex items-center gap-8">
+            <div className="max-w-5xl mx-auto flex items-center justify-between w-full">
 
-                {/* 로고 (한 줄) */}
                 <Link href="/" className="flex items-center gap-2 font-black text-base text-slate-900">
                     세금 계산기
                     <span className="text-xs font-medium text-slate-400">
-                                taxsim.kr
-                            </span>
+        taxsim.kr
+      </span>
                 </Link>
 
-                {/* 메뉴 */}
                 <div className="hidden md:flex gap-5 text-sm text-slate-600">
                     <Link href="/vat-calculator">부가세</Link>
                     <Link href="/income-tax-calculator">종합소득세</Link>
                     <Link href="/withholding-tax-calculator">원천징수</Link>
                     <Link href="/four-insurance-calculator">4대보험</Link>
                 </div>
+
             </div>
         </nav>
 

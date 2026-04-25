@@ -1,222 +1,170 @@
-'use client';
+// src/app/income-tax-calculator/page.tsx
+'use client'
 
-import Link from 'next/link';
-import { useState } from 'react';
-import RelatedCalculators from '@/components/RelatedCalculators';
+import { useState } from 'react'
+import Link from 'next/link'
+import RelatedCalculators from '@/components/RelatedCalculators'
 
-function format(num: number) {
-    return num.toLocaleString('ko-KR');
+function fmt(n: number) { return n.toLocaleString('ko-KR') }
+function parseNum(v: string) { return Number(v.replace(/[^0-9]/g, '')) || 0 }
+function formatInput(v: string) {
+  const n = v.replace(/[^0-9]/g, '')
+  return n ? Number(n).toLocaleString('ko-KR') : ''
 }
 
-function calculateTax(income: number) {
-    let tax = 0;
-
-    if (income <= 12000000) tax = income * 0.06;
-    else if (income <= 46000000)
-        tax = 720000 + (income - 12000000) * 0.15;
-    else if (income <= 88000000)
-        tax = 5820000 + (income - 46000000) * 0.24;
-    else if (income <= 150000000)
-        tax = 15900000 + (income - 88000000) * 0.35;
-    else if (income <= 300000000)
-        tax = 37000000 + (income - 150000000) * 0.38;
-    else if (income <= 500000000)
-        tax = 94000000 + (income - 300000000) * 0.40;
-    else if (income <= 1000000000)
-        tax = 174000000 + (income - 500000000) * 0.42;
-    else
-        tax = 384000000 + (income - 1000000000) * 0.45;
-
-    return Math.floor(tax);
+// 2026년 종합소득세 누진세율
+function calcIncomeTax(base: number): number {
+  if (base <= 14_000_000)  return Math.floor(base * 0.06)
+  if (base <= 50_000_000)  return Math.floor(840_000    + (base - 14_000_000)  * 0.15)
+  if (base <= 88_000_000)  return Math.floor(6_240_000  + (base - 50_000_000)  * 0.24)
+  if (base <= 150_000_000) return Math.floor(15_360_000 + (base - 88_000_000)  * 0.35)
+  if (base <= 300_000_000) return Math.floor(37_060_000 + (base - 150_000_000) * 0.38)
+  if (base <= 500_000_000) return Math.floor(94_060_000 + (base - 300_000_000) * 0.40)
+  if (base <= 1_000_000_000) return Math.floor(174_060_000 + (base - 500_000_000) * 0.42)
+  return Math.floor(384_060_000 + (base - 1_000_000_000) * 0.45)
 }
 
-export default function IncomeTaxCalculator() {
-    const [income, setIncome] = useState('');
+export default function IncomeTaxCalculatorPage() {
+  const [income, setIncome]   = useState('')
+  const [expense, setExpense] = useState('')
 
-    const parsed = Number(income.replace(/,/g, '')) || 0;
-    const hasValue = parsed > 0;
+  const incomeNum  = parseNum(income)
+  const expenseNum = parseNum(expense)
+  const hasValue   = incomeNum > 0
 
-    const tax = calculateTax(parsed);
-    const localTax = Math.floor(tax * 0.1);
-    const totalTax = tax + localTax;
-    const net = parsed - totalTax;
+  const taxBase    = Math.max(0, incomeNum - expenseNum)
+  const incomeTax  = calcIncomeTax(taxBase)
+  const localTax   = Math.floor(incomeTax * 0.1)
+  const totalTax   = incomeTax + localTax
+  const netIncome  = incomeNum - totalTax
+  const effectiveRate = incomeNum > 0 ? ((totalTax / incomeNum) * 100).toFixed(1) : '0'
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const raw = e.target.value.replace(/[^0-9]/g, '');
-        if (!raw) {
-            setIncome('');
-            return;
-        }
-        setIncome(Number(raw).toLocaleString('ko-KR'));
-    };
+  return (
+    <main className="max-w-3xl mx-auto px-4 py-10">
+      <h1 className="text-3xl font-bold mb-2">종합소득세 계산기</h1>
+      <p className="text-slate-500 mb-6">2026년 누진세율 기준 · 간이 계산 (공제 미반영)</p>
 
-    return (
-        <main className="container mx-auto px-4 py-12 max-w-4xl">
-            <h1 className="text-3xl font-black mb-8">종합소득세 계산기</h1>
+      {/* 입력 카드 */}
+      <div className="calc-card p-6 space-y-5">
+        <h2 className="text-base font-bold text-slate-800">소득 정보 입력</h2>
 
-            {/* 입력 */}
-            <div className="bg-white border rounded-2xl p-6 shadow-sm">
-                <label className="text-sm font-semibold text-slate-700">
-                    연 소득 입력 (원)
-                </label>
+        <div>
+          <label className="calc-label">연 소득 <span className="text-red-400">*</span></label>
+          <div className="relative">
+            <input type="text" inputMode="numeric" value={income}
+              onChange={(e) => setIncome(formatInput(e.target.value))}
+              placeholder="예: 50,000,000" className="calc-input pr-8" />
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+          </div>
+          <p className="calc-hint">세전 연간 총 소득을 입력하세요</p>
+        </div>
 
-                <input
-                    type="text"
-                    value={income}
-                    onChange={handleChange}
-                    placeholder="예: 50,000,000"
-                    className="w-full mt-2 border rounded-lg p-3 text-xl font-bold focus:ring-2 focus:ring-slate-900 outline-none"
-                />
+        <div>
+          <label className="calc-label">필요경비 / 공제액 <span className="text-xs font-normal text-slate-400">(선택)</span></label>
+          <div className="relative">
+            <input type="text" inputMode="numeric" value={expense}
+              onChange={(e) => setExpense(formatInput(e.target.value))}
+              placeholder="예: 10,000,000" className="calc-input pr-8" />
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+          </div>
+          <p className="calc-hint">필요경비, 소득공제 합계 (입력 시 과세표준에서 차감)</p>
+        </div>
 
-                <p className="mt-2 text-xs text-slate-400">
-                    본 계산기는 공제 없이 단순 세율 기준으로 계산된 참고용 결과입니다.
-                </p>
+        {hasValue && (
+          <div className="rounded-xl bg-slate-50 border border-slate-100 px-4 py-3 text-xs text-slate-500 space-y-1">
+            <p className="font-semibold text-slate-600 mb-1">입력 요약</p>
+            <div className="flex justify-between"><span>연 소득</span><span className="font-medium text-slate-700">{fmt(incomeNum)}원</span></div>
+            {expenseNum > 0 && <div className="flex justify-between"><span>필요경비/공제</span><span className="font-medium text-emerald-600">−{fmt(expenseNum)}원</span></div>}
+            <div className="flex justify-between"><span>과세표준</span><span className="font-medium text-slate-700">{fmt(taxBase)}원</span></div>
+          </div>
+        )}
+      </div>
+
+      {/* 결과 */}
+      {hasValue ? (
+        <div className="mt-6 space-y-4 animate-slide-up">
+          <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
+            <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">총 세액</p>
+            <p className="text-4xl font-black tabular-nums">{fmt(totalTax)}<span className="text-2xl font-bold ml-1">원</span></p>
+            <div className="mt-3 pt-3 border-t border-white/20 flex flex-wrap gap-x-4 gap-y-1 text-sm text-blue-100">
+              <span>실효세율 {effectiveRate}%</span>
+              <span>과세표준 {fmt(taxBase)}원</span>
             </div>
+          </div>
 
-            {/* 결과 */}
-            {hasValue ? (
-                <div className="mt-8 bg-slate-900 text-white p-8 rounded-2xl">
-                    <p className="text-slate-400 text-sm mb-2">예상 세금</p>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="calc-card p-4">
+              <p className="text-xs font-semibold text-slate-400 mb-1">세후 소득</p>
+              <p className="text-lg font-bold text-emerald-600 tabular-nums">{fmt(netIncome)}원</p>
+            </div>
+            <div className="calc-card p-4">
+              <p className="text-xs font-semibold text-slate-400 mb-1">과세표준</p>
+              <p className="text-lg font-bold text-slate-900 tabular-nums">{fmt(taxBase)}원</p>
+            </div>
+          </div>
 
-                    <div className="space-y-3 text-lg">
-                        <div className="flex justify-between">
-                            <span>소득세</span>
-                            <span>{format(tax)} 원</span>
-                        </div>
+          <div className="calc-card p-5">
+            <h3 className="text-sm font-bold text-slate-700 mb-4">세금 내역</h3>
+            <ul className="space-y-2.5">
+              <li className="flex justify-between text-sm"><span className="text-slate-600">과세표준</span><span className="font-bold text-slate-800 tabular-nums">{fmt(taxBase)} 원</span></li>
+              <li className="flex justify-between text-sm"><span className="text-slate-600">소득세</span><span className="font-bold text-blue-600 tabular-nums">{fmt(incomeTax)} 원</span></li>
+              <li className="flex justify-between text-sm"><span className="text-slate-600">지방소득세 (소득세×10%)</span><span className="font-bold text-slate-700 tabular-nums">{fmt(localTax)} 원</span></li>
+              <li className="flex justify-between text-sm pt-3 border-t border-slate-100">
+                <span className="font-bold text-slate-800">총 세액</span>
+                <span className="font-bold text-red-500 tabular-nums">−{fmt(totalTax)} 원</span>
+              </li>
+            </ul>
+          </div>
 
-                        <div className="flex justify-between">
-                            <span>지방소득세</span>
-                            <span>{format(localTax)} 원</span>
-                        </div>
+          <div className="calc-card p-4 bg-amber-50 border-amber-100">
+            <p className="text-xs text-amber-700 leading-relaxed">
+              <strong className="font-semibold">⚠ 간이 계산 안내:</strong> 본 계산기는 기본공제, 세액공제, 감면 등 각종 공제를 반영하지 않은 단순 참고용입니다. 실제 신고 시 홈택스 또는 세무사를 이용하세요.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 text-sm">
+          소득을 입력하면 계산됩니다
+        </div>
+      )}
 
-                        <div className="flex justify-between font-bold text-xl border-t pt-3 mt-3">
-                            <span>총 세금</span>
-                            <span>{format(totalTax)} 원</span>
-                        </div>
+      <section className="mt-10 rounded-2xl border border-green-100 bg-green-50 p-5">
+        <p className="text-sm font-semibold text-slate-800 mb-1">연봉 실수령액도 확인해보세요</p>
+        <p className="text-xs text-slate-500 mb-3">4대보험·소득세 공제 후 실수령액은 연봉계산기.kr에서 확인하세요.</p>
+        <Link href="https://연봉계산기.kr" target="_blank" rel="noopener noreferrer"
+          className="inline-flex rounded-xl bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700 transition-colors">
+          연봉 계산기 바로가기 →
+        </Link>
+      </section>
 
-                        <div className="flex justify-between font-bold text-xl mt-3 text-green-400">
-                            <span>세후 소득</span>
-                            <span>{format(net)} 원</span>
-                        </div>
-                    </div>
-                </div>
-            ) : (
-                <div className="mt-8 h-40 border-2 border-dashed rounded-2xl flex items-center justify-center text-slate-400">
-                    소득을 입력하면 계산됩니다
-                </div>
-            )}
+      <section className="mt-10 space-y-5 text-sm text-slate-600 leading-relaxed">
+        <div>
+          <h2 className="text-base font-bold text-slate-800 mb-2">종합소득세란?</h2>
+          <p>사업소득, 프리랜서 소득, 금융소득, 기타소득 등 여러 소득을 합산해 신고하는 세금입니다. 매년 5월 종합소득세 신고 기간에 신고합니다.</p>
+        </div>
+        <div>
+          <h2 className="text-base font-bold text-slate-800 mb-2">2026년 종합소득세 세율표</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs border-collapse min-w-[320px]">
+              <thead><tr className="bg-slate-50"><th className="px-3 py-2 text-left font-semibold text-slate-600">과세표준</th><th className="px-3 py-2 text-right font-semibold text-slate-600">세율</th></tr></thead>
+              <tbody className="divide-y divide-slate-100">
+                {[['1,400만원 이하','6%'],['1,400만~5,000만원','15%'],['5,000만~8,800만원','24%'],['8,800만~1.5억원','35%'],['1.5억~3억원','38%'],['3억~5억원','40%'],['5억~10억원','42%'],['10억원 초과','45%']].map(([range,rate])=>(
+                  <tr key={range} className="bg-white">
+                    <td className="px-3 py-2 text-slate-600">{range}</td>
+                    <td className="px-3 py-2 text-right font-bold text-blue-600">{rate}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <h2 className="text-base font-bold text-slate-800 mb-2">주의사항</h2>
+          <p>실제 종합소득세는 필요경비, 인적공제, 세액공제, 감면 항목에 따라 크게 달라집니다. 본 계산기는 대략적인 규모 파악용입니다.</p>
+        </div>
+      </section>
 
-            {/* SEO 본문 */}
-            <section className="mt-12 space-y-8 text-sm text-slate-600 leading-relaxed">
-                <div className="space-y-4">
-                    <h2 className="text-lg font-bold text-slate-800">종합소득세 계산기란?</h2>
-                    <p>
-                        종합소득세 계산기는 1년 동안 발생한 소득을 기준으로 예상 세금을 계산하는 도구입니다.
-                        프리랜서, 개인사업자, 부업 소득이 있는 직장인처럼 다양한 소득원이 있는 사람은
-                        종합소득세 신고 전에 예상 세금 규모를 미리 확인해두는 것이 중요합니다.
-                    </p>
-                    <p>
-                        대한민국 종합소득세는 누진세 구조를 가지고 있기 때문에 소득이 높아질수록 더 높은 세율이 적용됩니다.
-                        그래서 단순히 일정 비율만 곱해서 계산하는 것이 아니라,
-                        소득 구간에 따라 나누어 계산해야 보다 현실적인 예상이 가능합니다.
-                    </p>
-                </div>
-
-                <div className="space-y-4">
-                    <h2 className="text-lg font-bold text-slate-800">언제 사용하는 계산기인가요?</h2>
-                    <p>
-                        이 계산기는 종합소득세 신고 시즌 전에 예상 세금을 확인하거나,
-                        프리랜서·사업자·부업 소득자의 연간 세금 부담을 가늠할 때 유용합니다.
-                        또한 예상 세후 소득을 확인해 자금 계획을 세우는 데도 도움이 됩니다.
-                    </p>
-                    <p>
-                        특히 3.3% 원천징수를 당하는 프리랜서라면 연말 또는 다음 해 신고 시
-                        실제로 추가 납부가 필요한지, 환급 가능성이 있는지 대략적으로 감을 잡는 용도로 활용할 수 있습니다.
-                    </p>
-                </div>
-
-                <div className="space-y-4">
-                    <h2 className="text-lg font-bold text-slate-800">계산 방법</h2>
-                    <p>
-                        본 계산기는 입력한 연 소득을 기준으로 종합소득세 누진세율을 적용해 소득세를 계산합니다.
-                        이후 지방소득세 10%를 추가해 총 세금을 추정하고, 세후 소득도 함께 표시합니다.
-                    </p>
-                    <ul className="list-disc pl-5 space-y-1">
-                        <li>소득세 = 과세표준 구간별 누진세율 적용</li>
-                        <li>지방소득세 = 소득세 × 10%</li>
-                        <li>세후 소득 = 연 소득 - 총 세금</li>
-                    </ul>
-                    <p>
-                        다만 본 계산기는 공제, 필요경비, 세액공제, 감면 항목을 반영하지 않는 단순 계산기이므로
-                        참고용으로 활용하는 것이 적절합니다.
-                    </p>
-                </div>
-
-                <div className="space-y-4">
-                    <h2 className="text-lg font-bold text-slate-800">주의사항</h2>
-                    <p>
-                        실제 종합소득세는 필요경비, 인적공제, 카드공제, 보험료공제, 세액감면,
-                        신고 방식 등에 따라 크게 달라질 수 있습니다.
-                        특히 프리랜서나 개인사업자는 경비 처리 여부에 따라 최종 세액 차이가 커집니다.
-                    </p>
-                    <p>
-                        따라서 본 계산기는 대략적인 세금 규모를 파악하는 참고용 도구로 활용해야 하며,
-                        실제 신고는 홈택스 계산 결과 또는 세무 전문가의 안내를 따르는 것이 좋습니다.
-                    </p>
-                </div>
-
-                <div className="space-y-4">
-                    <h2 className="text-lg font-bold text-slate-800">자주 묻는 질문 (FAQ)</h2>
-
-                    <div>
-                        <p className="font-semibold">Q. 종합소득세는 누구에게 적용되나요?</p>
-                        <p>
-                            A. 사업소득, 프리랜서 소득, 기타소득, 금융소득 등 여러 소득이 있는 개인에게 적용됩니다.
-                        </p>
-                    </div>
-
-                    <div>
-                        <p className="font-semibold">Q. 실제 세금과 왜 차이가 나나요?</p>
-                        <p>
-                            A. 공제, 감면, 필요경비, 신고 방식 등이 반영되지 않았기 때문입니다.
-                        </p>
-                    </div>
-
-                    <div>
-                        <p className="font-semibold">Q. 지방소득세는 무엇인가요?</p>
-                        <p>
-                            A. 소득세의 10%가 추가로 붙는 지방세 개념으로 함께 부담하는 경우가 일반적입니다.
-                        </p>
-                    </div>
-
-                    <div>
-                        <p className="font-semibold">Q. 3.3% 원천징수를 했으면 신고 안 해도 되나요?</p>
-                        <p>
-                            A. 아닙니다. 3.3%는 선납 개념이기 때문에 종합소득세 신고를 통해 최종 정산해야 합니다.
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            {/* 연봉계산기 연동 CTA */}
-            <section className="mt-12 rounded-2xl border bg-green-50 p-6">
-                <h2 className="text-xl font-bold mb-2 text-slate-900">
-                    연봉 실수령액도 확인해보세요
-                </h2>
-
-                <p className="text-slate-600 mb-4">
-                    세금 계산과 함께 연봉 기준 월 실수령액, 4대보험 공제 후 금액도 확인할 수 있습니다.
-                </p>
-
-                <Link
-                    href="https://연봉계산기.kr"
-                    className="inline-flex rounded-xl bg-green-600 px-5 py-3 font-semibold text-white hover:bg-green-700"
-                >
-                    연봉 계산기 바로가기 →
-                </Link>
-            </section>
-
-            <RelatedCalculators />
-        </main>
-    );
+      <RelatedCalculators current="income-tax-calculator" />
+    </main>
+  )
 }

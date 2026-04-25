@@ -1,4 +1,4 @@
 /**
  * @file Environment Variables
  */
-export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://texsim.kr';
+export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://taxsim.kr';

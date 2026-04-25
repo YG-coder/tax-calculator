@@ -1,10 +1,53 @@
-/** @path src/app/globals.css */
+/* src/app/globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-    body {
-        @apply bg-slate-50 text-slate-900 antialiased;
-    }
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+  }
 }
+
+@layer components {
+  /* 연봉계산기 스타일과 통일된 공통 컴포넌트 */
+  .calc-card {
+    @apply bg-white border border-slate-100 rounded-2xl;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08);
+  }
+  .calc-input {
+    @apply block w-full px-4 py-3 rounded-xl border border-slate-200 bg-white
+           text-slate-900 placeholder-slate-400 text-base font-medium
+           transition-colors duration-150
+           focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+           hover:border-slate-300;
+  }
+  .calc-label {
+    @apply block text-sm font-semibold text-slate-700 mb-1.5;
+  }
+  .calc-hint {
+    @apply text-xs text-slate-400 mt-1;
+  }
+  .calc-btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-xl
+           bg-blue-600 hover:bg-blue-700 active:bg-blue-800
+           text-white font-semibold text-sm
+           transition-all duration-150
+           focus-visible:outline-none focus-visible:ring-2
+           focus-visible:ring-blue-500 focus-visible:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in  { animation: fadeIn  0.35s ease-out both; }
+  .animate-slide-up { animation: slideUp 0.40s ease-out both; }
+}
+
+@keyframes fadeIn  { from { opacity: 0; }                             to { opacity: 1; } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+/* 숫자 스피너 제거 */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type='number'] { -moz-appearance: textfield; }

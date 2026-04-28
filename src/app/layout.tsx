@@ -12,7 +12,6 @@ export const metadata: Metadata = {
   description:
       '부가세, 종합소득세, 프리랜서 3.3%, 양도소득세, 증여세, 상속세, 원천징수세액 계산기를 무료로 제공합니다. 2026년 세율 기준.',
   verification: {
-    google: 'GXlO_JaqRc_86OdNOVN-Yrq9Pc5fzWyHfrd_SroZJZU',
     other: {
       'naver-site-verification': '0444aa9bcf56047cc159d6bfb14999f757aef63c',
     },

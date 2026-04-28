@@ -90,23 +90,6 @@ export default function AboutPage() {
           </p>
         </section>
 
-        {/* 연봉계산기 안내 */}
-        <section className="rounded-xl bg-green-50 border border-green-100 p-4">
-          <p className="text-sm font-semibold text-slate-800 mb-1">직장인 급여 계산이 필요하신가요?</p>
-          <p className="text-xs text-slate-500 mb-2">
-            실수령액, 4대보험, 퇴직금, 연차수당 등 직장인 급여 계산기는
-            연봉계산기.kr에서 제공합니다. (taxsim.kr와 별도 서비스)
-          </p>
-          <Link
-            href="https://연봉계산기.kr"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex rounded-xl bg-green-600 px-4 py-2 text-xs font-semibold text-white hover:bg-green-700 transition-colors"
-          >
-            연봉 계산기 바로가기 →
-          </Link>
-        </section>
-
         {/* 면책 */}
         <section className="border-t pt-4 text-xs text-slate-400 leading-relaxed">
           본 사이트는 세금 계산 정보를 제공하는 참고용 서비스이며 법적 책임을 지지 않습니다.<br />

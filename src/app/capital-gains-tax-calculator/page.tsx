@@ -2,7 +2,6 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import RelatedCalculators from '@/components/RelatedCalculators'
 
 function fmt(n: number) { return n.toLocaleString('ko-KR') }
@@ -134,15 +133,6 @@ export default function CapitalGainsTaxCalculatorPage() {
           취득가액과 양도가액을 입력하면 계산됩니다
         </div>
       )}
-
-      <section className="mt-10 rounded-2xl border border-green-100 bg-green-50 p-5">
-        <p className="text-sm font-semibold text-slate-800 mb-1">연봉 실수령액도 확인해보세요</p>
-        <p className="text-xs text-slate-500 mb-3">직장인 급여 관련 계산은 연봉계산기.kr에서.</p>
-        <Link href="https://연봉계산기.kr" target="_blank" rel="noopener noreferrer"
-          className="inline-flex rounded-xl bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700 transition-colors">
-          연봉 계산기 바로가기 →
-        </Link>
-      </section>
 
       <section className="mt-10 space-y-5 text-sm text-slate-600 leading-relaxed">
         <div>

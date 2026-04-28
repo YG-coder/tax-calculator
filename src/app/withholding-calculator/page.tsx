@@ -2,7 +2,6 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import Link from 'next/link'
 import RelatedCalculators from '@/components/RelatedCalculators'
 
 function fmt(n: number) { return n.toLocaleString('ko-KR') }
@@ -172,15 +171,6 @@ export default function WithholdingCalculatorPage() {
           월 급여를 입력하면 예상 원천징수세액이 표시됩니다
         </div>
       )}
-
-      <section className="mt-10 rounded-2xl border border-green-100 bg-green-50 p-5">
-        <p className="text-sm font-semibold text-slate-800 mb-1">4대보험 포함 실수령액이 필요하신가요?</p>
-        <p className="text-xs text-slate-500 mb-3">국민연금·건강보험·고용보험까지 반영한 정확한 실수령액은 연봉계산기.kr에서 확인하세요.</p>
-        <Link href="https://연봉계산기.kr" target="_blank" rel="noopener noreferrer"
-          className="inline-flex rounded-xl bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700 transition-colors">
-          연봉 계산기 바로가기 →
-        </Link>
-      </section>
 
       <section className="mt-10 space-y-5 text-sm text-slate-600 leading-relaxed">
         <div>

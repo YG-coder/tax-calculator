@@ -3,7 +3,6 @@
 
 import type { Metadata } from 'next'
 import { useState } from 'react'
-import Link from 'next/link'
 import RelatedCalculators from '@/components/RelatedCalculators'
 
 // metadata는 'use client'와 함께 사용 불가 → layout 또는 별도 처리
@@ -114,16 +113,6 @@ export default function VatCalculatorPage() {
           금액을 입력하면 자동 계산됩니다
         </div>
       )}
-
-      {/* 연봉계산기 CTA */}
-      <section className="mt-10 rounded-2xl border border-green-100 bg-green-50 p-5">
-        <p className="text-sm font-semibold text-slate-800 mb-1">연봉 실수령액도 확인해보세요</p>
-        <p className="text-xs text-slate-500 mb-3">4대보험·소득세 공제 후 실수령액은 연봉계산기.kr에서 확인하세요.</p>
-        <Link href="https://연봉계산기.kr" target="_blank" rel="noopener noreferrer"
-          className="inline-flex rounded-xl bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700 transition-colors">
-          연봉 계산기 바로가기 →
-        </Link>
-      </section>
 
       {/* SEO */}
       <section className="mt-10 space-y-6 text-sm text-slate-600 leading-relaxed">

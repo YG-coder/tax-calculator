@@ -47,8 +47,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-600 text-white text-sm font-bold select-none">
                 税
               </span>
-            <span className="font-bold text-slate-900 text-[15px] tracking-tight group-hover:text-blue-600 transition-colors">
-                세금계산기<span className="text-blue-500">.kr</span>
+              <span className="font-bold text-slate-900 text-[15px] tracking-tight group-hover:text-blue-600 transition-colors">
+                  세금<span className="text-blue-600">계산기</span>
               </span>
           </Link>
 

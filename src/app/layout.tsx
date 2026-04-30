@@ -4,18 +4,21 @@ import Link from 'next/link'
 import './globals.css'
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://taxsim.kr'),
-  title: {
-    default: '세금 계산기 | 부가세·소득세·양도세·증여세·상속세',
-    template: '%s | 세금 계산기',
-  },
-  description:
-      '부가세, 종합소득세, 프리랜서 3.3%, 양도소득세, 증여세, 상속세, 원천징수세액 계산기를 무료로 제공합니다. 2026년 세율 기준.',
-  verification: {
-    other: {
-      'naver-site-verification': '0444aa9bcf56047cc159d6bfb14999f757aef63c',
+    metadataBase: new URL('https://taxsim.kr'),
+    title: {
+        default: '세금 계산기 | 부가세·소득세·양도세·증여세·상속세',
+        template: '%s | 세금 계산기',
     },
-  },
+    description:
+        '부가세, 종합소득세, 프리랜서 3.3%, 양도소득세, 증여세, 상속세, 원천징수세액 계산기를 무료로 제공합니다. 2026년 세율 기준.',
+    alternates: {
+        canonical: '/',
+    },
+    verification: {
+        other: {
+            'naver-site-verification': '0444aa9bcf56047cc159d6bfb14999f757aef63c',
+        },
+    },
 }
 
 const NAV_ITEMS = [

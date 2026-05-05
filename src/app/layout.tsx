@@ -1,5 +1,5 @@
 /* src/app/layout.tsx */
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import Link from 'next/link'
 import './globals.css'
 
@@ -11,14 +11,102 @@ export const metadata: Metadata = {
     },
     description:
         '부가세, 종합소득세, 프리랜서 3.3%, 양도소득세, 증여세, 상속세, 원천징수세액 계산기를 무료로 제공합니다. 2026년 세율 기준.',
+    applicationName: '세금계산기',
+    keywords: [
+        '세금계산기',
+        '부가세 계산기',
+        '종합소득세 계산기',
+        '프리랜서 3.3%',
+        '양도소득세 계산기',
+        '증여세 계산기',
+        '상속세 계산기',
+        '원천징수세액 계산기',
+        '소득세 계산기',
+        '2026년 세금',
+        '세금 환급',
+        'taxsim',
+    ],
+    authors: [{ name: 'Incomelab' }],
+    creator: 'Incomelab',
+    publisher: 'Incomelab',
     alternates: {
         canonical: '/',
     },
+
+    // 검색엔진 인증
     verification: {
         other: {
             'naver-site-verification': '0444aa9bcf56047cc159d6bfb14999f757aef63c',
         },
     },
+
+    // 파비콘 / 앱 아이콘
+    icons: {
+        icon: [
+            { url: '/favicon.ico', sizes: 'any' },
+            { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+            { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+            { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+            { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+            { url: '/icon.svg', type: 'image/svg+xml' },
+        ],
+        shortcut: '/favicon.ico',
+        apple: [
+            { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
+        ],
+    },
+
+    // Open Graph (카카오톡, 페이스북, 네이버 미리보기)
+    openGraph: {
+        type: 'website',
+        locale: 'ko_KR',
+        url: 'https://taxsim.kr',
+        siteName: '세금계산기',
+        title: '세금 계산기 | 부가세·소득세·양도세·증여세·상속세',
+        description:
+            '부가세, 종합소득세, 프리랜서 3.3%, 양도소득세, 증여세, 상속세, 원천징수세액 계산기를 무료로 제공합니다. 2026년 세율 기준.',
+        images: [
+            {
+                url: '/og-image.png',
+                width: 1200,
+                height: 630,
+                alt: '세금계산기 - 부가세·소득세·양도세·증여세·상속세',
+                type: 'image/png',
+            },
+        ],
+    },
+
+    // 트위터 카드
+    twitter: {
+        card: 'summary_large_image',
+        title: '세금 계산기 | 부가세·소득세·양도세·증여세·상속세',
+        description:
+            '부가세, 종합소득세, 프리랜서 3.3%, 양도소득세, 증여세, 상속세 계산기를 무료로 제공합니다.',
+        images: ['/og-image.png'],
+    },
+
+    // 검색 로봇
+    robots: {
+        index: true,
+        follow: true,
+        googleBot: {
+            index: true,
+            follow: true,
+            'max-snippet': -1,
+            'max-image-preview': 'large',
+            'max-video-preview': -1,
+        },
+    },
+
+    // PWA 매니페스트
+    manifest: '/site.webmanifest',
+}
+
+export const viewport: Viewport = {
+    themeColor: '#2563eb',
+    colorScheme: 'light',
+    width: 'device-width',
+    initialScale: 1,
 }
 
 const NAV_ITEMS = [
@@ -29,10 +117,57 @@ const NAV_ITEMS = [
   { href: '/guide', label: '가이드' },
 ]
 
+/** 헤더 로고 — 그라디언트 배경 + 税 한자 + 워드마크 */
+function HeaderLogo() {
+    return (
+        <Link href="/" className="flex items-center gap-2 group" aria-label="세금계산기 홈">
+            <span className="relative flex items-center justify-center w-9 h-9 rounded-xl shadow-sm overflow-hidden transition-transform group-hover:scale-105">
+                <svg
+                    viewBox="0 0 36 36"
+                    className="absolute inset-0 w-full h-full"
+                    aria-hidden="true"
+                >
+                    <defs>
+                        <linearGradient id="logo-bg" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stopColor="#2563eb"/>
+                            <stop offset="100%" stopColor="#1d4ed8"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="36" height="36" rx="9" fill="url(#logo-bg)"/>
+                </svg>
+                <span
+                    className="relative font-black text-white text-[17px] leading-none tracking-tight"
+                    style={{ fontFamily: "'Noto Sans CJK KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif" }}
+                >
+                    税
+                </span>
+            </span>
+            <span className="flex flex-col leading-none">
+                <span className="font-black text-slate-900 text-[15px] tracking-tight group-hover:text-blue-600 transition-colors">
+                    세금<span className="text-blue-600">계산기</span>
+                </span>
+                <span className="text-[10px] text-slate-400 mt-0.5 tracking-wide hidden sm:inline">
+                    taxsim.kr
+                </span>
+            </span>
+        </Link>
+    )
+}
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
       <html lang="ko">
       <head>
+        {/* 검색엔진 추가 메타 */}
+        <meta name="naver-site-verification" content="0444aa9bcf56047cc159d6bfb14999f757aef63c" />
+        <meta name="format-detection" content="telephone=no" />
+
+        {/* 파비콘 명시 (호환성) */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/apple-icon.png" />
+
+        {/* AdSense */}
         <script
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6405509957088169"
@@ -44,14 +179,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       {/* 네비바 */}
       <nav className="sticky top-0 z-50 h-14 border-b bg-white/90 backdrop-blur-md">
         <div className="max-w-4xl mx-auto px-4 h-full flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 group">
-              <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-600 text-white text-sm font-bold select-none">
-                税
-              </span>
-              <span className="font-bold text-slate-900 text-[15px] tracking-tight group-hover:text-blue-600 transition-colors">
-                  세금<span className="text-blue-600">계산기</span>
-              </span>
-          </Link>
+          <HeaderLogo />
 
           <div className="hidden md:flex items-center gap-0.5">
             {NAV_ITEMS.map((item) => (

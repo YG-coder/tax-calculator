@@ -26,6 +26,7 @@ const NAV_ITEMS = [
   { href: '/income-tax-calculator', label: '종합소득세' },
   { href: '/freelancer-tax-calculator', label: '프리랜서 3.3%' },
   { href: '/withholding-calculator', label: '원천징수' },
+  { href: '/guide', label: '가이드' },
 ]
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -71,19 +72,34 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       {/* 푸터 */}
       <footer className="mt-auto border-t bg-white">
         <div className="max-w-4xl mx-auto px-4 py-8">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-            <Link href="/vat-calculator"             className="text-xs text-slate-500 hover:text-blue-600 transition-colors">부가세 계산기</Link>
-            <Link href="/income-tax-calculator"      className="text-xs text-slate-500 hover:text-blue-600 transition-colors">종합소득세 계산기</Link>
-            <Link href="/freelancer-tax-calculator"  className="text-xs text-slate-500 hover:text-blue-600 transition-colors">프리랜서 3.3% 계산기</Link>
+          {/* 계산기 링크 */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+            <Link href="/vat-calculator"               className="text-xs text-slate-500 hover:text-blue-600 transition-colors">부가세 계산기</Link>
+            <Link href="/income-tax-calculator"        className="text-xs text-slate-500 hover:text-blue-600 transition-colors">종합소득세 계산기</Link>
+            <Link href="/freelancer-tax-calculator"    className="text-xs text-slate-500 hover:text-blue-600 transition-colors">프리랜서 3.3% 계산기</Link>
             <Link href="/capital-gains-tax-calculator" className="text-xs text-slate-500 hover:text-blue-600 transition-colors">양도소득세 계산기</Link>
-            <Link href="/gift-tax-calculator"        className="text-xs text-slate-500 hover:text-blue-600 transition-colors">증여세 계산기</Link>
-            <Link href="/inheritance-tax-calculator" className="text-xs text-slate-500 hover:text-blue-600 transition-colors">상속세 계산기</Link>
-            <Link href="/withholding-calculator"     className="text-xs text-slate-500 hover:text-blue-600 transition-colors">원천징수세액 계산기</Link>
+            <Link href="/gift-tax-calculator"          className="text-xs text-slate-500 hover:text-blue-600 transition-colors">증여세 계산기</Link>
+            <Link href="/inheritance-tax-calculator"   className="text-xs text-slate-500 hover:text-blue-600 transition-colors">상속세 계산기</Link>
+            <Link href="/withholding-calculator"       className="text-xs text-slate-500 hover:text-blue-600 transition-colors">원천징수세액 계산기</Link>
+            <Link href="/guide"                        className="text-xs text-slate-500 hover:text-blue-600 transition-colors">세금 가이드</Link>
           </div>
+
+          {/* 면책 강화 */}
+          <div className="border-t border-slate-100 pt-4 mb-4 text-xs text-slate-500 leading-relaxed space-y-1">
+            <p>
+              본 사이트는 세무 자문(tax advisory)을 제공하지 않으며, 모든 계산 결과는 참고용입니다.
+              정확한 신고는 국세청 홈택스 또는 세무사 등 전문가를 통해 확인하시기 바랍니다.
+            </p>
+            <p className="text-slate-400">
+              운영: Incomelab · 정보 출처: 국세청 홈택스, 국세법령정보시스템 · 적용 기준: 2026년 세율
+            </p>
+          </div>
+
           <div className="border-t border-slate-100 pt-4 flex flex-wrap items-center justify-between gap-2">
-            <p className="text-xs text-slate-400">© {new Date().getFullYear()} taxsim.kr</p>
+            <p className="text-xs text-slate-400">© {new Date().getFullYear()} taxsim.kr · Incomelab</p>
             <div className="flex gap-4 text-xs text-slate-500">
               <Link href="/about"   className="hover:text-blue-600 transition-colors">소개</Link>
+              <Link href="/guide"   className="hover:text-blue-600 transition-colors">가이드</Link>
               <Link href="/privacy" className="hover:text-blue-600 transition-colors">개인정보처리방침</Link>
               <Link href="/terms"   className="hover:text-blue-600 transition-colors">이용안내</Link>
               <Link href="/contact" className="hover:text-blue-600 transition-colors">문의</Link>

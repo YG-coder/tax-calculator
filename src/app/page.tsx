@@ -26,9 +26,9 @@ const websiteJsonLd = {
     url: 'https://taxsim.kr',
     logo: {
       '@type': 'ImageObject',
-      url: 'https://taxsim.kr/icon-512.png',
-      width: 512,
-      height: 512,
+      url: 'https://taxsim.kr/og-image.png',
+      width: 1200,
+      height: 630,
     },
   },
   potentialAction: {
@@ -79,30 +79,8 @@ export default function HomePage() {
 
       <main className="max-w-4xl mx-auto px-4 py-12">
 
-        {/* 히어로 - 큰 로고 아이콘 추가 */}
+        {/* 히어로 */}
         <section className="text-center mb-12">
-          <div className="flex justify-center mb-5">
-            <div className="relative w-20 h-20 rounded-2xl shadow-lg overflow-hidden flex items-center justify-center">
-              <svg viewBox="0 0 80 80" className="absolute inset-0 w-full h-full" aria-hidden="true">
-                <defs>
-                  <linearGradient id="hero-bg" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#2563eb"/>
-                    <stop offset="100%" stopColor="#1d4ed8"/>
-                  </linearGradient>
-                </defs>
-                <rect width="80" height="80" rx="20" fill="url(#hero-bg)"/>
-              </svg>
-              <span
-                className="relative font-black text-white leading-none"
-                style={{
-                  fontSize: '44px',
-                  fontFamily: "'Noto Sans CJK KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif"
-                }}
-              >
-                税
-              </span>
-            </div>
-          </div>
           <h1 className="text-3xl sm:text-4xl font-black mb-3 leading-tight text-slate-900">
             세금 계산기 모음
           </h1>

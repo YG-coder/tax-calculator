@@ -45,18 +45,6 @@ export const metadata: Metadata = {
         },
     },
 
-    // ✅ 아이콘 (현재 파일 구조 기준)
-    icons: {
-        icon: [
-            { url: '/favicon.ico', sizes: 'any' },
-            { url: '/icon.svg', type: 'image/svg+xml' },
-        ],
-        shortcut: '/favicon.ico',
-        apple: [
-            { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
-        ],
-    },
-
     // ✅ OG (카카오/네이버/구글)
     openGraph: {
         type: 'website',
@@ -78,8 +66,9 @@ export const metadata: Metadata = {
 
     twitter: {
         card: 'summary_large_image',
-        title: '세금 계산기',
-        description: '세금 계산기를 무료로 제공합니다.',
+        title: '세금 계산기 | 부가세·소득세·양도세·증여세·상속세',
+        description:
+            '부가세, 종합소득세, 프리랜서 3.3%, 양도소득세, 증여세, 상속세, 원천징수세액 계산기를 무료로 제공합니다. 2026년 세율 기준.',
         images: ['/og-image.png'],
     },
 
@@ -95,8 +84,6 @@ export const metadata: Metadata = {
         },
     },
 
-    // ✅ manifest 유지
-    manifest: '/site.webmanifest',
 }
 
 export const viewport: Viewport = {

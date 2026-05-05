@@ -114,12 +114,26 @@ export default function HomePage() {
           <p className="text-slate-600 text-sm mb-4">
             프리랜서 종합소득세, 부가세 신고, 5월 종소세 신고법 등 실무 가이드를 무료로 제공합니다.
           </p>
-          <Link
-            href="/guide"
-            className="inline-flex rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
-          >
-            세금 가이드 보기 →
-          </Link>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
+            <Link
+                href="/guide/freelancer-tax"
+                className="text-sm text-blue-600 hover:underline"
+            >
+              프리랜서 종합소득세 →
+            </Link>
+            <Link
+                href="/guide/vat-filing"
+                className="text-sm text-blue-600 hover:underline"
+            >
+              부가세 신고 방법 →
+            </Link>
+            <Link
+                href="/guide/income-tax-may"
+                className="text-sm text-blue-600 hover:underline"
+            >
+              5월 종합소득세 신고 →
+            </Link>
+          </div>
         </section>
 
         {/* SEO 본문 */}

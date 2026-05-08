@@ -5,7 +5,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: '부가세 신고 체크리스트 (개인사업자, 2026)',
   description:
-    '1월·7월 부가세 신고 시즌, 빠뜨리면 안 되는 매출·매입 자료와 신고 절차, 자주 하는 실수, 가산세 위험까지 한눈에 정리한 실무 체크리스트.',
+    '1월·7월 부가세 신고 시즌, 빠뜨리면 안 되는 매출·매입 자료와 신고 절차, 자주 하는 실수, 가산세 위험까지 한눈에 정리한 체크리스트.',
   alternates: { canonical: '/guide/vat-filing' },
 }
 

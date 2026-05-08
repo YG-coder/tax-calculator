@@ -112,7 +112,7 @@ export default function HomePage() {
             세금 신고가 처음이신가요?
           </h2>
           <p className="text-slate-600 text-sm mb-4">
-            프리랜서 종합소득세, 부가세 신고, 5월 종소세 신고법 등 실무 가이드를 무료로 제공합니다.
+            프리랜서 종합소득세, 부가세 신고, 5월 종소세 신고법 등 신고 절차를 정리한 가이드를 무료로 제공합니다.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
             <Link

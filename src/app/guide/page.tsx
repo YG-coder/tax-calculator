@@ -5,7 +5,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: '세금 가이드 | 종합소득세·부가세·프리랜서 신고법',
   description:
-    '프리랜서 종합소득세 신고법, 부가세 신고 체크리스트, 5월 종소세 신고 가이드 등 한국 세금 신고 실무에 도움이 되는 무료 가이드를 제공합니다.',
+    '프리랜서 종합소득세 신고법, 부가세 신고 체크리스트, 5월 종소세 신고 가이드 등 한국 세금 신고에 참고할 수 있는 무료 가이드를 제공합니다.',
   alternates: { canonical: '/guide' },
 }
 
@@ -20,7 +20,7 @@ const GUIDES = [
   {
     href: '/guide/vat-filing',
     title: '부가세 신고 체크리스트 (개인사업자)',
-    description: '1월·7월 부가세 신고 시즌, 빠뜨리면 안 되는 매출·매입 자료와 신고 절차를 한눈에 확인할 수 있는 실무 체크리스트.',
+    description: '1월·7월 부가세 신고 시즌, 빠뜨리면 안 되는 매출·매입 자료와 신고 절차를 한눈에 확인할 수 있도록 정리한 체크리스트.',
     category: '부가세',
     readTime: '약 7분',
   },
@@ -38,7 +38,7 @@ export default function GuideIndexPage() {
     <main className="max-w-3xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold mb-2 text-center">세금 가이드</h1>
       <p className="text-center text-sm text-slate-500 mb-10">
-        한국 세금 신고 실무에 도움이 되는 무료 가이드
+        한국 세금 신고에 참고할 수 있는 무료 가이드
       </p>
 
       <div className="space-y-4">

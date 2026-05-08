@@ -65,10 +65,10 @@ export default function GuideIndexPage() {
       <section className="mt-12 rounded-2xl border border-slate-100 bg-slate-50 p-6 text-sm text-slate-600 leading-relaxed">
         <h2 className="text-base font-bold text-slate-800 mb-2">가이드 작성 원칙</h2>
         <p>
-          본 가이드는 운영자(Incomelab)의 실무 경험과 국세청 공식 자료(소득세법, 부가가치세법,
-          국세청 신고 안내 등)를 기반으로 작성되었습니다. 모든 내용은 일반 사용자가 이해하기 쉽도록
-          단순화한 참고 정보이며, 실제 신고는 국세청 홈택스 또는 세무 전문가의 안내를 함께 참고해
-          진행하시기 바랍니다.
+          본 가이드는 국세청 공식 자료(소득세법, 부가가치세법,
+          국세청 신고 안내 등)를 바탕으로 일반 사용자가 이해하기 쉽도록
+          정리한 참고용 정보입니다. 실제 신고 및 세무 처리는
+          국세청 홈택스 또는 세무 전문가의 안내를 함께 참고하시기 바랍니다.
         </p>
       </section>
     </main>

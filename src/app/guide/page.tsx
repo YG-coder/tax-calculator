@@ -3,9 +3,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: '세금 가이드 | 종합소득세·부가세·상속·증여 신고법',
+  title: '세금 가이드 | 종합소득세·부가세·양도·상속·증여 신고법',
   description:
-    '프리랜서·사업자 세금 신고법부터 양도세 비과세, 상속·증여 절세까지 한국 세금에 참고할 수 있는 무료 가이드를 제공합니다.',
+    '프리랜서·사업자 세금 신고법부터 양도세 필요경비·장기보유특별공제, 상속·증여 절세, 근로소득 비과세까지 한국 세금에 참고할 수 있는 무료 가이드를 제공합니다.',
   alternates: { canonical: '/guide' },
 }
 
@@ -60,11 +60,32 @@ const GUIDES = [
     readTime: '약 7분',
   },
   {
+    href: '/guide/non-taxable-allowance',
+    title: '비과세 수당 종류와 한도',
+    description: '식대 월 20만원, 자가운전보조금, 출산·보육수당 등 세금이 붙지 않는 수당의 종류와 한도를 국세청 기준으로 정리했습니다.',
+    category: '근로소득',
+    readTime: '약 7분',
+  },
+  {
     href: '/guide/one-house-exemption',
     title: '1세대 1주택 양도세 비과세 요건 총정리',
     description: '2년 보유·거주 요건, 양도가액 12억 기준, 고가주택 과세, 일시적 2주택 특례까지 핵심만 정리했습니다.',
     category: '양도소득세',
     readTime: '약 8분',
+  },
+  {
+    href: '/guide/capital-gains-expenses',
+    title: '양도세 필요경비, 인정되는 것과 안 되는 것',
+    description: '자본적 지출과 수익적 지출의 구분, 증빙 요건을 국세청 기준으로 정리해 양도차익을 정확히 줄이는 법을 설명합니다.',
+    category: '양도소득세',
+    readTime: '약 7분',
+  },
+  {
+    href: '/guide/long-term-holding-deduction',
+    title: '장기보유특별공제 계산 방법',
+    description: '표1(일반, 최대 30%)과 표2(1세대 1주택, 보유+거주 최대 80%)의 공제율과 계산 방법을 사례로 정리했습니다.',
+    category: '양도소득세',
+    readTime: '약 7분',
   },
   {
     href: '/guide/gift-split',

@@ -17,6 +17,10 @@ const GUIDES = [
     'family-loan',
     'inheritance-vs-gift',
     'inheritance-renounce',
+    // 3차 보강 (양도·근로)
+    'capital-gains-expenses',
+    'long-term-holding-deduction',
+    'non-taxable-allowance',
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

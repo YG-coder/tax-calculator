@@ -3,9 +3,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: '세금 가이드 | 종합소득세·부가세·프리랜서 신고법',
+  title: '세금 가이드 | 종합소득세·부가세·상속·증여 신고법',
   description:
-    '프리랜서 종합소득세 신고법, 부가세 신고 체크리스트, 5월 종소세 신고 가이드 등 한국 세금 신고에 참고할 수 있는 무료 가이드를 제공합니다.',
+    '프리랜서·사업자 세금 신고법부터 양도세 비과세, 상속·증여 절세까지 한국 세금에 참고할 수 있는 무료 가이드를 제공합니다.',
   alternates: { canonical: '/guide' },
 }
 
@@ -66,6 +66,34 @@ const GUIDES = [
     category: '양도소득세',
     readTime: '약 8분',
   },
+  {
+    href: '/guide/gift-split',
+    title: '증여세 절세, 10년 단위 분할 증여 완벽 정리',
+    description: '공제가 10년마다 갱신되는 원리를 활용한 분할 증여 전략과 혼인·출산 증여공제 특례까지 정리했습니다.',
+    category: '증여세',
+    readTime: '약 7분',
+  },
+  {
+    href: '/guide/family-loan',
+    title: '부모 자식 간 차용증 쓰는 법',
+    description: '가족 간 금전거래가 증여로 추정되지 않도록, 적정이자율 4.6%·연 이자 차액 1천만원 기준과 차용증 필수 항목을 정리했습니다.',
+    category: '증여세',
+    readTime: '약 7분',
+  },
+  {
+    href: '/guide/inheritance-vs-gift',
+    title: '상속세 vs 증여세, 뭐가 더 유리할까',
+    description: '세율은 같지만 결과는 다른 두 제도의 공제·과세방식·사전증여 합산 차이를 비교하고 유리한 선택을 사례로 정리했습니다.',
+    category: '상속·증여',
+    readTime: '약 8분',
+  },
+  {
+    href: '/guide/inheritance-renounce',
+    title: '상속 포기·한정승인, 3개월 안에 결정하기',
+    description: '빚이 더 많은 상속을 마주했을 때의 선택지. 3개월 기한, 후순위 상속인 함정, 특별한정승인까지 정리했습니다.',
+    category: '상속',
+    readTime: '약 7분',
+  },
 ]
 
 export default function GuideIndexPage() {
@@ -100,7 +128,7 @@ export default function GuideIndexPage() {
       <section className="mt-12 rounded-2xl border border-slate-100 bg-slate-50 p-6 text-sm text-slate-600 leading-relaxed">
         <h2 className="text-base font-bold text-slate-800 mb-2">가이드 작성 원칙</h2>
         <p>
-          본 가이드는 국세청 공식 자료(소득세법, 부가가치세법,
+          본 가이드는 국세청 공식 자료(소득세법, 부가가치세법, 상속세 및 증여세법,
           국세청 신고 안내 등)를 바탕으로 일반 사용자가 이해하기 쉽도록
           정리한 참고용 정보입니다. 실제 신고 및 세무 처리는
           국세청 홈택스 또는 세무 전문가의 안내를 함께 참고하시기 바랍니다.

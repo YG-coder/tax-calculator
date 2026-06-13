@@ -1,4 +1,4 @@
-// src/app/withholding-calculator/page.tsx
+// src/app/withholding-calculator/WithholdingClient.tsx
 'use client'
 
 import { useState, useCallback } from 'react'
@@ -58,6 +58,8 @@ export default function WithholdingCalculatorPage() {
   const handleCalc = useCallback(() => {}, [])  // 입력 시 즉시 계산 (실시간)
 
   const incomeTax  = calcWithholdingTax(salaryNum, depNum)
+  // 근로소득세에는 지방소득세 10%가 부과됨 (지방세법, 소득분).
+  // 근로소득세 원천징수 시 지방소득세도 함께 특별징수 → localTax 유지.
   const localTax   = Math.floor(incomeTax * 0.1 / 10) * 10
   const totalTax   = incomeTax + localTax
   const netPay     = salaryNum - totalTax
@@ -77,7 +79,7 @@ export default function WithholdingCalculatorPage() {
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-2">원천징수세액 계산기</h1>
-      <p className="text-slate-500 mb-6">월 급여·부양가족 기준 예상 원천징수세액 간이 계산</p>
+      <p className="text-slate-500 mb-6">월 급여·부양가족 기준 예상 원천징수세액 간이 계산 · 참고용</p>
 
       <div className="calc-card p-6 space-y-5">
         <h2 className="text-base font-bold text-slate-800">급여 정보 입력</h2>
@@ -129,11 +131,11 @@ export default function WithholdingCalculatorPage() {
       {hasValue ? (
         <div className="mt-6 space-y-4 animate-slide-up">
           <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
-            <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">예상 실수령액</p>
+            <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">예상 실수령액 (세금만 차감)</p>
             <p className="text-4xl font-black tabular-nums">{fmt(finalNet)}<span className="text-2xl font-bold ml-1">원</span></p>
             <div className="mt-3 pt-3 border-t border-white/20 flex flex-wrap gap-x-4 gap-y-1 text-sm text-blue-100">
               <span>월 세전 {fmt(salaryNum)}원</span>
-              <span>총 공제 {fmt(finalTotal)}원</span>
+              <span>세금 공제 {fmt(finalTotal)}원</span>
             </div>
           </div>
 
@@ -147,22 +149,12 @@ export default function WithholdingCalculatorPage() {
               )}
               <li className="flex justify-between text-sm pt-3 border-t border-slate-100">
                 <span className="font-bold text-slate-800">세금 합계</span>
-                <span className="font-bold text-red-500 tabular-nums">−{fmt(finalTotal)} 원</span>
+                <span className="font-bold text-blue-600 tabular-nums">{fmt(finalTotal)} 원</span>
               </li>
             </ul>
-          </div>
-
-          <div className="calc-card p-4 bg-sky-50 border-sky-100">
-            <p className="text-xs text-sky-700 leading-relaxed">
-              <strong className="font-semibold">ℹ 안내:</strong> 본 결과는 소득세·지방소득세만 반영한 참고값입니다. 실제 급여명세서에는 국민연금, 건강보험, 장기요양, 고용보험 등 4대보험 공제가 추가됩니다.
-              4대보험 포함 전체 실수령액은{' '}
-              <a href="https://연봉계산기.kr/salary-calculator" className="underline font-medium" target="_blank" rel="noopener noreferrer">연봉계산기.kr</a>에서 확인하세요.
-            </p>
-          </div>
-
-          <div className="calc-card p-4 bg-amber-50 border-amber-100">
-            <p className="text-xs text-amber-700 leading-relaxed">
-              <strong className="font-semibold">⚠ 간이 계산 안내:</strong> 본 계산기는 국세청 간이세액표를 직접 참조하지 않는 근사값입니다. 비과세 수당, 상여금, 중도입사·퇴사, 회사별 급여 구조에 따라 실제와 차이가 납니다.
+            <p className="mt-3 text-xs text-slate-400">
+              ※ 위 실수령액은 소득세·지방소득세만 차감한 값입니다. 실제 급여에서는 국민연금·건강보험·
+              장기요양·고용보험(4대보험)이 추가로 공제됩니다.
             </p>
           </div>
         </div>
@@ -172,24 +164,115 @@ export default function WithholdingCalculatorPage() {
         </div>
       )}
 
-      <section className="mt-10 space-y-5 text-sm text-slate-600 leading-relaxed">
+      {/* ============================================================ */}
+      {/*                    SEO 본문 (확장 풀버전)                      */}
+      {/* ============================================================ */}
+      <section className="mt-12 space-y-8 text-sm text-slate-600 leading-relaxed">
+
         <div>
-          <h2 className="text-base font-bold text-slate-800 mb-2">원천징수세액이란?</h2>
-          <p>급여 지급 시 사용자(회사)가 미리 공제하는 소득세·지방소득세입니다. 국세청 간이세액표를 기준으로 매월 공제하고, 연말정산에서 최종 세액을 정산합니다.</p>
+          <h2 className="text-lg font-bold text-slate-800 mb-3">원천징수세액이란?</h2>
+          <p>
+            원천징수는 회사(원천징수의무자)가 급여를 줄 때 근로소득세와 지방소득세를 미리 떼어
+            대신 납부하는 제도입니다. 매월 정확한 연 세액을 계산하기 어렵기 때문에, 국세청이 제공하는
+            <strong> 근로소득 간이세액표</strong>에 따라 월급과 부양가족 수 기준으로 개략적인 금액을 떼고,
+            이듬해 <strong>연말정산</strong>에서 실제 세액과 정산(환급 또는 추가 납부)합니다.
+          </p>
+          <p className="mt-2">
+            근로소득세는 소득세의 한 종류이므로 <strong>소득세의 10%가 지방소득세로 함께 징수</strong>됩니다.
+          </p>
         </div>
+
         <div>
-          <h2 className="text-base font-bold text-slate-800 mb-2">계산 방법</h2>
+          <h2 className="text-lg font-bold text-slate-800 mb-3">계산 흐름</h2>
           <ul className="list-disc pl-5 space-y-1">
-            <li>근로소득공제 → 과세표준 산출</li>
-            <li>누진세율 적용 → 소득세 산출</li>
-            <li>근로소득세액공제 (최대 74만원) 적용</li>
-            <li>자녀세액공제 추가 적용</li>
+            <li>연 환산 급여에서 <strong>근로소득공제</strong> 차감</li>
+            <li>부양가족 기본공제(1인당 연 150만 원) 차감 → 과세표준</li>
+            <li>과세표준에 누진세율(6~45%) 적용 → 산출세액</li>
+            <li><strong>근로소득세액공제</strong>(최대 약 74만 원) 적용</li>
+            <li><strong>자녀세액공제</strong> 추가 적용</li>
             <li>지방소득세 = 소득세 × 10%</li>
           </ul>
+          <p className="mt-2 text-xs text-slate-500">
+            본 계산기는 위 흐름을 근사 구현한 것으로, 국세청 간이세액표를 직접 참조하지 않습니다.
+            따라서 실제 원천징수액과 차이가 날 수 있으며, 정확한 월별 세액은 홈택스의 &lsquo;근로소득
+            간이세액표&rsquo; 조회 기능을 이용하세요.
+          </p>
         </div>
+
         <div>
-          <h2 className="text-base font-bold text-slate-800 mb-2">주의사항</h2>
-          <p>본 계산기는 간이 근사값으로, 국세청 간이세액표 직접 참조 결과와 차이가 있을 수 있습니다. 비과세 항목, 중도입사, 상여금 등은 반영하지 않습니다. 4대보험 공제는 별도 계산이 필요합니다.</p>
+          <h2 className="text-lg font-bold text-slate-800 mb-3">무엇이 원천징수액을 바꾸나</h2>
+          <ul className="space-y-2 list-disc pl-5">
+            <li><strong>부양가족 수:</strong> 공제 대상 부양가족이 늘수록 과세표준이 줄어 매월 떼는 세금이 감소합니다.</li>
+            <li><strong>20세 이하 자녀 수:</strong> 자녀세액공제만큼 월 세액이 추가로 줄어듭니다.</li>
+            <li><strong>비과세 수당:</strong> 식대(월 20만 원 한도), 자가운전보조금 등 비과세 항목은 과세 대상에서 빠지므로 실제 세금이 더 낮을 수 있습니다. (본 계산기는 비과세를 반영하지 않습니다)</li>
+            <li><strong>간이세액표 비율 선택:</strong> 회사에 신청하면 간이세액표의 80% 또는 120%로 조정할 수 있습니다. 80%는 매월 적게 떼고 연말정산에서 더 내거나 덜 받는 구조입니다.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h2 className="text-lg font-bold text-slate-800 mb-3">원천징수와 연말정산의 관계</h2>
+          <p>
+            매월 떼는 원천징수액은 어디까지나 &lsquo;선납&rsquo;입니다. 실제로 부담할 세금은 연말정산에서
+            의료비·교육비·신용카드·연금저축 등 각종 공제를 반영해 확정됩니다. 1년간 원천징수로 낸
+            금액이 확정세액보다 많으면 환급, 적으면 추가 납부가 발생합니다. 흔히 말하는
+            &lsquo;13월의 월급&rsquo;이 바로 이 환급금입니다.
+          </p>
+        </div>
+
+        <div>
+          <h2 className="text-lg font-bold text-slate-800 mb-3">자주 묻는 질문 (FAQ)</h2>
+
+          <div className="space-y-4">
+            <div className="rounded-xl border border-slate-100 p-4">
+              <p className="font-semibold text-slate-800 mb-1">Q. 이 계산기 결과가 급여명세서 실수령액과 다른 이유는?</p>
+              <p>
+                본 계산기는 소득세·지방소득세만 반영합니다. 실제 급여에서는 국민연금(4.5%), 건강보험,
+                장기요양, 고용보험 등 4대보험이 추가로 공제되므로 실수령액은 더 낮습니다. 4대보험 포함
+                실수령액은 연봉계산기 류 도구로 확인하세요.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-slate-100 p-4">
+              <p className="font-semibold text-slate-800 mb-1">Q. 원천징수를 적게 떼면 이득인가요?</p>
+              <p>
+                아닙니다. 적게 떼면 연말정산에서 그만큼 더 내거나 덜 환급받습니다. 1년 총 부담세액은
+                동일합니다. 현금 흐름 선호에 따라 비율(80~120%)을 선택하는 것일 뿐입니다.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-slate-100 p-4">
+              <p className="font-semibold text-slate-800 mb-1">Q. 부양가족은 누구까지 넣을 수 있나요?</p>
+              <p>
+                기본공제 대상은 본인, 배우자, 직계존비속 등으로 소득·나이 요건을 충족해야 합니다.
+                연 소득금액 100만 원(근로소득만 있으면 총급여 500만 원) 이하 등의 요건이 있습니다.
+              </p>
+            </div>
+
+            <div className="rounded-xl border border-slate-100 p-4">
+              <p className="font-semibold text-slate-800 mb-1">Q. 정확한 월 원천징수액은 어디서 확인하나요?</p>
+              <p>
+                국세청 홈택스의 &lsquo;근로소득 간이세액표&rsquo; 조회에서 월급여와 공제대상 가족 수를
+                입력하면 공식 표 기준 금액을 확인할 수 있습니다.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-amber-100 bg-amber-50 p-4 text-xs text-slate-600">
+          <p className="font-semibold text-slate-800 mb-1">⚠️ 참고용 안내</p>
+          <p>
+            본 계산기는 국세청 간이세액표를 직접 참조하지 않는 <strong>근사값</strong>이며, 소득세·지방소득세만
+            반영합니다. 비과세 수당, 상여금, 중도 입·퇴사, 4대보험, 회사별 급여 구조에 따라 실제 금액과
+            차이가 납니다. 정확한 월 원천징수액은 국세청 홈택스 간이세액표 조회로 확인하시기 바랍니다.
+          </p>
+        </div>
+
+        <div className="text-xs text-slate-500 border-t pt-4">
+          <p className="font-semibold text-slate-700 mb-1">근거 자료</p>
+          <ul className="list-disc pl-5 space-y-0.5">
+            <li>소득세법 제134조(근로소득 원천징수)·제59조(근로소득세액공제) — 국가법령정보센터</li>
+            <li>국세청 근로소득 간이세액표 (홈택스)</li>
+          </ul>
         </div>
       </section>
 

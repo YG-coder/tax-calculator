@@ -18,6 +18,13 @@ const GUIDES = [
     readTime: '약 8분',
   },
   {
+    href: '/guide/freelancer-refund',
+    title: '프리랜서 3.3%, 환급받는 사람 vs 추가납부하는 사람',
+    description: '3.3% 원천징수가 환급으로 돌아오는 사람과 추가 납부가 생기는 사람의 차이를 수입 구간·경비별로 정리했습니다.',
+    category: '프리랜서',
+    readTime: '약 7분',
+  },
+  {
     href: '/guide/vat-filing',
     title: '부가세 신고 체크리스트 (개인사업자)',
     description: '1월·7월 부가세 신고 시즌, 빠뜨리면 안 되는 매출·매입 자료와 신고 절차를 한눈에 확인할 수 있도록 정리한 체크리스트.',
@@ -25,11 +32,39 @@ const GUIDES = [
     readTime: '약 7분',
   },
   {
+    href: '/guide/simplified-vs-general-vat',
+    title: '간이과세자 vs 일반과세자, 차이와 전환 기준',
+    description: '매출 1억 400만원 기준, 세율·세금계산서·신고 횟수 차이와 내게 어느 쪽이 유리한지 사례로 정리했습니다.',
+    category: '부가세',
+    readTime: '약 7분',
+  },
+  {
+    href: '/guide/business-registration',
+    title: '사업자등록 처음 하는 법',
+    description: '신청 기한(20일), 필요 서류, 간이·일반·면세 과세유형 선택, 등록 후 세금 의무까지 단계별로 정리했습니다.',
+    category: '사업자',
+    readTime: '약 8분',
+  },
+  {
     href: '/guide/income-tax-may',
     title: '5월 종합소득세 신고 가이드',
     description: '대상자 확인부터 모두채움 신고서, 분납 신청, 자주 하는 실수까지 5월 종합소득세 신고의 전체 흐름을 정리했습니다.',
     category: '종합소득세',
     readTime: '약 9분',
+  },
+  {
+    href: '/guide/withholding-year-end',
+    title: '원천징수와 연말정산은 어떻게 연결되나',
+    description: '매월 떼는 원천징수와 다음 해 연말정산의 관계, 13월의 월급(환급)이 생기는 원리를 사례로 설명합니다.',
+    category: '근로소득',
+    readTime: '약 7분',
+  },
+  {
+    href: '/guide/one-house-exemption',
+    title: '1세대 1주택 양도세 비과세 요건 총정리',
+    description: '2년 보유·거주 요건, 양도가액 12억 기준, 고가주택 과세, 일시적 2주택 특례까지 핵심만 정리했습니다.',
+    category: '양도소득세',
+    readTime: '약 8분',
   },
 ]
 

@@ -6,6 +6,12 @@ const GUIDES = [
     'freelancer-tax',
     'vat-filing',
     'income-tax-may',
+    // 신규 5편
+    'simplified-vs-general-vat',
+    'freelancer-refund',
+    'business-registration',
+    'one-house-exemption',
+    'withholding-year-end',
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

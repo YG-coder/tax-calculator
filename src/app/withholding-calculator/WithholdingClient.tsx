@@ -64,12 +64,13 @@ export default function WithholdingCalculatorPage() {
   const totalTax   = incomeTax + localTax
   const netPay     = salaryNum - totalTax
 
-  // 20세 이하 자녀 세액공제 (월 환산)
-  // 1명: 연 15만원, 2명: 연 35만원, 3명~: +30만원/명
+  // 자녀세액공제 (8세 이상 20세 이하, 2025년 귀속 기준, 월 환산)
+  // 1명: 연 25만원, 2명: 연 55만원, 3명 이상: 55만원 + 2명 초과 1명당 40만원
+  // (예: 3명 95만원, 4명 135만원)
   const childCredit = childNum === 0 ? 0
-    : childNum === 1 ? Math.floor(150_000 / 12)
-    : childNum === 2 ? Math.floor(350_000 / 12)
-    : Math.floor((350_000 + (childNum - 2) * 300_000) / 12)
+    : childNum === 1 ? Math.floor(250_000 / 12)
+    : childNum === 2 ? Math.floor(550_000 / 12)
+    : Math.floor((550_000 + (childNum - 2) * 400_000) / 12)
 
   const finalIncomeTax = Math.max(0, incomeTax - childCredit)
   const finalLocalTax  = Math.floor(finalIncomeTax * 0.1 / 10) * 10
@@ -112,7 +113,7 @@ export default function WithholdingCalculatorPage() {
         </div>
 
         <div>
-          <label className="calc-label">20세 이하 자녀 수</label>
+          <label className="calc-label">8세 이상 20세 이하 자녀 수</label>
           <div className="flex gap-2">
             {[0,1,2,3].map((n) => (
               <button key={n} type="button"
@@ -124,7 +125,7 @@ export default function WithholdingCalculatorPage() {
                 }`}>{n}명</button>
             ))}
           </div>
-          <p className="calc-hint">자녀세액공제 반영 (1명 15만원/년, 2명 35만원/년, 3명~ +30만원/명)</p>
+          <p className="calc-hint">자녀세액공제 반영 · 8세 이상 자녀 (1명 25만원/년, 2명 55만원/년, 3명~ +40만원/명)</p>
         </div>
       </div>
 
@@ -203,7 +204,7 @@ export default function WithholdingCalculatorPage() {
           <h2 className="text-lg font-bold text-slate-800 mb-3">무엇이 원천징수액을 바꾸나</h2>
           <ul className="space-y-2 list-disc pl-5">
             <li><strong>부양가족 수:</strong> 공제 대상 부양가족이 늘수록 과세표준이 줄어 매월 떼는 세금이 감소합니다.</li>
-            <li><strong>20세 이하 자녀 수:</strong> 자녀세액공제만큼 월 세액이 추가로 줄어듭니다.</li>
+            <li><strong>8세 이상 20세 이하 자녀 수:</strong> 자녀세액공제만큼 월 세액이 추가로 줄어듭니다.</li>
             <li><strong>비과세 수당:</strong> 식대(월 20만 원 한도), 자가운전보조금 등 비과세 항목은 과세 대상에서 빠지므로 실제 세금이 더 낮을 수 있습니다. (본 계산기는 비과세를 반영하지 않습니다)</li>
             <li><strong>간이세액표 비율 선택:</strong> 회사에 신청하면 간이세액표의 80% 또는 120%로 조정할 수 있습니다. 80%는 매월 적게 떼고 연말정산에서 더 내거나 덜 받는 구조입니다.</li>
           </ul>

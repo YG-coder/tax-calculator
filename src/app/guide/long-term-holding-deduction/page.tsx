@@ -157,7 +157,7 @@ export default function LongTermHoldingDeductionGuidePage() {
             </div>
             <div className="rounded-xl border border-slate-100 p-4">
               <p className="font-semibold text-slate-800 mb-1">Q. 다주택자도 장특공을 받나요?</p>
-              <p>일반 표1은 받을 수 있습니다. 다만 중과세 대상이거나 정책에 따라 적용이 제한되는 경우가 있으므로 확인이 필요합니다.</p>
+              <p>일반 표1은 받을 수 있습니다. 다만 다주택자 양도세 중과 유예가 2026년 5월 9일 종료되어, 조정대상지역 주택을 양도하는 다주택자가 중과 대상이 되는 경우에는 장기보유특별공제가 배제됩니다. 해당 여부는 홈택스 모의계산으로 확인하세요.</p>
             </div>
             <div className="rounded-xl border border-slate-100 p-4">
               <p className="font-semibold text-slate-800 mb-1">Q. 보유기간은 언제부터 계산하나요?</p>

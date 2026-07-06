@@ -178,8 +178,9 @@ export default function CapitalGainsTaxCalculatorPage() {
             </table>
           </div>
           <p className="mt-2 text-xs text-slate-500">
-            위 기본세율은 2년 이상 보유한 부동산 등에 적용됩니다. 단기 보유, 다주택, 분양권·주식은
-            별도의 중과세율이 적용되므로 본 계산기 결과와 크게 달라질 수 있습니다.
+            위 기본세율은 2년 이상 보유한 부동산 등에 적용됩니다. 단기 보유 부동산,
+            조정대상지역 다주택, 분양권 및 일부 자산은 별도의 세율과 계산 규정이 적용됩니다.
+            본 계산기는 일반적인 기본세율 기준의 참고용 계산기입니다.
           </p>
         </div>
 
@@ -272,8 +273,16 @@ export default function CapitalGainsTaxCalculatorPage() {
             <div className="rounded-xl border border-slate-100 p-4">
               <p className="font-semibold text-slate-800 mb-1">Q. 다주택자 중과세는 본 계산기에 반영되나요?</p>
               <p>
-                반영되지 않습니다. 본 계산기는 기본세율(2년 이상 보유)만 적용합니다. 다주택 중과세는
-                정책에 따라 적용·유예가 자주 바뀌므로, 해당된다면 홈택스 모의계산으로 확인하세요.
+                반영되지 않습니다. 본 계산기는 기본세율(2년 이상 보유)만 적용합니다.
+              </p>
+              <p className="mt-2">
+                다주택자 양도소득세 중과 유예는 <strong>2026년 5월 9일 종료</strong>되었습니다.
+                현재 조정대상지역 주택을 양도하는 경우에는 다주택 여부에 따라 기본세율에
+                중과세율이 적용될 수 있으며 장기보유특별공제가 제한될 수 있습니다.
+              </p>
+              <p className="mt-2">
+                다주택자에 해당하는 경우에는 홈택스 모의계산 또는 세무 전문가를 통해
+                최종 세액을 확인하시기 바랍니다.
               </p>
             </div>
 

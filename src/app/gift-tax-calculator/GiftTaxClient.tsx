@@ -167,7 +167,7 @@ export default function GiftTaxCalculatorPage() {
             <li>배우자: <strong>6억 원</strong></li>
             <li>직계존·비속 (성인 자녀·부모 등): <strong>5,000만 원</strong></li>
             <li>직계존·비속 (미성년 자녀): <strong>2,000만 원</strong></li>
-            <li>기타 친족 (형제자매·며느리·사위 등 6촌 이내 혈족, 4촌 이내 인척): <strong>1,000만 원</strong></li>
+            <li>기타 친족 (형제자매·며느리·사위 등 4촌 이내 혈족, 3촌 이내 인척): <strong>1,000만 원</strong></li>
           </ul>
           <p className="mt-2 text-xs text-slate-500">
             혼인·출산 증여재산 공제(직계존속 → 자녀, 별도 1억 원 추가 등) 같은 특례는 본 계산기에 반영되어

@@ -64,13 +64,14 @@ export default function WithholdingCalculatorPage() {
   const totalTax   = incomeTax + localTax
   const netPay     = salaryNum - totalTax
 
-  // 자녀세액공제 (8세 이상 20세 이하, 2025년 귀속 기준, 월 환산)
-  // 1명: 연 25만원, 2명: 연 55만원, 3명 이상: 55만원 + 2명 초과 1명당 40만원
-  // (예: 3명 95만원, 4명 135만원)
+  // 간이세액표 자녀수별 공제 (8세 이상 20세 이하, 2026.2.27 개정 간이세액표 기준, 2026.3.1 지급분부터 적용)
+  // ※ 연말정산용 연간 자녀세액공제(25만/55만원 등)를 12개월로 나눈 값이 아니라,
+  //   국세청 간이세액표 자체에 내장된 월 단위 자녀수 공제액입니다.
+  // 1명: 월 12,500원, 2명: 월 29,160원, 3명 이상: 29,160원 + 초과 1명당 월 25,000원
   const childCredit = childNum === 0 ? 0
-    : childNum === 1 ? Math.floor(250_000 / 12)
-    : childNum === 2 ? Math.floor(550_000 / 12)
-    : Math.floor((550_000 + (childNum - 2) * 400_000) / 12)
+    : childNum === 1 ? 12_500
+    : childNum === 2 ? 29_160
+    : 29_160 + (childNum - 2) * 25_000
 
   const finalIncomeTax = Math.max(0, incomeTax - childCredit)
   const finalLocalTax  = Math.floor(finalIncomeTax * 0.1 / 10) * 10
@@ -125,7 +126,7 @@ export default function WithholdingCalculatorPage() {
                 }`}>{n}명</button>
             ))}
           </div>
-          <p className="calc-hint">자녀세액공제 반영 · 8세 이상 자녀 (1명 25만원/년, 2명 55만원/년, 3명~ +40만원/명)</p>
+          <p className="calc-hint">간이세액표 자녀수 공제 반영 · 8세 이상 자녀 (1명 월 12,500원, 2명 월 29,160원, 3명~ +월 25,000원/명)</p>
         </div>
       </div>
 
@@ -146,7 +147,7 @@ export default function WithholdingCalculatorPage() {
               <li className="flex justify-between text-sm"><span className="text-slate-600">소득세 (간이세액표 근사)</span><span className="font-bold text-blue-600 tabular-nums">{fmt(finalIncomeTax)} 원</span></li>
               <li className="flex justify-between text-sm"><span className="text-slate-600">지방소득세 (소득세×10%)</span><span className="font-bold text-slate-600 tabular-nums">{fmt(finalLocalTax)} 원</span></li>
               {childCredit > 0 && (
-                <li className="flex justify-between text-sm"><span className="text-emerald-600">자녀세액공제 적용</span><span className="font-bold text-emerald-600 tabular-nums">−{fmt(childCredit)} 원/월</span></li>
+                <li className="flex justify-between text-sm"><span className="text-emerald-600">자녀수 공제 적용 (간이세액표)</span><span className="font-bold text-emerald-600 tabular-nums">−{fmt(childCredit)} 원/월</span></li>
               )}
               <li className="flex justify-between text-sm pt-3 border-t border-slate-100">
                 <span className="font-bold text-slate-800">세금 합계</span>
@@ -190,7 +191,7 @@ export default function WithholdingCalculatorPage() {
             <li>부양가족 기본공제(1인당 연 150만 원) 차감 → 과세표준</li>
             <li>과세표준에 누진세율(6~45%) 적용 → 산출세액</li>
             <li><strong>근로소득세액공제</strong>(최대 약 74만 원) 적용</li>
-            <li><strong>자녀세액공제</strong> 추가 적용</li>
+            <li>간이세액표 <strong>자녀수 공제</strong> 추가 적용</li>
             <li>지방소득세 = 소득세 × 10%</li>
           </ul>
           <p className="mt-2 text-xs text-slate-500">
@@ -204,7 +205,7 @@ export default function WithholdingCalculatorPage() {
           <h2 className="text-lg font-bold text-slate-800 mb-3">무엇이 원천징수액을 바꾸나</h2>
           <ul className="space-y-2 list-disc pl-5">
             <li><strong>부양가족 수:</strong> 공제 대상 부양가족이 늘수록 과세표준이 줄어 매월 떼는 세금이 감소합니다.</li>
-            <li><strong>8세 이상 20세 이하 자녀 수:</strong> 자녀세액공제만큼 월 세액이 추가로 줄어듭니다.</li>
+            <li><strong>8세 이상 20세 이하 자녀 수:</strong> 간이세액표 자녀수 공제만큼 월 세액이 추가로 줄어듭니다. (연말정산 자녀세액공제와는 별개입니다)</li>
             <li><strong>비과세 수당:</strong> 식대(월 20만 원 한도), 자가운전보조금 등 비과세 항목은 과세 대상에서 빠지므로 실제 세금이 더 낮을 수 있습니다. (본 계산기는 비과세를 반영하지 않습니다)</li>
             <li><strong>간이세액표 비율 선택:</strong> 회사에 신청하면 간이세액표의 80% 또는 120%로 조정할 수 있습니다. 80%는 매월 적게 떼고 연말정산에서 더 내거나 덜 받는 구조입니다.</li>
           </ul>

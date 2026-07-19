@@ -50,6 +50,13 @@ export const CALCULATORS = [
     emoji: '💰',
     enabled: true,
   },
+  {
+    slug: 'vat-type-compare',
+    title: '간이과세 vs 일반과세 비교',
+    description: '연매출·매입·업종 기준 간이·일반과세 부가세 비교 및 유불리 안내.',
+    emoji: '⚖️',
+    enabled: true,
+  },
 ] as const;
 
 export type CalculatorSlug = typeof CALCULATORS[number]['slug'];

@@ -186,6 +186,10 @@ export default function SimplifiedVsGeneralVatGuidePage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 계산기</h2>
           <ul className="space-y-2 text-sm">
             <li>
+              <Link href="/vat-type-compare" className="text-blue-700 hover:underline font-semibold">→ 간이과세 vs 일반과세 비교</Link>
+              <span className="text-slate-500"> · 내 조건에서 어느 유형이 유리한지 비교</span>
+            </li>
+            <li>
               <Link href="/vat-calculator" className="text-blue-700 hover:underline font-semibold">→ 부가세 계산기</Link>
               <span className="text-slate-500"> · 공급가액·부가세·총금액을 즉시 계산</span>
             </li>

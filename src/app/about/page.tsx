@@ -5,7 +5,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: '사이트 소개 | 세금계산기',
   description:
-    'taxsim.kr는 부가세, 종합소득세, 프리랜서 3.3%, 양도소득세, 증여세, 상속세, 원천징수세액 계산기를 무료로 제공하는 온라인 세금 계산 서비스입니다. 운영자 소개, 정보 출처, 업데이트 정책을 안내합니다.',
+    'taxsim.kr는 8종 이상의 세금 계산기와 세금 가이드를 무료로 제공하는 온라인 세금 계산 서비스입니다. 운영자 소개, 정보 출처, 업데이트 정책을 안내합니다.',
   alternates: { canonical: '/about' },
 }
 
@@ -17,6 +17,7 @@ const CALC_LIST = [
   { href: '/gift-tax-calculator',          label: '증여세 계산기',            desc: '증여금액·공제 기준 누진세율 적용 예상 증여세 계산.' },
   { href: '/inheritance-tax-calculator',   label: '상속세 계산기',            desc: '상속재산·공제 기준 예상 상속세 간이 계산.' },
   { href: '/withholding-calculator',       label: '원천징수세액 계산기',      desc: '월 급여·부양가족·자녀 수 기준 예상 원천징수세액 계산.' },
+  { href: '/vat-type-compare',             label: '간이과세 vs 일반과세 비교', desc: '연매출·매입·업종 기준 간이·일반과세 부가세 비교 및 유불리 안내.' },
 ]
 
 export default function AboutPage() {
@@ -34,7 +35,7 @@ export default function AboutPage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">taxsim.kr 소개</h2>
           <p>
             taxsim.kr는 부가세, 종합소득세, 프리랜서 원천징수, 양도소득세, 증여세, 상속세,
-            원천징수세액 등 실생활에서 자주 접하는 세금 계산을 누구나 쉽게 확인할 수 있도록
+            원천징수세액, 간이·일반과세 비교 등 실생활에서 자주 접하는 세금 계산을 누구나 쉽게 확인할 수 있도록
             돕기 위해 만들어진 무료 온라인 세금 계산 서비스입니다.
             회원가입이나 로그인 없이 누구나 자유롭게 이용할 수 있으며, 입력한 금액 정보는
             서버에 저장되지 않고 사용자의 브라우저에서만 처리됩니다.
@@ -129,6 +130,7 @@ export default function AboutPage() {
             <li>소득세법 제55조 — 종합소득세 누진세율</li>
             <li>소득세법 시행령 제189조 — 간이세액표(원천징수)</li>
             <li>부가가치세법 제30조 — 일반과세자 세율(10%)</li>
+            <li>부가가치세법 제61조·제63조·제69조 — 간이과세 기준·납부세액·납부의무 면제</li>
             <li>상속세 및 증여세법 제26조·제56조 — 누진세율</li>
             <li>국세청 고시 「근로소득 간이세액표」 — 매년 갱신본 반영</li>
           </ul>
@@ -144,7 +146,7 @@ export default function AboutPage() {
             <li>현재 적용 기준: <strong>2026년 귀속 세율</strong></li>
             <li>주요 개정(세율·공제) 발생 시: 1~4주 이내 반영</li>
             <li>국세청 간이세액표: 매년 2월 갱신본 반영</li>
-            <li>최근 점검일: 2026년 4월</li>
+            <li>최근 점검일: 2026년 7월</li>
           </ul>
           <p className="mt-2">
             세법은 매년 개정되며, 특히 종합소득세·양도소득세·상속세는 공제 항목이 빈번히
@@ -155,7 +157,7 @@ export default function AboutPage() {
 
         {/* 제공 계산기 목록 */}
         <section>
-          <h2 className="text-base font-bold text-slate-800 mb-3">제공 계산기 (7종)</h2>
+          <h2 className="text-base font-bold text-slate-800 mb-3">제공 계산기 (8종)</h2>
           <ul className="space-y-3">
             {CALC_LIST.map(({ href, label, desc }) => (
               <li key={href} className="flex gap-3">

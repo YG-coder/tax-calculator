@@ -5,7 +5,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: '부가세 신고 체크리스트 (개인사업자, 2026)',
   description:
-    '1월·7월 부가세 신고 시즌, 빠뜨리면 안 되는 매출·매입 자료와 신고 절차, 자주 하는 실수, 가산세 위험까지 한눈에 정리한 체크리스트.',
+    '2026년 제1기 부가가치세 확정신고(7월 27일까지) 대상·기간·준비서류·신고절차와 간이과세자 예외, 자주 하는 실수, 가산세 위험까지 정리한 체크리스트.',
   alternates: { canonical: '/guide/vat-filing' },
 }
 
@@ -26,6 +26,25 @@ export default function VatFilingGuidePage() {
       </div>
 
       <article className="prose prose-slate max-w-none text-sm leading-7 text-slate-700 space-y-8">
+
+        {/* 2026년 7월 시즌 안내 */}
+        <section className="rounded-xl border border-blue-200 bg-blue-50 p-5">
+          <h2 className="text-base font-bold text-slate-800 mb-2">📌 2026년 제1기 부가가치세 확정신고</h2>
+          <ul className="space-y-1 text-sm text-slate-700">
+            <li>· <strong>신고·납부기한:</strong> 2026년 7월 27일(월) <span className="text-xs text-slate-500">— 25일이 토요일이라 다음 영업일로 연장</span></li>
+            <li>· <strong>과세기간:</strong> 2026년 1월 1일 ~ 6월 30일</li>
+            <li>· <strong>대상:</strong> 개인 일반과세자, 법인사업자 (간이과세자는 원칙적으로 제외 — 아래 예외 확인)</li>
+          </ul>
+          <div className="mt-3 rounded-lg border border-amber-100 bg-amber-50 p-3">
+            <p className="text-sm text-slate-700">
+              <strong>간이과세자도 7월 신고 대상이 될 수 있습니다.</strong> 다음 경우에는 상반기(1.1~6.30)를 과세기간으로 7월 27일까지 신고해야 합니다.
+            </p>
+            <ul className="list-disc pl-5 mt-1.5 text-sm text-slate-600 space-y-0.5">
+              <li>7월 1일자로 일반과세자로 과세유형이 전환된 경우</li>
+              <li>상반기에 세금계산서를 발급한 경우</li>
+            </ul>
+          </div>
+        </section>
 
         <section>
           <h2 className="text-lg font-bold text-slate-800 mb-2">먼저, 본인의 사업자 유형 확인</h2>
@@ -55,7 +74,7 @@ export default function VatFilingGuidePage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 bg-white">
-                <tr><td className="px-4 py-2">일반 1기 확정</td><td className="px-4 py-2">7/1 ~ 7/25</td><td className="px-4 py-2">1/1 ~ 6/30</td></tr>
+                <tr><td className="px-4 py-2">일반 1기 확정</td><td className="px-4 py-2">7/1 ~ 7/27 <span className="text-xs text-slate-400">(2026)</span></td><td className="px-4 py-2">1/1 ~ 6/30</td></tr>
                 <tr><td className="px-4 py-2">일반 2기 확정</td><td className="px-4 py-2">1/1 ~ 1/25</td><td className="px-4 py-2">7/1 ~ 12/31</td></tr>
                 <tr><td className="px-4 py-2">간이과세자</td><td className="px-4 py-2">1/1 ~ 1/25</td><td className="px-4 py-2">전년 1/1 ~ 12/31</td></tr>
                 <tr><td className="px-4 py-2">법인 분기별</td><td className="px-4 py-2">분기 종료 후 25일</td><td className="px-4 py-2">해당 분기</td></tr>
@@ -64,6 +83,9 @@ export default function VatFilingGuidePage() {
           </div>
           <p className="mt-2 text-xs text-slate-500">
             법인사업자는 분기마다 신고하므로 연 4회, 개인 일반과세자는 연 2회, 간이과세자는 연 1회 신고합니다.
+          </p>
+          <p className="mt-1 text-xs text-slate-500">
+            ※ 신고 기한은 공휴일 및 법정기한 연장 여부에 따라 달라질 수 있으므로, 신고 전 국세청 공지를 확인하세요.
           </p>
         </section>
 
@@ -168,6 +190,12 @@ export default function VatFilingGuidePage() {
                 → 부가세 계산기
               </Link>
               <span className="text-slate-500"> · 공급가액·부가세·합계 자동 계산</span>
+            </li>
+            <li>
+              <Link href="/vat-type-compare" className="text-blue-700 hover:underline font-semibold">
+                → 간이과세 vs 일반과세 비교
+              </Link>
+              <span className="text-slate-500"> · 내 조건에서 어느 유형이 유리한지 비교</span>
             </li>
             <li>
               <Link href="/income-tax-calculator" className="text-blue-700 hover:underline font-semibold">

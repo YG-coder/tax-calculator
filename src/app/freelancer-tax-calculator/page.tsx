@@ -1,7 +1,7 @@
 // src/app/freelancer-tax-calculator/page.tsx
 
 import { buildMetadata } from '@/lib/metadata'
-import FreelancerTaxClient from '../../../../../Downloads/taxsim_freelancer_ctr_patch/src/app/freelancer-tax-calculator/FreelancerTaxClient'
+import FreelancerTaxClient from './FreelancerTaxClient'
 
 const title = '프리랜서 3.3% 계산기 실수령액·환급'
 const description =

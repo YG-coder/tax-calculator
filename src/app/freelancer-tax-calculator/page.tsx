@@ -1,11 +1,11 @@
 // src/app/freelancer-tax-calculator/page.tsx
 
 import { buildMetadata } from '@/lib/metadata'
-import FreelancerTaxClient from './FreelancerTaxClient'
+import FreelancerTaxClient from '../../../../../Downloads/taxsim_freelancer_ctr_patch/src/app/freelancer-tax-calculator/FreelancerTaxClient'
 
-const title = '프리랜서 3.3% 계산기'
+const title = '프리랜서 3.3% 계산기 실수령액·환급'
 const description =
-    '프리랜서 원천징수 3.3% 세금과 실수령액을 간편하게 계산할 수 있는 계산기입니다.'
+    '프리랜서 3.3% 원천징수 세금과 실수령액을 바로 계산합니다. 100만원이면 실수령 96만 7천원. 5월 종합소득세 신고 시 환급 가능 여부까지 확인하세요. 가입 없이 무료.'
 const path = '/freelancer-tax-calculator'
 const url = `https://taxsim.kr${path}`
 

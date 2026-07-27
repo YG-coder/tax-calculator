@@ -83,6 +83,12 @@ const GUIDES = [
     category: '양도소득세',
   },
   {
+    href: '/guide/property-tax',
+    title: '2026년 재산세 계산 가이드',
+    description: '주택 공시가격에 적용되는 공정시장가액비율과 세율, 도시지역분·지방교육세·세부담상한, 7월·9월 납부 방식을 정리했습니다.',
+    category: '재산세',
+  },
+  {
     href: '/guide/gift-split',
     title: '증여세 절세, 10년 단위 분할 증여 완벽 정리',
     description: '공제가 10년마다 갱신되는 원리를 활용한 분할 증여 전략과 혼인·출산 증여공제 특례까지 정리했습니다.',

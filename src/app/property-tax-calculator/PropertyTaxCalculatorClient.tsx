@@ -13,11 +13,9 @@ const eokMan = (amount: number) => {
   if (!amount) return "";
   const eok = Math.floor(amount / 100_000_000);
   const man = Math.floor((amount % 100_000_000) / 10_000);
-  return (
-    [eok ? `${eok}억` : "", man ? `${man.toLocaleString("ko-KR")}만` : ""]
-      .filter(Boolean)
-      .join(" ") + "원"
-  );
+  return [eok ? `${eok}억` : "", man ? `${man.toLocaleString("ko-KR")}만` : ""]
+    .filter(Boolean)
+    .join(" ");
 };
 
 const parseNum = (s: string) => {
@@ -73,7 +71,7 @@ export default function PropertyTaxCalculatorClient() {
               inputMode="numeric"
               value={publishedPrice ? publishedPrice.toLocaleString("ko-KR") : ""}
               onChange={(e) => setPublishedPrice(parseNum(e.target.value))}
-              placeholder="예) 500,000,000"
+              placeholder="예) 500000000 (5억원)"
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-right"
             />
             <span className="shrink-0 text-sm text-gray-500">원</span>
@@ -168,6 +166,12 @@ export default function PropertyTaxCalculatorClient() {
       </section>
 
       {/* ── 결과 ── */}
+      {!result && (
+        <div className="rounded-xl border border-dashed border-gray-300 p-6 text-center text-sm text-gray-500">
+          공시가격을 입력하면 예상 재산세가 계산됩니다.
+        </div>
+      )}
+
       {result && (
         <section className="rounded-2xl border border-gray-200 bg-white p-6 space-y-4">
           <h2 className="text-lg font-semibold">계산 결과</h2>
@@ -190,7 +194,7 @@ export default function PropertyTaxCalculatorClient() {
           <div className="rounded-xl bg-gray-50 p-4 text-sm text-gray-600 space-y-1">
             <p className="font-medium text-gray-700">계산 상세</p>
             <p>적용 공정시장가액비율: {(result.fmvRatio * 100).toFixed(0)}%</p>
-            <p>적용 세율 유형: {result.rateType}</p>
+            <p>적용 세율: {result.rateType}</p>
             <p>세부담상한: {ceilingStatus}</p>
             <p>소유지분율: {Math.round(result.ownershipRatio * 100)}%</p>
             {result.ownershipRatio < 1 && (

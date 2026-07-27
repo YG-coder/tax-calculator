@@ -17,6 +17,7 @@ const ALL_CALCS: RelatedItem[] = [
   { href: '/income-tax-calculator',       label: '종합소득세 계산기',     emoji: '📊' },
   { href: '/freelancer-tax-calculator',   label: '프리랜서 3.3% 계산기', emoji: '💻' },
   { href: '/capital-gains-tax-calculator',label: '양도소득세 계산기',     emoji: '🏠' },
+  { href: '/property-tax-calculator',    label: '재산세 계산기',         emoji: '🏡' },
   { href: '/gift-tax-calculator',         label: '증여세 계산기',         emoji: '🎁' },
   { href: '/inheritance-tax-calculator',  label: '상속세 계산기',         emoji: '📋' },
   { href: '/withholding-calculator',      label: '원천징수세액 계산기',   emoji: '💰' },

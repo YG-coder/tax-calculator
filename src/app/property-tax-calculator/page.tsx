@@ -3,6 +3,7 @@
 
 import type { Metadata } from "next";
 import PropertyTaxCalculatorClient from "./PropertyTaxCalculatorClient";
+import RelatedCalculators from "@/components/RelatedCalculators";
 import { TAX_YEAR } from "./calc";
 
 export const metadata: Metadata = {
@@ -36,6 +37,17 @@ export default function Page() {
         <a href="/guide/property-tax" className="text-blue-600 hover:underline">
           → {TAX_YEAR}년 재산세 계산 방법과 7월·9월 납부기간 가이드
         </a>
+      </div>
+
+      <div className="mx-auto max-w-3xl">
+        <RelatedCalculators
+          current="property-tax-calculator"
+          items={[
+            { href: "/capital-gains-tax-calculator", label: "양도소득세 계산기", emoji: "🏠" },
+            { href: "/gift-tax-calculator", label: "증여세 계산기", emoji: "🎁" },
+            { href: "/inheritance-tax-calculator", label: "상속세 계산기", emoji: "📋" },
+          ]}
+        />
       </div>
     </main>
   );

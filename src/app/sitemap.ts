@@ -23,6 +23,8 @@ const GUIDES = [
     'non-taxable-allowance',
     // 4차 보강 (근로소득 비과세 계산기 클러스터)
     'tax-free-income',
+    // 5차 보강 (주택 재산세 계산기 클러스터)
+    'property-tax',
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

@@ -30,6 +30,13 @@ export const CALCULATORS = [
     enabled: true,
   },
   {
+    slug: 'property-tax-calculator',
+    title: '재산세 계산기',
+    description: '주택 공시가격으로 연간 재산세와 7월·9월 납부액을 계산합니다.',
+    emoji: '🏡',
+    enabled: true,
+  },
+  {
     slug: 'gift-tax-calculator',
     title: '증여세 계산기',
     description: '증여금액·공제 기준 예상 증여세 누진세율 계산.',

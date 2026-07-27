@@ -21,6 +21,8 @@ const GUIDES = [
     'capital-gains-expenses',
     'long-term-holding-deduction',
     'non-taxable-allowance',
+    // 4차 보강 (근로소득 비과세 계산기 클러스터)
+    'tax-free-income',
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

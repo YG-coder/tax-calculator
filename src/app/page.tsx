@@ -46,7 +46,7 @@ const itemListJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
   name: '세금 계산기 모음',
-  numberOfItems: 8,
+  numberOfItems: 9,
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: '부가세 계산기', url: 'https://taxsim.kr/vat-calculator' },
     { '@type': 'ListItem', position: 2, name: '종합소득세 계산기', url: 'https://taxsim.kr/income-tax-calculator' },
@@ -56,6 +56,7 @@ const itemListJsonLd = {
     { '@type': 'ListItem', position: 6, name: '상속세 계산기', url: 'https://taxsim.kr/inheritance-tax-calculator' },
     { '@type': 'ListItem', position: 7, name: '원천징수세액 계산기', url: 'https://taxsim.kr/withholding-calculator' },
     { '@type': 'ListItem', position: 8, name: '간이과세 vs 일반과세 비교', url: 'https://taxsim.kr/vat-type-compare' },
+    { '@type': 'ListItem', position: 9, name: '근로소득 비과세 계산기', url: 'https://taxsim.kr/tax-free-income-calculator' },
   ],
 }
 

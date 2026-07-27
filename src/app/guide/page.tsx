@@ -59,6 +59,12 @@ const GUIDES = [
     category: '근로소득',
   },
   {
+    href: '/guide/tax-free-income',
+    title: '근로소득 비과세 판정 방법',
+    description: '내 급여가 비과세인지 판정하는 방법. 비과세·소득공제·세액공제·감면의 차이, 항목별 적용 조건, 자주 틀리는 사례를 2026년 국세청 기준으로 정리했습니다.',
+    category: '근로소득',
+  },
+  {
     href: '/guide/one-house-exemption',
     title: '1세대 1주택 양도세 비과세 요건 총정리',
     description: '2년 보유·거주 요건, 양도가액 12억 기준, 고가주택 과세, 일시적 2주택 특례까지 핵심만 정리했습니다.',

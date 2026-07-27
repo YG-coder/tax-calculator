@@ -20,6 +20,7 @@ const ALL_CALCS: RelatedItem[] = [
   { href: '/gift-tax-calculator',         label: '증여세 계산기',         emoji: '🎁' },
   { href: '/inheritance-tax-calculator',  label: '상속세 계산기',         emoji: '📋' },
   { href: '/withholding-calculator',      label: '원천징수세액 계산기',   emoji: '💰' },
+  { href: '/tax-free-income-calculator',  label: '근로소득 비과세 계산기', emoji: '🧮' },
   { href: '/vat-type-compare',            label: '간이과세 vs 일반과세',  emoji: '⚖️' },
 ]
 

@@ -51,6 +51,13 @@ export const CALCULATORS = [
     enabled: true,
   },
   {
+    slug: 'tax-free-income-calculator',
+    title: '근로소득 비과세 계산기',
+    description: '식대·자가운전·보육수당 등 비과세 급여와 과세대상 급여 계산.',
+    emoji: '🧮',
+    enabled: true,
+  },
+  {
     slug: 'vat-type-compare',
     title: '간이과세 vs 일반과세 비교',
     description: '연매출·매입·업종 기준 간이·일반과세 부가세 비교 및 유불리 안내.',

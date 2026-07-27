@@ -55,7 +55,7 @@ export default function NonTaxableAllowanceGuidePage() {
                 {[
                   ['식대 (현물 급식 미제공 시)', '월 20만 원'],
                   ['자가운전보조금 (본인 차량·업무용)', '월 20만 원'],
-                  ['출산·6세 이하 보육수당', '월 20만 원'],
+                  ['출산·6세 이하 자녀 보육수당', '자녀 1인당 월 20만 원'],
                   ['연구보조비·연구활동비 (교원·연구원 등)', '월 20만 원'],
                   ['생산직 근로자 야간근로수당 등', '연 240만 원'],
                   ['국외근로소득 (일반)', '월 100만 원'],
@@ -79,8 +79,8 @@ export default function NonTaxableAllowanceGuidePage() {
           <h2 className="text-lg font-bold text-slate-800 mb-2">자주 헷갈리는 요건</h2>
           <ul className="list-disc pl-5 space-y-2">
             <li><strong>식대:</strong> 회사가 현물(구내식당 등)로 식사를 제공하면 그 식사는 비과세지만, 식사를 제공받으면서 별도 식대까지 받으면 그 식대는 과세될 수 있습니다.</li>
-            <li><strong>자가운전보조금:</strong> 본인 명의(또는 본인이 직접 운전하는) 차량을 업무에 사용하고, 실제 여비를 따로 받지 않을 때 월 20만 원까지 비과세입니다.</li>
-            <li><strong>출산·보육수당:</strong> 6세 이하 자녀 보육과 관련해 받는 수당이 대상이며 월 20만 원까지입니다.</li>
+            <li><strong>자가운전보조금:</strong> 세법상 비과세 대상이 되는 본인 소유 또는 본인 명의 임차 차량을 업무에 사용하고, 실제 여비를 따로 받지 않을 때 월 20만 원까지 비과세입니다.</li>
+            <li><strong>출산·보육수당:</strong> 6세 이하 자녀 보육과 관련해 받는 수당으로, 2026년 1월 1일 이후 지급분부터 <strong>자녀 1인당</strong> 월 20만 원까지 비과세입니다(예: 6세 이하 자녀 2명이면 월 40만 원).</li>
             <li><strong>야간근로수당:</strong> 생산직 등 일정 직종·급여 요건을 갖춘 근로자에게 연 240만 원 한도로 적용됩니다.</li>
           </ul>
         </section>
@@ -93,8 +93,8 @@ export default function NonTaxableAllowanceGuidePage() {
             <p>20만 원은 비과세, 초과 5만 원은 과세. 비과세 한도까지만 세금이 빠집니다.</p>
           </div>
           <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4 mb-3">
-            <p className="font-semibold text-slate-800 mb-2">사례 2. 식대 20만 + 자가운전 20만 + 보육수당 20만</p>
-            <p>요건을 모두 갖추면 월 60만 원이 비과세 → 과세표준이 줄어 원천징수·연말정산 세액 감소.</p>
+            <p className="font-semibold text-slate-800 mb-2">사례 2. 6세 이하 자녀 1명 · 식대 20만 + 자가운전보조금 20만 + 보육수당 20만</p>
+            <p>요건을 모두 갖추면 월 60만 원이 비과세 → 과세표준이 줄어 원천징수·연말정산 세액 감소. (자녀가 2명이면 보육수당 한도가 월 40만 원으로 늘어 비과세 합계도 커집니다.)</p>
           </div>
           <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4">
             <p className="font-semibold text-slate-800 mb-2">사례 3. 회사 구내식당 이용 + 식대 10만 원 별도</p>
@@ -119,7 +119,7 @@ export default function NonTaxableAllowanceGuidePage() {
             </div>
             <div className="rounded-xl border border-slate-100 p-4">
               <p className="font-semibold text-slate-800 mb-1">Q. 배우자 명의 차량도 자가운전보조금 비과세인가요?</p>
-              <p>본인이 직접 운전·업무 사용하는 요건을 따집니다. 명의·사용 요건을 충족하는지 회사 규정과 함께 확인해야 합니다.</p>
+              <p>원칙적으로 본인 소유 또는 본인 명의로 임차한 차량이 대상이며, 배우자 등 타인 명의 차량은 일반적으로 인정되지 않습니다. 명의·업무 사용·여비 미수령 요건 충족 여부를 회사 규정·증빙과 함께 확인해야 합니다.</p>
             </div>
             <div className="rounded-xl border border-slate-100 p-4">
               <p className="font-semibold text-slate-800 mb-1">Q. 비과세가 많으면 무조건 이득인가요?</p>

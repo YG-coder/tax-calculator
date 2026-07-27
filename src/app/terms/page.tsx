@@ -18,16 +18,18 @@ export default function TermsPage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">1. 서비스 목적</h2>
           <p>
             taxsim.kr는 사용자가 세금 관련 금액을 쉽고 빠르게 확인할 수 있도록 돕는
-            참고용 계산 서비스입니다. 본 사이트는 아래 8종의 세금 계산기를 제공합니다.
+            참고용 계산 서비스입니다. 본 사이트는 아래 세금 계산기를 제공합니다.
           </p>
           <ul className="list-disc pl-5 mt-2 space-y-0.5 text-slate-600">
             <li>부가세 계산기</li>
             <li>종합소득세 계산기</li>
             <li>프리랜서 3.3% 계산기</li>
             <li>양도소득세 계산기</li>
+            <li>재산세 계산기</li>
             <li>증여세 계산기</li>
             <li>상속세 계산기</li>
             <li>원천징수세액 계산기</li>
+            <li>근로소득 비과세 계산기</li>
             <li>간이과세 vs 일반과세 비교 계산기</li>
           </ul>
           <p className="mt-2">

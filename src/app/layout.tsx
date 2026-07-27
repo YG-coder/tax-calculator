@@ -1,6 +1,7 @@
 /* src/app/layout.tsx */
 import type { Metadata, Viewport } from 'next'
 import Link from 'next/link'
+import SiteNav from '@/components/SiteNav'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -92,29 +93,6 @@ export const viewport: Viewport = {
     initialScale: 1,
 }
 
-// 네비
-const NAV_ITEMS = [
-    { href: '/vat-calculator', label: '부가세' },
-    { href: '/income-tax-calculator', label: '종합소득세' },
-    { href: '/freelancer-tax-calculator', label: '프리랜서 3.3%' },
-    { href: '/withholding-calculator', label: '원천징수' },
-    { href: '/guide', label: '가이드' },
-]
-
-// 로고
-function HeaderLogo() {
-    return (
-        <Link href="/" className="flex items-center gap-2 group">
-      <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-blue-600 text-white font-black">
-        税
-      </span>
-            <span className="font-black text-slate-900 text-sm">
-        세금<span className="text-blue-600">계산기</span>
-      </span>
-        </Link>
-    )
-}
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="ko">
@@ -131,18 +109,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <body className="bg-slate-50 text-slate-900 flex flex-col min-h-screen">
         {/* 네비 */}
-        <nav className="sticky top-0 z-50 h-14 border-b bg-white">
-            <div className="max-w-4xl mx-auto px-4 h-full flex items-center justify-between">
-                <HeaderLogo />
-                <div className="hidden md:flex gap-2">
-                    {NAV_ITEMS.map((item) => (
-                        <Link key={item.href} href={item.href} className="text-sm">
-                            {item.label}
-                        </Link>
-                    ))}
-                </div>
-            </div>
-        </nav>
+        <SiteNav />
 
         {children}
 

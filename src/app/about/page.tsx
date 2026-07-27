@@ -5,7 +5,7 @@ import Link from 'next/link'
 export const metadata: Metadata = {
   title: '사이트 소개 | 세금계산기',
   description:
-    'taxsim.kr는 8종 이상의 세금 계산기와 세금 가이드를 무료로 제공하는 온라인 세금 계산 서비스입니다. 운영자 소개, 정보 출처, 업데이트 정책을 안내합니다.',
+    'taxsim.kr는 여러 세금 계산기와 세금 가이드를 무료로 제공하는 온라인 세금 계산 서비스입니다. 운영자 소개, 정보 출처, 업데이트 정책을 안내합니다.',
   alternates: { canonical: '/about' },
 }
 
@@ -14,9 +14,11 @@ const CALC_LIST = [
   { href: '/income-tax-calculator',        label: '종합소득세 계산기',        desc: '연 소득 기준 예상 소득세·지방소득세 간이 계산.' },
   { href: '/freelancer-tax-calculator',    label: '프리랜서 3.3% 계산기',    desc: '원천징수 3.3%(소득세 3% + 지방소득세 0.3%) 및 실수령액 계산.' },
   { href: '/capital-gains-tax-calculator', label: '양도소득세 계산기',        desc: '취득가액·양도가액 기준 예상 양도차익·세액 간이 계산.' },
+  { href: '/property-tax-calculator',      label: '재산세 계산기',            desc: '주택 공시가격 기준 연간 재산세와 7월·9월 납부액 계산.' },
   { href: '/gift-tax-calculator',          label: '증여세 계산기',            desc: '증여금액·공제 기준 누진세율 적용 예상 증여세 계산.' },
   { href: '/inheritance-tax-calculator',   label: '상속세 계산기',            desc: '상속재산·공제 기준 예상 상속세 간이 계산.' },
   { href: '/withholding-calculator',       label: '원천징수세액 계산기',      desc: '월 급여·부양가족·자녀 수 기준 예상 원천징수세액 계산.' },
+  { href: '/tax-free-income-calculator',   label: '근로소득 비과세 계산기',    desc: '식대·자가운전보조금·보육수당 등 비과세 항목 반영 실수령 계산.' },
   { href: '/vat-type-compare',             label: '간이과세 vs 일반과세 비교', desc: '연매출·매입·업종 기준 간이·일반과세 부가세 비교 및 유불리 안내.' },
 ]
 
@@ -34,8 +36,8 @@ export default function AboutPage() {
         <section>
           <h2 className="text-base font-bold text-slate-800 mb-2">taxsim.kr 소개</h2>
           <p>
-            taxsim.kr는 부가세, 종합소득세, 프리랜서 원천징수, 양도소득세, 증여세, 상속세,
-            원천징수세액, 간이·일반과세 비교 등 실생활에서 자주 접하는 세금 계산을 누구나 쉽게 확인할 수 있도록
+            taxsim.kr는 부가세, 종합소득세, 프리랜서 원천징수, 양도소득세, 재산세, 증여세, 상속세,
+            원천징수세액, 근로소득 비과세, 간이·일반과세 비교 등 실생활에서 자주 접하는 세금 계산을 누구나 쉽게 확인할 수 있도록
             돕기 위해 만들어진 무료 온라인 세금 계산 서비스입니다.
             회원가입이나 로그인 없이 누구나 자유롭게 이용할 수 있으며, 입력한 금액 정보는
             서버에 저장되지 않고 사용자의 브라우저에서만 처리됩니다.
@@ -80,9 +82,8 @@ export default function AboutPage() {
             </li>
             <li>
               <strong>세법 개정 사항 정기 점검</strong> — 매년 세제 개편안 발표 시기(통상
-              7~8월 정부안, 12월 국회 통과)와 시행령·고시 갱신 시점에 맞춰 계산 로직과
-              안내 문구를 검토합니다. 국세청 「근로소득 간이세액표」와 같이 매년 갱신되는
-              자료는 갱신본 공개 후 반영합니다.
+              7~8월 정부안, 12월 국회 통과)와 시행령·고시 개정 여부를 확인하고,
+              법령 또는 공식 계산 기준이 변경된 경우 계산 로직과 안내 문구를 검토·반영합니다.
             </li>
             <li>
               <strong>참고용임을 명확히 안내</strong> — 모든 계산기에는 적용 범위와 한계
@@ -113,8 +114,8 @@ export default function AboutPage() {
           <p className="mt-2">
             taxsim.kr는 사용자가 신고 전에 빠르게 예상 세액을 가늠하거나, 견적·계약
             단계에서 세금을 확인할 때 부담 없이 꺼내 쓸 수 있는 도구를 만드는 것을
-            목표로 시작했습니다. 회원가입 없이, 광고 부담 없이, 입력값이 외부로
-            나가지 않는 환경에서 누구나 즉시 사용할 수 있도록 설계했습니다.
+            목표로 시작했습니다. 회원가입 없이 입력한 정보를 저장하지 않는
+            환경에서 누구나 즉시 사용할 수 있도록 설계했습니다.
           </p>
         </section>
 
@@ -128,11 +129,13 @@ export default function AboutPage() {
             <li>국세청 홈택스 (<a href="https://www.hometax.go.kr" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">www.hometax.go.kr</a>) — 신고·납부 기준</li>
             <li>국세법령정보시스템 (<a href="https://taxlaw.nts.go.kr" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">taxlaw.nts.go.kr</a>) — 세법 본문 및 시행령</li>
             <li>소득세법 제55조 — 종합소득세 누진세율</li>
-            <li>소득세법 시행령 제189조 — 간이세액표(원천징수)</li>
+            <li>소득세법 시행령 별표 2 (제189조제1항 관련) — 근로소득 간이세액표</li>
+            <li>소득세법 제12조 및 시행령 — 근로소득 비과세</li>
             <li>부가가치세법 제30조 — 일반과세자 세율(10%)</li>
             <li>부가가치세법 제61조·제63조·제69조 — 간이과세 기준·납부세액·납부의무 면제</li>
             <li>상속세 및 증여세법 제26조·제56조 — 누진세율</li>
-            <li>국세청 고시 「근로소득 간이세액표」 — 매년 갱신본 반영</li>
+            <li>지방세법·지방세법 시행령 — 재산세</li>
+            <li>국세청 「근로소득 원천징수방법 및 간이세액표 안내」 — 최신 공표 자료 확인</li>
           </ul>
           <p className="mt-2">
             중요한 의사결정이나 실제 세금 신고 시에는 반드시 국세청 홈택스 또는 관련 전문가의 안내를 함께 참고하시기 바랍니다.
@@ -143,9 +146,9 @@ export default function AboutPage() {
         <section>
           <h2 className="text-base font-bold text-slate-800 mb-2">업데이트 정책</h2>
           <ul className="list-disc pl-5 space-y-1">
-            <li>현재 적용 기준: <strong>2026년 귀속 세율</strong></li>
+            <li>현재 적용 기준: <strong>2026년 적용 세율·공제·과세 기준</strong></li>
             <li>주요 개정(세율·공제) 발생 시: 1~4주 이내 반영</li>
-            <li>국세청 간이세액표: 매년 2월 갱신본 반영</li>
+            <li>근로소득 간이세액표: 법령 또는 공식 표 개정 시 검토·반영</li>
             <li>최근 점검일: 2026년 7월</li>
           </ul>
           <p className="mt-2">
@@ -157,7 +160,7 @@ export default function AboutPage() {
 
         {/* 제공 계산기 목록 */}
         <section>
-          <h2 className="text-base font-bold text-slate-800 mb-3">제공 계산기 (8종)</h2>
+          <h2 className="text-base font-bold text-slate-800 mb-3">제공 계산기</h2>
           <ul className="space-y-3">
             {CALC_LIST.map(({ href, label, desc }) => (
               <li key={href} className="flex gap-3">

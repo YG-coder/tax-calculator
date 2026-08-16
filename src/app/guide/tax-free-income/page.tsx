@@ -219,7 +219,7 @@ export default function TaxFreeIncomeGuidePage() {
             <li><strong>출산·보육수당:</strong> 6세 이하 자녀 보육과 관련한 수당으로, 2026년부터 <strong>자녀 1인당</strong> 월 20만원까지 비과세됩니다(예: 자녀 2명이면 월 40만원). 사용자가 지급하는 출산지원금은 출생 후 2년 이내·2회 이내 지급분에 한해 별도로 전액 비과세됩니다.</li>
             <li><strong>연구보조비·연구활동비:</strong> 교원·연구원 등 대상 직종·기관 요건을 갖춘 경우 월 20만원까지 비과세됩니다.</li>
             <li><strong>국외근로소득:</strong> 일반 국외근무는 월 100만원, 원양어업·외항선박 선원과 해외건설현장 등은 월 500만원까지 비과세됩니다. 출장·연수 목적 출국 기간의 급여는 국외근로소득으로 보지 않습니다.</li>
-            <li><strong>생산직 초과근로수당:</strong> 공장·광산 등 생산 및 그 관련직 근로자로서 <strong>월정액급여 210만원 이하</strong>이고 <strong>직전 과세기간 총급여 3,000만원 이하</strong>인 경우, 연장·야간·휴일근로수당을 연 240만원 한도로 비과세합니다. 단순 금액만으로 판단하기 어려워 요건 입력이 필요합니다.</li>
+            <li><strong>생산직 초과근로수당:</strong> 공장·광산 등 생산 및 그 관련직 근로자로서 <strong>월정액급여 260만원 이하</strong>이고 <strong>직전 과세기간 총급여 3,700만원 이하</strong>인 경우, 연장·야간·휴일근로수당을 연 240만원 한도로 비과세합니다. 단순 금액만으로 판단하기 어려워 요건 입력이 필요합니다.</li>
           </ul>
         </section>
 
@@ -237,7 +237,7 @@ export default function TaxFreeIncomeGuidePage() {
             </div>
             <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4">
               <p className="font-semibold text-slate-800 mb-1">사례 3. 생산직인데 월정액급여 초과</p>
-              <p>생산직이라도 월정액급여가 210만원을 넘거나 직전연도 총급여가 3,000만원을 넘으면 초과근로수당 비과세가 배제됩니다.</p>
+              <p>생산직이라도 월정액급여가 260만원을 넘거나 직전연도 총급여가 3,700만원을 넘으면 초과근로수당 비과세가 배제됩니다.</p>
             </div>
             <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4">
               <p className="font-semibold text-slate-800 mb-1">사례 4. 국외근로 한도 혼동</p>

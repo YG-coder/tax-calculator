@@ -228,7 +228,7 @@ export default function WithholdingCalculatorPage() {
             <div className="rounded-xl border border-slate-100 p-4">
               <p className="font-semibold text-slate-800 mb-1">Q. 이 계산기 결과가 급여명세서 실수령액과 다른 이유는?</p>
               <p>
-                본 계산기는 소득세·지방소득세만 반영합니다. 실제 급여에서는 국민연금(4.5%), 건강보험,
+                본 계산기는 소득세·지방소득세만 반영합니다. 실제 급여에서는 국민연금(4.75%), 건강보험,
                 장기요양, 고용보험 등 4대보험이 추가로 공제되므로 실수령액은 더 낮습니다. 4대보험 포함
                 실수령액은 연봉계산기 류 도구로 확인하세요.
               </p>

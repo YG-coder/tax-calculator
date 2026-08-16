@@ -19,7 +19,7 @@ function formatInput(v: string) {
    · 출산·보육수당(6세 이하) : 자녀 1인당 월 20만원 (2026 개정, 소득세법 §12)
    · 연구보조비·연구활동비   : 월 20만원 (소득령 §12)
    · 국외근로소득            : 일반 월 100만원 / 원양어업·외항선박·해외건설현장 월 500만원 (소득령 §16)
-   · 생산직 연장·야간·휴일   : 연 240만원, 월정액급여 210만원 이하 + 직전연도 총급여 3,000만원 이하 (소득령 §17)
+   · 생산직 연장·야간·휴일   : 연 240만원, 월정액급여 260만원 이하 + 직전연도 총급여 3,700만원 이하 (소득령 §17)
    ──────────────────────────────────────────────────────────── */
 const CAP = {
   MEAL: 200_000,
@@ -29,8 +29,8 @@ const CAP = {
   OVERSEAS_GENERAL: 1_000_000,
   OVERSEAS_SPECIAL: 5_000_000,
   PRODUCTION_ANNUAL: 2_400_000,
-  PRODUCTION_FIXED_PAY: 2_100_000,
-  PRODUCTION_PREV_SALARY: 30_000_000,
+  PRODUCTION_FIXED_PAY: 2_600_000,
+  PRODUCTION_PREV_SALARY: 37_000_000,
 } as const
 
 type Row = {
@@ -173,9 +173,9 @@ export default function TaxFreeIncomeCalculatorPage() {
       note: !prodIsProduction
         ? '생산직 아님 → 과세'
         : !(prodFixedN > 0 && prodFixedN <= CAP.PRODUCTION_FIXED_PAY)
-          ? '월정액급여 210만원 이하 요건 미충족 → 과세'
+          ? '월정액급여 260만원 이하 요건 미충족 → 과세'
           : !(prodPrevN > 0 && prodPrevN <= CAP.PRODUCTION_PREV_SALARY)
-            ? '직전연도 총급여 3,000만원 이하 요건 미충족 → 과세'
+            ? '직전연도 총급여 3,700만원 이하 요건 미충족 → 과세'
             : prodRemainingCap === 0
               ? '올해 연 한도 240만원 소진 → 이번 달 전액 과세'
               : productionN > prodRemainingCap
@@ -361,7 +361,7 @@ export default function TaxFreeIncomeCalculatorPage() {
                       placeholder="예: 2,000,000" className="calc-input pr-8 text-sm" />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none">원</span>
                   </div>
-                  <p className="calc-hint">210만원 이하 요건</p>
+                  <p className="calc-hint">260만원 이하 요건</p>
                 </div>
                 <div>
                   <label className="text-xs font-semibold text-slate-600 mb-1 block">직전연도 총급여</label>
@@ -371,7 +371,7 @@ export default function TaxFreeIncomeCalculatorPage() {
                       placeholder="예: 28,000,000" className="calc-input pr-8 text-sm" />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none">원</span>
                   </div>
-                  <p className="calc-hint">3,000만원 이하 요건</p>
+                  <p className="calc-hint">3,700만원 이하 요건</p>
                 </div>
               </div>
               <div>
@@ -539,7 +539,7 @@ export default function TaxFreeIncomeCalculatorPage() {
                   ['출산·보육수당', '자녀 1인당 월 20만원', '6세 이하 자녀'],
                   ['연구보조비', '월 20만원', '교원·연구원 등'],
                   ['국외근로소득', '월 100만 / 500만원', '국외 근무지·업종'],
-                  ['생산직 초과근로수당', '연 240만원', '월정액급여 210만원·총급여 3천만원 이하'],
+                  ['생산직 초과근로수당', '연 240만원', '월정액급여 260만원·총급여 3,700만원 이하'],
                 ].map(([k, v, c]) => (
                   <tr key={k} className="bg-white">
                     <td className="px-3 py-2 text-slate-600">{k}</td>

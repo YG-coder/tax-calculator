@@ -21,8 +21,8 @@ export function simulateSalary(input: SalaryInput): SalaryResult | null {
     if (pBase > pensionConfig.ceiling) pBase = pensionConfig.ceiling;
     const pension = Math.floor((pBase * pensionConfig.rate) / 10) * 10;
 
-    const health = Math.floor((taxableMonthly * 0.03545) / 10) * 10;
-    const ltc = Math.floor((health * 0.1295) / 10) * 10;
+    const health = Math.floor((taxableMonthly * 0.03595) / 10) * 10;
+    const ltc = Math.floor((health * 0.1314) / 10) * 10;
     const employment = Math.floor((taxableMonthly * 0.009) / 10) * 10;
 
     const { incomeTax, isTableFound } = lookupWithholdingTax(taxableMonthly, input.dependents);

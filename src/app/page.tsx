@@ -4,9 +4,9 @@ import Link from 'next/link'
 import { CALCULATORS } from '@/lib/calculators'
 
 export const metadata: Metadata = {
-  title: '세금 계산기 모음 | 부가세·소득세·양도세·증여세·상속세',
+  title: '세금 계산기 모음 | 부가세·소득세·양도세·재산세·증여세·상속세',
   description:
-    '부가세, 종합소득세, 프리랜서 3.3%, 양도소득세, 증여세, 상속세, 원천징수세액 계산기를 한 곳에서. 2026년 세율 기준 무료 제공.',
+    '2026년 적용 기준 부가세, 종합소득세, 프리랜서 3.3%, 양도소득세, 재산세, 근로소득 비과세, 증여세, 상속세, 원천징수세액 계산기를 한 곳에서 무료로 제공합니다.',
   alternates: { canonical: '/' },
 }
 
@@ -19,7 +19,7 @@ const websiteJsonLd = {
   url: 'https://taxsim.kr',
   inLanguage: 'ko-KR',
   description:
-    '부가세, 종합소득세, 프리랜서 3.3%, 양도소득세, 증여세, 상속세 계산기를 무료로 제공합니다.',
+    '부가세, 종합소득세, 프리랜서 3.3%, 양도소득세, 재산세, 근로소득 비과세, 증여세, 상속세 계산기를 무료로 제공합니다.',
   publisher: {
     '@type': 'Organization',
     name: 'Incomelab',
@@ -46,17 +46,18 @@ const itemListJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
   name: '세금 계산기 모음',
-  numberOfItems: 9,
+  numberOfItems: 10,
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: '부가세 계산기', url: 'https://taxsim.kr/vat-calculator' },
     { '@type': 'ListItem', position: 2, name: '종합소득세 계산기', url: 'https://taxsim.kr/income-tax-calculator' },
     { '@type': 'ListItem', position: 3, name: '프리랜서 3.3% 계산기', url: 'https://taxsim.kr/freelancer-tax-calculator' },
     { '@type': 'ListItem', position: 4, name: '양도소득세 계산기', url: 'https://taxsim.kr/capital-gains-tax-calculator' },
-    { '@type': 'ListItem', position: 5, name: '증여세 계산기', url: 'https://taxsim.kr/gift-tax-calculator' },
-    { '@type': 'ListItem', position: 6, name: '상속세 계산기', url: 'https://taxsim.kr/inheritance-tax-calculator' },
-    { '@type': 'ListItem', position: 7, name: '원천징수세액 계산기', url: 'https://taxsim.kr/withholding-calculator' },
-    { '@type': 'ListItem', position: 8, name: '간이과세 vs 일반과세 비교', url: 'https://taxsim.kr/vat-type-compare' },
-    { '@type': 'ListItem', position: 9, name: '근로소득 비과세 계산기', url: 'https://taxsim.kr/tax-free-income-calculator' },
+    { '@type': 'ListItem', position: 5, name: '재산세 계산기', url: 'https://taxsim.kr/property-tax-calculator' },
+    { '@type': 'ListItem', position: 6, name: '증여세 계산기', url: 'https://taxsim.kr/gift-tax-calculator' },
+    { '@type': 'ListItem', position: 7, name: '상속세 계산기', url: 'https://taxsim.kr/inheritance-tax-calculator' },
+    { '@type': 'ListItem', position: 8, name: '원천징수세액 계산기', url: 'https://taxsim.kr/withholding-calculator' },
+    { '@type': 'ListItem', position: 9, name: '간이과세 vs 일반과세 비교', url: 'https://taxsim.kr/vat-type-compare' },
+    { '@type': 'ListItem', position: 10, name: '근로소득 비과세 계산기', url: 'https://taxsim.kr/tax-free-income-calculator' },
   ],
 }
 
@@ -87,7 +88,7 @@ export default function HomePage() {
             세금 계산기 모음
           </h1>
           <p className="text-slate-500 text-base sm:text-lg">
-            부가세부터 상속세까지 · 2026년 기준 · 무료 · 로그인 불필요
+            부가세부터 재산세·상속세까지 · 2026년 적용 기준 · 무료 · 로그인 불필요
           </p>
         </section>
 
@@ -142,9 +143,9 @@ export default function HomePage() {
         <section className="text-sm text-slate-600 leading-relaxed space-y-4">
           <h2 className="text-lg font-bold text-slate-800">세금 계산기 안내</h2>
           <p>
-            세금 계산기는 부가세, 종합소득세, 프리랜서 원천징수, 양도소득세, 증여세, 상속세 등
+            세금 계산기는 부가세, 종합소득세, 프리랜서 원천징수, 양도소득세, 재산세, 근로소득 비과세, 증여세, 상속세 등
             다양한 세금 항목을 빠르게 확인할 수 있도록 설계된 무료 도구입니다.
-            2026년 최신 세율을 기준으로 계산하며, 회원가입이나 로그인 없이 누구나 즉시 이용할 수 있습니다.
+            2026년 적용 세율·공제·과세 기준을 반영하며, 회원가입이나 로그인 없이 누구나 즉시 이용할 수 있습니다.
           </p>
           <p>
             모든 계산은 사용자 브라우저에서만 처리되며, 입력한 금액 정보는 서버로 전송되지 않습니다.

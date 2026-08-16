@@ -102,7 +102,7 @@ export default function FreelancerTaxClient() {
             <li><strong>월 수입 정산 시:</strong> 통장 입금액에서 거꾸로 세전 금액을 추정할 때.</li>
             <li><strong>5월 종합소득세 신고 준비:</strong> 1년치 원천징수 합산액을 미리 파악해 환급/추납 규모를 가늠.</li>
             <li><strong>견적서·청구서 작성:</strong> 클라이언트가 "3.3% 떼고 입금"한다는 조건일 때.</li>
-            <li><strong>강사·교육비·강연료 계산:</strong> 강의료 100만 원 받기로 했는데 96만 7천 원 들어왔다면 정상입니다.</li>
+            <li><strong>프리랜서 용역비 계산:</strong> 외주 개발·디자인 등 사업소득 용역비 100만 원 계약이라면 3.3% 원천징수 후 96만 7천 원을 받습니다.</li>
           </ul>
         </div>
 
@@ -146,7 +146,7 @@ export default function FreelancerTaxClient() {
           </div>
 
           <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4">
-            <p className="font-semibold text-slate-800 mb-2">예시 3. 강연료 50만 원 1회</p>
+            <p className="font-semibold text-slate-800 mb-2">예시 3. 외주 개발 용역비 50만 원</p>
             <ul className="space-y-1 text-slate-600">
               <li>소득세 = <strong>15,000원</strong></li>
               <li>지방소득세 = <strong>1,500원</strong></li>

@@ -1,7 +1,7 @@
 // src/app/withholding-calculator/WithholdingClient.tsx
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import RelatedCalculators from '@/components/RelatedCalculators'
 
 function fmt(n: number) { return n.toLocaleString('ko-KR') }
@@ -55,14 +55,9 @@ export default function WithholdingCalculatorPage() {
   const childNum    = Math.max(0, Number(childCount) || 0)
   const hasValue    = salaryNum > 0
 
-  const handleCalc = useCallback(() => {}, [])  // 입력 시 즉시 계산 (실시간)
-
-  const incomeTax  = calcWithholdingTax(salaryNum, depNum)
   // 근로소득세에는 지방소득세 10%가 부과됨 (지방세법, 소득분).
-  // 근로소득세 원천징수 시 지방소득세도 함께 특별징수 → localTax 유지.
-  const localTax   = Math.floor(incomeTax * 0.1 / 10) * 10
-  const totalTax   = incomeTax + localTax
-  const netPay     = salaryNum - totalTax
+  // 근로소득세 원천징수 시 지방소득세도 함께 특별징수 → 아래 finalLocalTax에서 반영.
+  const incomeTax  = calcWithholdingTax(salaryNum, depNum)
 
   // 간이세액표 자녀수별 공제 (8세 이상 20세 이하, 2026.2.27 개정 간이세액표 기준, 2026.3.1 지급분부터 적용)
   // ※ 연말정산용 연간 자녀세액공제(25만/55만원 등)를 12개월로 나눈 값이 아니라,

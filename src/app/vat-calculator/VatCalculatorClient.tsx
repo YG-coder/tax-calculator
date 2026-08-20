@@ -132,7 +132,7 @@ export default function VatCalculatorClient() {
           <h2 className="text-lg font-bold text-slate-800 mb-3">언제 사용하나요?</h2>
           <ul className="space-y-2 list-disc pl-5">
             <li><strong>세금계산서 발행 시:</strong> 공급가액과 세액을 별도로 기재해야 하므로 두 값을 정확히 분리해야 합니다.</li>
-            <li><strong>견적서·계약서 작성 시:</strong> 클라이언트가 "VAT 별도"로 요청했는지 "VAT 포함"으로 요청했는지에 따라 최종 청구금액이 달라집니다.</li>
+            <li><strong>견적서·계약서 작성 시:</strong> 클라이언트가 “VAT 별도”로 요청했는지 “VAT 포함”으로 요청했는지에 따라 최종 청구금액이 달라집니다.</li>
             <li><strong>지출 증빙 정리 시:</strong> 카드매출전표나 현금영수증에서 공급가액과 부가세를 분리해 장부에 기록할 때 유용합니다.</li>
             <li><strong>매입세액 공제 검토:</strong> 매입한 재화·용역의 부가세 부담분을 미리 가늠해보고 싶을 때 사용합니다.</li>
             <li><strong>온라인 쇼핑몰 가격 책정:</strong> 부가세 포함 표시 가격에서 실제 공급가액이 얼마인지 확인할 때 사용합니다.</li>
@@ -168,7 +168,7 @@ export default function VatCalculatorClient() {
           </div>
 
           <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4 mb-3">
-            <p className="font-semibold text-slate-800 mb-2">예시 2. 견적서 "VAT 별도 500만 원" 청구 시</p>
+            <p className="font-semibold text-slate-800 mb-2">예시 2. 견적서 “VAT 별도 500만 원” 청구 시</p>
             <ul className="space-y-1 text-slate-600">
               <li>공급가액 = <strong>5,000,000원</strong></li>
               <li>부가세 = 5,000,000 × 10% = <strong>500,000원</strong></li>
@@ -189,7 +189,7 @@ export default function VatCalculatorClient() {
         <div>
           <h2 className="text-lg font-bold text-slate-800 mb-3">자주 하는 실수</h2>
           <ul className="space-y-2 list-disc pl-5">
-            <li><strong>"VAT 별도"인데 포함으로 계산:</strong> 견적서에 "VAT 별도"라고 적혀 있으면 표시된 금액에 10%를 추가로 더해야 합니다. 100만 원 → 실제 청구는 110만 원.</li>
+            <li><strong>“VAT 별도”인데 포함으로 계산:</strong> 견적서에 “VAT 별도”라고 적혀 있으면 표시된 금액에 10%를 추가로 더해야 합니다. 100만 원 → 실제 청구는 110만 원.</li>
             <li><strong>역산 시 ÷1.1 대신 ×0.9 사용:</strong> 110만 원의 90%는 99만 원이지 100만 원이 아닙니다. 반드시 1.1로 나눠야 정확합니다.</li>
             <li><strong>간이과세자에게 일반세율 적용:</strong> 간이과세자는 업종별 부가가치율(15~40%)을 곱한 후 10%를 적용하므로 실제 부담이 다릅니다.</li>
             <li><strong>면세 항목까지 포함해 계산:</strong> 도서, 신문, 미가공 식료품, 의료·교육 서비스 등은 부가세 면세 대상이라 10%가 붙지 않습니다.</li>

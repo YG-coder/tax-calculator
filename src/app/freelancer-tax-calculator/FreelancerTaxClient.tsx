@@ -85,7 +85,7 @@ export default function FreelancerTaxClient() {
             개인이 사업자로부터 대금을 받을 때, 사업자는 대금에서 <strong>소득세 3%</strong>와
             <strong>지방소득세 0.3%</strong>를 합한 <strong>총 3.3%</strong>를 미리 떼고 나머지
             금액만 지급합니다. 이를 「사업소득 원천징수」라고 부르며, 일상적으로
-            <strong> "프리랜서 3.3%"</strong>로 통칭됩니다.
+            <strong> “프리랜서 3.3%”</strong>로 통칭됩니다.
           </p>
           <p className="mt-2">
             중요한 점은 3.3%가 <strong>최종 세금이 아닌 선납</strong>이라는 사실입니다.
@@ -98,10 +98,10 @@ export default function FreelancerTaxClient() {
         <div>
           <h2 className="text-lg font-bold text-slate-800 mb-3">언제 사용하나요?</h2>
           <ul className="space-y-2 list-disc pl-5">
-            <li><strong>프리랜서 계약 협상 시:</strong> "세전 100만 원" 계약이면 실수령은 96만 7천 원입니다. 협상 시 세전/세후를 명확히 해야 합니다.</li>
+            <li><strong>프리랜서 계약 협상 시:</strong> “세전 100만 원” 계약이면 실수령은 96만 7천 원입니다. 협상 시 세전/세후를 명확히 해야 합니다.</li>
             <li><strong>월 수입 정산 시:</strong> 통장 입금액에서 거꾸로 세전 금액을 추정할 때.</li>
             <li><strong>5월 종합소득세 신고 준비:</strong> 1년치 원천징수 합산액을 미리 파악해 환급/추납 규모를 가늠.</li>
-            <li><strong>견적서·청구서 작성:</strong> 클라이언트가 "3.3% 떼고 입금"한다는 조건일 때.</li>
+            <li><strong>견적서·청구서 작성:</strong> 클라이언트가 “3.3% 떼고 입금”한다는 조건일 때.</li>
             <li><strong>프리랜서 용역비 계산:</strong> 외주 개발·디자인 등 사업소득 용역비 100만 원 계약이라면 3.3% 원천징수 후 96만 7천 원을 받습니다.</li>
           </ul>
         </div>

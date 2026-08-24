@@ -4,6 +4,7 @@
 // UI 컴포넌트에서 분리해 테스트 가능한 형태로 둔다.
 
 import { basicIncomeTax } from './rates.ts';
+export { lookupWithholdingTax } from './withholding-engine.ts';
 
 /** 근로소득공제 (소득세법 §47) — 공제 한도 2,000만원 */
 export function wageIncomeDeduction(annual: number): number {
@@ -46,12 +47,12 @@ export function childMonthlyCredit(childCount: number): number {
 }
 
 /**
- * 월 원천징수 근로소득세 — ⚠️ 근사 계산.
+ * 월 원천징수 근로소득세 근사 계산(회귀 비교용).
  *
  * 국세청 근로소득 간이세액표(소득세법 시행령 별표2)를 직접 조회하지 않는다.
  * 연 환산 후 연말정산 방식으로 재계산한 근사값이라 공식 표와 차이가 난다.
  * (예: 월급여 300만원·부양가족 1명 → 공식 표 74,350원 / 본 근사식 약 61,500원)
- * 공식 표 데이터를 확보하면 lookupWithholdingTax 조회로 교체할 것.
+ * 화면 계산에는 사용하지 않고 공식 표 조회와의 회귀 비교에만 사용한다.
  */
 export function calcWithholdingTax(monthlyTaxable: number, dependents: number): number {
     const annual = monthlyTaxable * 12;

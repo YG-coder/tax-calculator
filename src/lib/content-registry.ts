@@ -96,12 +96,13 @@ export const CALCULATOR_META: Record<CalculatorSlug, ContentMeta> = {
     },
     'withholding-calculator': {
         lastReviewed: '2026-08-24',
-        appliesTo: '⚠️ 공식 간이세액표 미적용 · 연 환산 방식 근사 계산',
+        appliesTo: '2026년 근로소득 간이세액표 · 2026-03-01 시행',
         sources: [
             { label: '소득세법 제134조(근로소득 원천징수)', url: law('소득세법', '제134조') },
             { label: '소득세법 제59조(근로소득세액공제)', url: law('소득세법', '제59조') },
             { label: '소득세법 시행령 제189조(근로소득 간이세액표)', url: law('소득세법 시행령', '제189조') },
-            { label: '홈택스 근로소득 간이세액표 조회', url: 'https://hometax.go.kr' },
+            { label: '소득세법 시행령 별표 2 공식 PDF(2026.2.27. 개정)', url: 'https://www.law.go.kr/LSW/flDownload.do?flSeq=164357181&bylClsCd=110201' },
+            { label: '홈택스 근로소득 간이세액표 조회', url: 'https://www.hometax.go.kr/websquare/websquare.wq?tm2lIdx=0113000000&tmIdx=0&w2xPath=%2Fui%2Fpp%2Findex_pp.xml' },
         ],
     },
     'tax-free-income-calculator': {

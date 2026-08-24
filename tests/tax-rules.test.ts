@@ -4,6 +4,7 @@ import {
     wageIncomeDeduction,
     earnedIncomeTaxCredit,
     childMonthlyCredit,
+    lookupWithholdingTax,
 } from '../src/lib/tax/rules/withholding.ts';
 import {
     calcInheritanceTax,
@@ -36,6 +37,28 @@ test('자녀 수별 월 공제액 (2024년 개정 자녀세액공제 ÷ 12)', ()
     assert.equal(childMonthlyCredit(1), 20_830);
     assert.equal(childMonthlyCredit(2), 45_830);
     assert.equal(childMonthlyCredit(3), 79_160);
+});
+
+test('2026 공식 근로소득 간이세액표 대표값', () => {
+    assert.equal(lookupWithholdingTax(3_000_000, 1), 74_350);
+    assert.equal(lookupWithholdingTax(3_000_000, 2), 56_850);
+    assert.equal(lookupWithholdingTax(3_500_000, 4), 49_340);
+    assert.equal(lookupWithholdingTax(10_000_000, 1), 1_507_400);
+});
+
+test('2026 공식 근로소득 간이세액표 급여 경계와 고액 산식', () => {
+    assert.equal(lookupWithholdingTax(769_999, 1), 0);
+    assert.equal(lookupWithholdingTax(1_060_000, 1), 1_040);
+    assert.equal(lookupWithholdingTax(2_999_999, 1), 73_060);
+    assert.equal(lookupWithholdingTax(10_000_001, 1), 1_532_400);
+    assert.equal(lookupWithholdingTax(14_000_000, 1), 2_904_400);
+    assert.equal(lookupWithholdingTax(87_000_000, 1), 32_542_000);
+});
+
+test('공제대상 가족 11명 초과 산식은 음수가 되면 0원 처리', () => {
+    assert.equal(lookupWithholdingTax(3_000_000, 11), 0);
+    assert.equal(lookupWithholdingTax(3_000_000, 12), 0);
+    assert.ok(lookupWithholdingTax(10_000_000, 12) < lookupWithholdingTax(10_000_000, 11));
 });
 
 test('상속세 누진세율 경계값', () => {

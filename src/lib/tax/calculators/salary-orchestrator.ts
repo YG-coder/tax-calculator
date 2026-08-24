@@ -25,7 +25,8 @@ export function simulateSalary(input: SalaryInput): SalaryResult | null {
     const ltc = Math.floor((health * 0.1314) / 10) * 10;
     const employment = Math.floor((taxableMonthly * 0.009) / 10) * 10;
 
-    const { incomeTax, isTableFound } = lookupWithholdingTax(taxableMonthly, input.dependents);
+    const incomeTax = lookupWithholdingTax(taxableMonthly, input.dependents);
+    const isTableFound = true;
     const localTax = Math.floor(incomeTax * 0.1);
 
     const totalDeductions = pension + health + ltc + employment + incomeTax + localTax;

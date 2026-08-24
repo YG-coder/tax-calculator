@@ -5,7 +5,7 @@ import { useState } from 'react'
 import RelatedCalculators from '@/components/RelatedCalculators'
 import SourceNote from '@/components/SourceNote'
 import { amountError, amountValue, formatAmount } from '@/lib/utils/amount'
-import { calcWithholdingTax, childMonthlyCredit } from '@/lib/tax/rules/withholding'
+import { childMonthlyCredit, lookupWithholdingTax } from '@/lib/tax/rules/withholding'
 
 function fmt(n: number) { return n.toLocaleString('ko-KR') }
 
@@ -21,7 +21,7 @@ export default function WithholdingCalculatorPage() {
 
   // 근로소득세에는 지방소득세 10%가 부과됨 (지방세법, 소득분).
   // 근로소득세 원천징수 시 지방소득세도 함께 특별징수 → 아래 finalLocalTax에서 반영.
-  const incomeTax  = calcWithholdingTax(salaryNum, depNum)
+  const incomeTax  = lookupWithholdingTax(salaryNum, depNum)
 
   // 간이세액표 자녀수별 공제 (8세 이상 20세 이하)
   const childCredit = childMonthlyCredit(childNum)
@@ -34,18 +34,16 @@ export default function WithholdingCalculatorPage() {
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-2">원천징수세액 계산기</h1>
-      <p className="text-slate-500 mb-4">월 급여·부양가족 기준 근로소득 원천징수세액 근사 계산 · 참고용</p>
+      <p className="text-slate-500 mb-4">2026년 공식 근로소득 간이세액표 기준 · 참고용</p>
 
-      <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-slate-700">
-        <p className="font-semibold text-slate-900 mb-1">이 계산기는 공식 간이세액표를 조회하지 않습니다</p>
+      <div className="mb-6 rounded-xl border border-blue-200 bg-blue-50 p-4 text-xs text-slate-700">
+        <p className="font-semibold text-slate-900 mb-1">2026년 공식 간이세액표 적용</p>
         <p>
-          국세청 <strong>근로소득 간이세액표</strong>(소득세법 시행령 별표2)를 직접 조회하는 대신,
-          연 환산 후 연말정산 방식으로 재계산한 <strong>근사값</strong>을 보여줍니다. 공식 표 금액과
-          차이가 날 수 있으므로(급여 구간에 따라 수천~수만 원) 실제 원천징수액은 아래 홈택스
-          간이세액표 조회로 확인하세요.
+          소득세법 시행령 별표 2(2026년 2월 27일 개정, 3월 1일 시행)의 646개 급여 구간과
+          1,000만원 초과 산식을 적용합니다. 회사의 비과세 급여 처리와 가족 정보에 따라 실제 금액은 달라질 수 있습니다.
         </p>
         <p className="mt-2">
-          <a href="https://hometax.go.kr" target="_blank" rel="noopener noreferrer"
+          <a href="https://www.hometax.go.kr/websquare/websquare.wq?tm2lIdx=0113000000&amp;tmIdx=0&amp;w2xPath=%2Fui%2Fpp%2Findex_pp.xml" target="_blank" rel="noopener noreferrer"
              className="font-semibold text-blue-700 underline">
             홈택스 근로소득 간이세액표 조회 →
           </a>
@@ -68,40 +66,33 @@ export default function WithholdingCalculatorPage() {
           {amountError(salary) && (
             <p id="salary-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(salary)}</p>
           )}
-          <p className="calc-hint">월 세전 급여를 입력하세요</p>
+          <p className="calc-hint">비과세 소득과 학자금 지원액을 제외한 월 급여를 입력하세요</p>
         </div>
 
         <div>
-          <label className="calc-label">부양가족 수 (본인 포함)</label>
-          <div className="flex gap-2">
-            {[1,2,3,4,5].map((n) => (
-              <button key={n} type="button"
-                aria-pressed={dependents === String(n)}
-                onClick={() => setDependents(String(n))}
-                className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border transition-all ${
-                  dependents === String(n)
-                    ? 'bg-blue-600 border-blue-600 text-white'
-                    : 'bg-white border-slate-200 text-slate-600 hover:border-blue-300'
-                }`}>{n}명</button>
+          <label htmlFor="dependents" className="calc-label">부양가족 수 (본인 포함)</label>
+          <select id="dependents" value={dependents}
+            onChange={(event) => {
+              const n = Number(event.target.value)
+              setDependents(event.target.value)
+              if (Number(childCount) >= n) setChildCount(String(Math.max(0, n - 1)))
+            }}
+            className="calc-input">
+            {Array.from({ length: 11 }, (_, index) => index + 1).map((n) => (
+              <option key={n} value={n}>{n}명</option>
             ))}
-          </div>
-          <p className="calc-hint">본인 포함 기본공제 대상 인원 (1인당 연 150만원 공제)</p>
+          </select>
+          <p className="calc-hint">본인과 배우자도 각각 1명으로 포함해 선택하세요</p>
         </div>
 
         <div>
-          <label className="calc-label">8세 이상 20세 이하 자녀 수</label>
-          <div className="flex gap-2">
-            {[0,1,2,3].map((n) => (
-              <button key={n} type="button"
-                aria-pressed={childCount === String(n)}
-                onClick={() => setChildCount(String(n))}
-                className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border transition-all ${
-                  childCount === String(n)
-                    ? 'bg-blue-600 border-blue-600 text-white'
-                    : 'bg-white border-slate-200 text-slate-600 hover:border-blue-300'
-                }`}>{n}명</button>
+          <label htmlFor="child-count" className="calc-label">8세 이상 20세 이하 자녀 수</label>
+          <select id="child-count" value={childCount} onChange={(event) => setChildCount(event.target.value)}
+            className="calc-input">
+            {Array.from({ length: depNum }, (_, index) => index).map((n) => (
+              <option key={n} value={n}>{n}명</option>
             ))}
-          </div>
+          </select>
           <p className="calc-hint">간이세액표 자녀수 공제 반영 · 8세 이상 자녀 (1명 월 20,830원, 2명 월 45,830원, 3명~ +월 33,330원/명)</p>
         </div>
       </div>
@@ -120,7 +111,7 @@ export default function WithholdingCalculatorPage() {
           <div className="calc-card p-5">
             <h3 className="text-sm font-bold text-slate-700 mb-4">원천징수 내역 (세금만)</h3>
             <ul className="space-y-2.5">
-              <li className="flex justify-between text-sm"><span className="text-slate-600">소득세 (공식 표 아님 · 근사값)</span><span className="font-bold text-blue-600 tabular-nums">{fmt(finalIncomeTax)} 원</span></li>
+              <li className="flex justify-between text-sm"><span className="text-slate-600">소득세 (2026 공식 간이세액표)</span><span className="font-bold text-blue-600 tabular-nums">{fmt(finalIncomeTax)} 원</span></li>
               <li className="flex justify-between text-sm"><span className="text-slate-600">지방소득세 (소득세×10%)</span><span className="font-bold text-slate-600 tabular-nums">{fmt(finalLocalTax)} 원</span></li>
               {childCredit > 0 && (
                 <li className="flex justify-between text-sm"><span className="text-emerald-600">자녀수 공제 적용 (간이세액표)</span><span className="font-bold text-emerald-600 tabular-nums">−{fmt(childCredit)} 원/월</span></li>
@@ -163,17 +154,13 @@ export default function WithholdingCalculatorPage() {
         <div>
           <h2 className="text-lg font-bold text-slate-800 mb-3">계산 흐름</h2>
           <ul className="list-disc pl-5 space-y-1">
-            <li>연 환산 급여에서 <strong>근로소득공제</strong> 차감</li>
-            <li>부양가족 기본공제(1인당 연 150만 원) 차감 → 과세표준</li>
-            <li>과세표준에 누진세율(6~45%) 적용 → 산출세액</li>
-            <li><strong>근로소득세액공제</strong>(최대 약 74만 원) 적용</li>
+            <li>월 급여 구간과 공제대상 가족 수로 공식 표의 기본 세액 조회</li>
             <li>간이세액표 <strong>자녀수 공제</strong> 추가 적용</li>
             <li>지방소득세 = 소득세 × 10%</li>
           </ul>
           <p className="mt-2 text-xs text-slate-500">
-            본 계산기는 위 흐름을 근사 구현한 것으로, 국세청 간이세액표를 직접 참조하지 않습니다.
-            따라서 실제 원천징수액과 차이가 날 수 있으며, 정확한 월별 세액은 홈택스의 &lsquo;근로소득
-            간이세액표&rsquo; 조회 기능을 이용하세요.
+            본 계산기는 소득세법 시행령 별표 2의 공식 표를 정적으로 참조합니다. 실제 급여명세서와 차이가 있다면
+            비과세 소득, 학자금 지원액, 회사에 신고한 공제대상 가족 수를 먼저 확인하세요.
           </p>
         </div>
 
@@ -239,9 +226,9 @@ export default function WithholdingCalculatorPage() {
         <div className="rounded-xl border border-amber-100 bg-amber-50 p-4 text-xs text-slate-600">
           <p className="font-semibold text-slate-800 mb-1">⚠️ 참고용 안내</p>
           <p>
-            본 계산기는 국세청 간이세액표를 직접 참조하지 않는 <strong>근사값</strong>이며, 소득세·지방소득세만
-            반영합니다. 비과세 수당, 상여금, 중도 입·퇴사, 4대보험, 회사별 급여 구조에 따라 실제 금액과
-            차이가 납니다. 정확한 월 원천징수액은 국세청 홈택스 간이세액표 조회로 확인하시기 바랍니다.
+            본 계산기는 2026년 3월 1일 시행 공식 간이세액표를 적용하며 소득세·지방소득세만 반영합니다.
+            비과세 수당, 상여금, 중도 입·퇴사, 4대보험, 회사별 급여 구조에 따라 실제 금액과 차이가 날 수
+            있습니다. 신고·정산 전에는 급여명세서와 홈택스 조회 결과를 함께 확인하세요.
           </p>
         </div>
 

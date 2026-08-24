@@ -1,27 +1,53 @@
 import {
-    IS_OFFICIAL_TABLE,
-    WITHHOLDING_TABLE_2025,
-} from "../config/verified/withholding-table-2025";
+    TEN_MILLION_BASE_2026,
+    WITHHOLDING_TABLE_2026,
+} from "../config/verified/withholding-table-2026.ts";
 
 /**
  * 근로소득 간이세액표 조회.
  *
- * 표 데이터가 아직 공식 전체 표로 교체되지 않았으면, 잘못된 세액이 화면에
- * 노출되는 것을 막기 위해 조회 자체를 실패시킨다.
- * (사람이 주의하는 대신 코드가 막는다)
+ * 소득세법 시행령 별표 2 <개정 2026. 2. 27.>의 표와
+ * 월급여 1,000만원 초과 구간 산식을 그대로 적용한다.
  */
-export function lookupWithholdingTax(taxableMonthly: number, dependents: number) {
-    if (!IS_OFFICIAL_TABLE) {
-        throw new Error(
-            "근로소득 간이세액표가 공식 데이터로 교체되지 않았습니다. " +
-            "withholding-table-2025.ts 를 홈택스 공식 표로 채우고 IS_OFFICIAL_TABLE 을 true 로 바꾸세요.",
+export function lookupWithholdingTax(taxableMonthly: number, dependents: number): number {
+    if (!Number.isFinite(taxableMonthly) || taxableMonthly <= 0) return 0;
+
+    const familyCount = Math.max(1, Math.floor(dependents));
+    const tableFamilyIndex = Math.min(familyCount, 11) - 1;
+    let tax: number;
+
+    if (taxableMonthly < 770_000) {
+        tax = 0;
+    } else if (taxableMonthly < 10_000_000) {
+        const row = WITHHOLDING_TABLE_2026.find(
+            ([min, max]) => taxableMonthly >= min && taxableMonthly < max,
         );
+        tax = row?.[tableFamilyIndex + 2] ?? 0;
+    } else if (taxableMonthly === 10_000_000) {
+        tax = TEN_MILLION_BASE_2026[tableFamilyIndex];
+    } else {
+        const base = TEN_MILLION_BASE_2026[tableFamilyIndex];
+        if (taxableMonthly <= 14_000_000) {
+            tax = base + 25_000 + (taxableMonthly - 10_000_000) * 0.98 * 0.35;
+        } else if (taxableMonthly <= 28_000_000) {
+            tax = base + 1_397_000 + (taxableMonthly - 14_000_000) * 0.98 * 0.38;
+        } else if (taxableMonthly <= 30_000_000) {
+            tax = base + 6_610_600 + (taxableMonthly - 28_000_000) * 0.98 * 0.4;
+        } else if (taxableMonthly <= 45_000_000) {
+            tax = base + 7_394_600 + (taxableMonthly - 30_000_000) * 0.4;
+        } else if (taxableMonthly <= 87_000_000) {
+            tax = base + 13_394_600 + (taxableMonthly - 45_000_000) * 0.42;
+        } else {
+            tax = base + 31_034_600 + (taxableMonthly - 87_000_000) * 0.45;
+        }
     }
 
-    const row = WITHHOLDING_TABLE_2025.find(
-        r => taxableMonthly >= r.min && taxableMonthly < r.max
-    );
-    if (!row) return { incomeTax: 0, isTableFound: false };
-    const familyIdx = Math.min(dependents - 1, row.taxes.length - 1);
-    return { incomeTax: row.taxes[familyIdx] || 0, isTableFound: true };
+    // 가족 11명 초과 시 별표 2 제4호의 차감 산식 적용.
+    if (familyCount > 11) {
+        const tax10 = lookupWithholdingTax(taxableMonthly, 10);
+        const tax11 = lookupWithholdingTax(taxableMonthly, 11);
+        tax = tax11 - (tax10 - tax11) * (familyCount - 11);
+    }
+
+    return Math.max(0, Math.floor(tax / 10) * 10);
 }

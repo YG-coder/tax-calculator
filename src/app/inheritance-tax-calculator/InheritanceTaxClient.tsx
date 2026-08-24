@@ -3,41 +3,42 @@
 
 import { useState } from 'react'
 import RelatedCalculators from '@/components/RelatedCalculators'
+import SourceNote from '@/components/SourceNote'
+import { amountError, amountValue, formatAmount } from '@/lib/utils/amount'
+import { calcInheritanceTax, spouseDeduction, spouseStatutoryShare } from '@/lib/tax/rules/inheritance'
 
 function fmt(n: number) { return n.toLocaleString('ko-KR') }
-function parseNum(v: string) { return Number(v.replace(/[^0-9]/g, '')) || 0 }
-function formatInput(v: string) {
-  const n = v.replace(/[^0-9]/g, '')
-  return n ? Number(n).toLocaleString('ko-KR') : ''
-}
-
-// 상속세 누진세율 (증여세와 동일, 2026년 기준)
-function calcInheritanceTax(base: number): number {
-  if (base <= 0) return 0
-  if (base <= 100_000_000)   return Math.floor(base * 0.10)
-  if (base <= 500_000_000)   return Math.floor(10_000_000  + (base - 100_000_000) * 0.20)
-  if (base <= 1_000_000_000) return Math.floor(90_000_000  + (base - 500_000_000) * 0.30)
-  if (base <= 3_000_000_000) return Math.floor(240_000_000 + (base - 1_000_000_000) * 0.40)
-  return Math.floor(1_040_000_000 + (base - 3_000_000_000) * 0.50)
-}
 
 const DEDUCTION_PRESETS = [
-  { label: '일괄공제 5억', value: '500000000', desc: '기본 선택' },
-  { label: '배우자 포함 (최소 5억+배우자공제)', value: '1000000000', desc: '배우자 존재 시' },
-  { label: '직접 입력', value: 'custom', desc: '' },
+  { label: '일괄공제 5억', value: '500000000', desc: '대부분 이쪽이 유리' },
+  { label: '기초공제+기타인적공제 직접 입력', value: 'custom', desc: '합계가 5억을 넘을 때' },
 ]
 
 export default function InheritanceTaxCalculatorPage() {
   const [estate,        setEstate]        = useState('')
+  const [debts,         setDebts]         = useState('')
   const [deductPreset,  setDeductPreset]  = useState('500000000')
   const [customDeduct,  setCustomDeduct]  = useState('')
+  const [hasSpouse,     setHasSpouse]     = useState(false)
+  const [childCount,    setChildCount]    = useState('0')
+  const [spouseShare,   setSpouseShare]   = useState('')
 
-  const estateNum = parseNum(estate)
-  const deductNum = deductPreset === 'custom' ? parseNum(customDeduct) : parseNum(deductPreset)
-  const hasValue  = estateNum > 0
+  const estateNum  = amountValue(estate)
+  const debtsNum   = amountValue(debts)
+  const childNum   = Math.max(0, Number(childCount) || 0)
+  const spouseNum  = amountValue(spouseShare)
 
-  const taxBase  = Math.max(0, estateNum - deductNum)
+  // 상속세 과세가액 = 상속재산 − 채무·공과금·장례비
+  const taxableEstate = Math.max(0, estateNum - debtsNum)
+
+  const baseDeduct   = deductPreset === 'custom' ? amountValue(customDeduct) : amountValue(deductPreset)
+  const spouseDeduct = hasSpouse ? spouseDeduction(taxableEstate, childNum, spouseNum) : 0
+  const deductNum    = baseDeduct + spouseDeduct
+  const hasValue     = estateNum > 0
+
+  const taxBase  = Math.max(0, taxableEstate - deductNum)
   const tax      = calcInheritanceTax(taxBase)
+  const filingCredit = Math.floor(tax * 0.03)  // 기한 내 신고 시 신고세액공제 3%
   // 상속세에는 지방소득세가 부과되지 않음.
   // 지방소득세(개인분 10%)는 소득세(종합·양도소득세 등)와 법인세에만 부과되며,
   // 상속세·증여세는 상속세 및 증여세법상 국세로 지방소득세 대상이 아님. → 본세(tax)만 표시.
@@ -52,14 +53,35 @@ export default function InheritanceTaxCalculatorPage() {
         <h2 className="text-base font-bold text-slate-800">상속 정보 입력</h2>
 
         <div>
-          <label className="calc-label">상속재산 총액 <span className="text-red-400">*</span></label>
+          <label htmlFor="estate" className="calc-label">상속재산 총액 <span className="text-red-400">*</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" value={estate}
-              onChange={(e) => setEstate(formatInput(e.target.value))}
+            <input type="text" inputMode="numeric" id="estate" value={formatAmount(estate)}
+              onChange={(e) => setEstate(e.target.value)}
+              aria-invalid={amountError(estate) !== null}
+              aria-describedby={amountError(estate) ? 'estate-error' : undefined}
               placeholder="예: 1,000,000,000" className="calc-input pr-8" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
           </div>
+          {amountError(estate) && (
+            <p id="estate-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(estate)}</p>
+          )}
           <p className="calc-hint">부동산, 금융자산, 기타 상속재산의 합계 (시가 기준)</p>
+        </div>
+
+        <div>
+          <label htmlFor="debts" className="calc-label">채무·공과금·장례비</label>
+          <div className="relative">
+            <input type="text" inputMode="numeric" id="debts" value={formatAmount(debts)}
+              onChange={(e) => setDebts(e.target.value)}
+              aria-invalid={amountError(debts) !== null}
+              aria-describedby={amountError(debts) ? 'debts-error' : undefined}
+              placeholder="예: 100,000,000" className="calc-input pr-8" />
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+          </div>
+          {amountError(debts) && (
+            <p id="debts-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(debts)}</p>
+          )}
+          <p className="calc-hint">피상속인의 채무, 미납 공과금, 장례비용 — 상속재산에서 차감됩니다</p>
         </div>
 
         <div>
@@ -67,6 +89,7 @@ export default function InheritanceTaxCalculatorPage() {
           <div className="flex flex-wrap gap-2">
             {DEDUCTION_PRESETS.map(({ label, value, desc }) => (
               <button key={value} type="button"
+                aria-pressed={deductPreset === value}
                 onClick={() => setDeductPreset(value)}
                 className={`px-3 py-2.5 rounded-xl text-sm font-semibold border transition-all text-left ${
                   deductPreset === value
@@ -79,28 +102,110 @@ export default function InheritanceTaxCalculatorPage() {
             ))}
           </div>
           {deductPreset === 'custom' && (
-            <div className="relative mt-2">
-              <input type="text" inputMode="numeric" value={customDeduct}
-                onChange={(e) => setCustomDeduct(formatInput(e.target.value))}
-                placeholder="공제금액 직접 입력" className="calc-input pr-8" />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
-            </div>
+            <>
+              <div className="relative mt-2">
+                <input type="text" inputMode="numeric" id="custom-deduct" value={formatAmount(customDeduct)}
+                  onChange={(e) => setCustomDeduct(e.target.value)}
+                  aria-invalid={amountError(customDeduct) !== null}
+                  aria-describedby={amountError(customDeduct) ? 'custom-deduct-error' : undefined}
+                  placeholder="공제금액 직접 입력" className="calc-input pr-8" />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+              </div>
+              {amountError(customDeduct) && (
+                <p id="custom-deduct-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(customDeduct)}</p>
+              )}
+            </>
           )}
           <p className="calc-hint">기본공제 2억 + 기타인적공제, 또는 일괄공제 5억 중 큰 금액 선택 가능</p>
+        </div>
+
+        <div className="border-t border-slate-100 pt-5">
+          <div className="flex items-center justify-between">
+            <span className="calc-label mb-0">배우자 상속공제</span>
+            <button type="button" aria-pressed={hasSpouse}
+              onClick={() => setHasSpouse((v) => !v)}
+              className={`rounded-full px-4 py-1.5 text-sm font-semibold border transition-all ${
+                hasSpouse ? 'bg-blue-600 border-blue-600 text-white' : 'bg-white border-slate-200 text-slate-600'
+              }`}>
+              {hasSpouse ? '배우자 있음' : '배우자 없음'}
+            </button>
+          </div>
+
+          {hasSpouse ? (
+            <div className="mt-3 space-y-4">
+              <div>
+                <span className="calc-label">자녀(직계비속) 수</span>
+                <div className="flex gap-2">
+                  {[0, 1, 2, 3, 4].map((n) => (
+                    <button key={n} type="button" aria-pressed={childCount === String(n)}
+                      onClick={() => setChildCount(String(n))}
+                      className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border transition-all ${
+                        childCount === String(n)
+                          ? 'bg-blue-600 border-blue-600 text-white'
+                          : 'bg-white border-slate-200 text-slate-600 hover:border-blue-300'
+                      }`}>{n}명</button>
+                  ))}
+                </div>
+                <p className="calc-hint">
+                  배우자 법정상속분 = 1.5 ÷ (1.5 + 자녀 수) = {(spouseStatutoryShare(childNum) * 100).toFixed(1)}%
+                </p>
+              </div>
+
+              <div>
+                <label htmlFor="spouse-share" className="calc-label">배우자가 실제 상속받는 금액</label>
+                <div className="relative">
+                  <input type="text" inputMode="numeric" id="spouse-share" value={formatAmount(spouseShare)}
+                    onChange={(e) => setSpouseShare(e.target.value)}
+                    aria-invalid={amountError(spouseShare) !== null}
+                    aria-describedby={amountError(spouseShare) ? 'spouse-share-error' : undefined}
+                    placeholder="예: 600,000,000" className="calc-input pr-8" />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+                </div>
+                {amountError(spouseShare) && (
+                  <p id="spouse-share-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(spouseShare)}</p>
+                )}
+                <p className="calc-hint">
+                  공제액 = min(실제 상속액, 과세가액 × 법정상속분, 30억) — 단, 5억원은 최소 보장됩니다.
+                  비워 두면 최소 5억원만 공제합니다.
+                </p>
+              </div>
+
+              {hasValue && (
+                <div className="rounded-xl bg-blue-50/60 border border-blue-100 px-4 py-3 text-xs text-slate-600 space-y-1">
+                  <div className="flex justify-between"><span>법정상속분 기준 한도</span>
+                    <span className="font-medium text-slate-700">{fmt(Math.floor(Math.min(taxableEstate * spouseStatutoryShare(childNum), 3_000_000_000)))}원</span></div>
+                  <div className="flex justify-between"><span>적용 배우자공제</span>
+                    <span className="font-semibold text-blue-700">{fmt(Math.floor(spouseDeduct))}원</span></div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <p className="calc-hint mt-2">
+              배우자가 있는 경우에도 공제액은 &lsquo;실제 상속받은 금액&rsquo;과 법정상속분 한도로 결정됩니다.
+              배우자가 있다는 이유만으로 10억 원이 자동 공제되지는 않습니다.
+            </p>
+          )}
         </div>
 
         {hasValue && (
           <div className="rounded-xl bg-slate-50 border border-slate-100 px-4 py-3 text-xs text-slate-500 space-y-1">
             <p className="font-semibold text-slate-600 mb-1">입력 요약</p>
             <div className="flex justify-between"><span>상속재산</span><span className="font-medium text-slate-700">{fmt(estateNum)}원</span></div>
-            <div className="flex justify-between"><span>상속공제</span><span className="font-medium text-emerald-600">−{fmt(deductNum)}원</span></div>
+            {debtsNum > 0 && (
+              <div className="flex justify-between"><span>채무·공과금·장례비</span><span className="font-medium text-emerald-600">−{fmt(debtsNum)}원</span></div>
+            )}
+            <div className="flex justify-between"><span>상속세 과세가액</span><span className="font-medium text-slate-700">{fmt(taxableEstate)}원</span></div>
+            <div className="flex justify-between"><span>일괄공제 등</span><span className="font-medium text-emerald-600">−{fmt(baseDeduct)}원</span></div>
+            {hasSpouse && (
+              <div className="flex justify-between"><span>배우자 상속공제</span><span className="font-medium text-emerald-600">−{fmt(Math.floor(spouseDeduct))}원</span></div>
+            )}
             <div className="flex justify-between"><span>과세표준</span><span className="font-medium text-slate-700">{fmt(taxBase)}원</span></div>
           </div>
         )}
       </div>
 
       {hasValue ? (
-        <div className="mt-6 space-y-4 animate-slide-up">
+        <div className="mt-6 space-y-4 animate-slide-up" aria-live="polite">
           {taxBase > 0 ? (
             <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
               <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">예상 상속세 (산출세액)</p>
@@ -114,16 +219,32 @@ export default function InheritanceTaxCalculatorPage() {
             </div>
           )}
 
+          <div className="rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-xs text-slate-600">
+            <p className="font-semibold text-slate-800 mb-1">이 결과에 반영되지 않은 항목</p>
+            <p>
+              금융재산 상속공제(순금융재산의 20%, 최대 2억), 동거주택 상속공제(최대 6억),
+              사전증여재산 합산(상속인 10년·그 외 5년), 감정평가수수료, 가업·영농 상속공제는
+              반영하지 않았습니다. 해당 사항이 있으면 실제 세액과 차이가 큽니다.
+            </p>
+          </div>
+
           {taxBase > 0 && (
             <div className="calc-card p-5">
               <h3 className="text-sm font-bold text-slate-700 mb-4">계산 내역</h3>
               <ul className="space-y-2.5">
                 <li className="flex justify-between text-sm"><span className="text-slate-600">상속재산 총액</span><span className="font-bold text-slate-800 tabular-nums">{fmt(estateNum)} 원</span></li>
-                <li className="flex justify-between text-sm"><span className="text-slate-600">상속공제</span><span className="font-bold text-slate-700 tabular-nums">−{fmt(deductNum)} 원</span></li>
+                <li className="flex justify-between text-sm"><span className="text-slate-600">채무·공과금·장례비</span><span className="font-bold text-slate-700 tabular-nums">−{fmt(debtsNum)} 원</span></li>
+                <li className="flex justify-between text-sm"><span className="text-slate-600">일괄공제 등</span><span className="font-bold text-slate-700 tabular-nums">−{fmt(baseDeduct)} 원</span></li>
+                <li className="flex justify-between text-sm"><span className="text-slate-600">배우자 상속공제</span><span className="font-bold text-slate-700 tabular-nums">−{fmt(Math.floor(spouseDeduct))} 원</span></li>
                 <li className="flex justify-between text-sm"><span className="text-slate-600">과세표준</span><span className="font-bold text-slate-800 tabular-nums">{fmt(taxBase)} 원</span></li>
                 <li className="flex justify-between text-sm pt-3 border-t border-slate-100">
                   <span className="font-bold text-slate-800">예상 상속세 (산출세액)</span>
                   <span className="font-bold text-blue-600 tabular-nums">{fmt(totalTax)} 원</span>
+                </li>
+                <li className="flex justify-between text-sm"><span className="text-slate-600">기한 내 신고 시 신고세액공제 3%</span><span className="font-bold text-emerald-600 tabular-nums">−{fmt(filingCredit)} 원</span></li>
+                <li className="flex justify-between text-sm">
+                  <span className="font-bold text-slate-800">신고세액공제 적용 후</span>
+                  <span className="font-bold text-slate-900 tabular-nums">{fmt(totalTax - filingCredit)} 원</span>
                 </li>
               </ul>
             </div>
@@ -163,8 +284,10 @@ export default function InheritanceTaxCalculatorPage() {
             <li><strong>신고세액공제:</strong> 기한 내 신고 시 산출세액의 3%.</li>
           </ul>
           <p className="mt-2 text-xs text-slate-500">
-            본 계산기의 공제 프리셋은 일괄공제 5억 또는 &lsquo;5억+배우자공제&rsquo; 가정값으로 단순화한 것입니다.
-            실제 배우자공제는 법정상속분과 실제 상속액에 따라 달라지므로 차이가 발생할 수 있습니다.
+            본 계산기는 일괄공제(또는 직접 입력한 기초공제+기타인적공제)에 배우자 상속공제를 더해 계산합니다.
+            배우자 상속공제는 &lsquo;배우자가 실제 상속받은 금액&rsquo;을 기준으로, 과세가액 × 법정상속분과 30억원 중
+            작은 금액을 한도로 하며 최소 5억원이 보장됩니다(상증법 §19). 금융재산·동거주택 공제와
+            사전증여 합산은 반영하지 않습니다.
           </p>
         </div>
 
@@ -221,11 +344,13 @@ export default function InheritanceTaxCalculatorPage() {
           </div>
 
           <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4">
-            <p className="font-semibold text-slate-800 mb-2">예시 3. 상속재산 15억, 배우자 포함 공제 10억(가정)</p>
+            <p className="font-semibold text-slate-800 mb-2">예시 3. 상속재산 15억, 배우자 1명 + 자녀 2명, 배우자가 6억 상속</p>
             <ul className="space-y-1 text-slate-600">
-              <li>과세표준 = 15억 − 10억 = <strong>5억 원</strong></li>
-              <li>산출세액 = 5억 × 20% − 1,000만 = <strong>9,000만 원</strong></li>
-              <li className="text-xs text-slate-500 mt-1">실제 배우자공제는 상속 구성에 따라 달라져 결과가 크게 변동될 수 있습니다.</li>
+              <li>배우자 법정상속분 = 1.5 ÷ (1.5+2) = <strong>42.9%</strong> → 한도 15억 × 42.9% = 약 <strong>6억 4천만 원</strong></li>
+              <li>배우자공제 = min(실제 6억, 한도 6.4억) = <strong>6억 원</strong></li>
+              <li>총 공제 = 일괄공제 5억 + 배우자공제 6억 = <strong>11억 원</strong></li>
+              <li>과세표준 = 15억 − 11억 = <strong>4억 원</strong> → 산출세액 = 4억 × 20% − 1,000만 = <strong>7,000만 원</strong></li>
+              <li className="text-xs text-slate-500 mt-1">같은 15억이라도 배우자가 실제로 얼마를 상속받느냐에 따라 세액이 달라집니다.</li>
             </ul>
           </div>
         </div>
@@ -271,7 +396,9 @@ export default function InheritanceTaxCalculatorPage() {
               <p className="font-semibold text-slate-800 mb-1">Q. 배우자가 있으면 상속세가 거의 안 나온다던데 사실인가요?</p>
               <p>
                 배우자 상속공제(최소 5억~최대 30억)와 일괄공제 5억이 더해지면 중산층 규모 상속에서는
-                과세표준이 0이 되는 경우가 많습니다. 다만 재산 규모와 상속 구성에 따라 달라집니다.
+                과세표준이 0이 되는 경우가 많습니다. 다만 배우자공제는 &lsquo;배우자가 있다&rsquo;는 사실만으로
+                자동 적용되는 정액 공제가 아니라, 배우자가 실제로 상속받은 금액과 법정상속분 한도로
+                결정됩니다. 배우자가 상속을 거의 받지 않으면 최소 5억원만 공제됩니다.
               </p>
             </div>
 
@@ -294,8 +421,8 @@ export default function InheritanceTaxCalculatorPage() {
             <div className="rounded-xl border border-slate-100 p-4">
               <p className="font-semibold text-slate-800 mb-1">Q. 본 계산기 결과와 실제 세액이 다른 이유는?</p>
               <p>
-                본 계산기는 일괄공제·배우자공제를 단순 가정한 간이 도구로, 금융재산공제·동거주택공제·
-                사전증여 합산·채무 공제 등을 반영하지 않습니다. 정확한 세액은 홈택스 또는 세무사를 통해
+                본 계산기는 일괄공제·배우자공제·채무 공제만 반영하는 간이 도구로, 금융재산공제·
+                동거주택공제·사전증여 합산·가업상속공제 등을 반영하지 않습니다. 정확한 세액은 홈택스 또는 세무사를 통해
                 확인하시기 바랍니다.
               </p>
             </div>
@@ -305,20 +432,14 @@ export default function InheritanceTaxCalculatorPage() {
         <div className="rounded-xl border border-amber-100 bg-amber-50 p-4 text-xs text-slate-600">
           <p className="font-semibold text-slate-800 mb-1">⚠️ 참고용 안내</p>
           <p>
-            본 계산기는 2026년 상속세 누진세율에 일괄공제(또는 배우자 포함 가정값)만 적용한 간이
-            도구입니다. 금융재산공제·동거주택공제·사전증여 합산·채무 공제·신고세액공제 등 실제
-            적용 항목을 반영하지 않으므로 신고 세액과 상당한 차이가 있을 수 있습니다. 정확한 신고는
+            본 계산기는 2026년 상속세 누진세율에 일괄공제·배우자 상속공제·채무 공제만 적용한 간이
+            도구입니다. 금융재산공제·동거주택공제·사전증여 합산·가업상속공제 등 실제 적용 항목을
+            반영하지 않으므로 신고 세액과 차이가 있을 수 있습니다. 정확한 신고는
             국세청 홈택스 또는 세무 전문가를 통해 확인하시기 바랍니다.
           </p>
         </div>
 
-        <div className="text-xs text-slate-500 border-t pt-4">
-          <p className="font-semibold text-slate-700 mb-1">근거 자료</p>
-          <ul className="list-disc pl-5 space-y-0.5">
-            <li>상속세 및 증여세법 제26조(세율)·제18조~제24조(공제)·제67조(신고기한) — 국가법령정보센터</li>
-            <li>국세청 상속세 안내 (홈택스)</li>
-          </ul>
-        </div>
+        <SourceNote calculator="inheritance-tax-calculator" />
       </section>
 
       <RelatedCalculators current="inheritance-tax-calculator" />

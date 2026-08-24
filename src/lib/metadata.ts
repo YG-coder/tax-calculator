@@ -28,12 +28,15 @@ export function buildMetadata({
         ? (ogImage.startsWith('http') ? ogImage : `${SITE.url}${ogImage}`)
         : `${SITE.url}/og-image.png`;
 
-    const fullTitle = `${title} | ${SITE.title}`;
+    // 루트 레이아웃의 title.template('%s | 세금 계산기')이 사이트명을 붙인다.
+    // 여기서 다시 붙이면 "… | 세금계산기 | 세금 계산기"처럼 중복되므로 순수 페이지 제목만 반환한다.
+    // OG/트위터에는 template이 적용되지 않으므로 사이트명을 붙인 제목을 따로 쓴다.
+    const socialTitle = `${title} | ${SITE.title}`;
 
     return {
         metadataBase: new URL(SITE.url),
 
-        title: fullTitle,
+        title,
         description,
         keywords,
 
@@ -54,7 +57,7 @@ export function buildMetadata({
         },
 
         openGraph: {
-            title: fullTitle,
+            title: socialTitle,
             description,
             url,
             siteName: SITE.name,
@@ -65,7 +68,7 @@ export function buildMetadata({
                     url: ogImageUrl,
                     width: 1200,
                     height: 630,
-                    alt: fullTitle,
+                    alt: socialTitle,
                     type: 'image/png',
                 },
             ],
@@ -73,7 +76,7 @@ export function buildMetadata({
 
         twitter: {
             card: 'summary_large_image',
-            title: fullTitle,
+            title: socialTitle,
             description,
             images: [ogImageUrl],
         },

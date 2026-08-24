@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "문의 | 세금계산기",
+    title: "문의",
     description:
         "세금계산기 이용 중 오류, 계산 문의, 광고 및 제휴 문의는 이 페이지를 통해 연락해주세요.",
 };

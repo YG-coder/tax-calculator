@@ -3,23 +3,11 @@
 
 import { useState } from 'react'
 import RelatedCalculators from '@/components/RelatedCalculators'
+import SourceNote from '@/components/SourceNote'
+import { inheritanceGiftTax } from '@/lib/tax/rules/rates'
+import { amountError, amountValue, formatAmount } from '@/lib/utils/amount'
 
 function fmt(n: number) { return n.toLocaleString('ko-KR') }
-function parseNum(v: string) { return Number(v.replace(/[^0-9]/g, '')) || 0 }
-function formatInput(v: string) {
-  const n = v.replace(/[^0-9]/g, '')
-  return n ? Number(n).toLocaleString('ko-KR') : ''
-}
-
-// 증여세 누진세율 (2026년 기준) — 지방소득세는 부과되지 않음
-function calcGiftTax(base: number): number {
-  if (base <= 0) return 0
-  if (base <= 100_000_000)   return Math.floor(base * 0.10)
-  if (base <= 500_000_000)   return Math.floor(10_000_000  + (base - 100_000_000) * 0.20)
-  if (base <= 1_000_000_000) return Math.floor(90_000_000  + (base - 500_000_000) * 0.30)
-  if (base <= 3_000_000_000) return Math.floor(240_000_000 + (base - 1_000_000_000) * 0.40)
-  return Math.floor(1_040_000_000 + (base - 3_000_000_000) * 0.50)
-}
 
 const DEDUCTION_PRESETS = [
   { label: '배우자 (6억)', value: '600000000' },
@@ -34,12 +22,12 @@ export default function GiftTaxCalculatorPage() {
   const [deductPreset, setDeductPreset]   = useState('50000000')
   const [customDeduct, setCustomDeduct]   = useState('')
 
-  const giftNum   = parseNum(giftAmount)
-  const deductNum = deductPreset === 'custom' ? parseNum(customDeduct) : parseNum(deductPreset)
+  const giftNum   = amountValue(giftAmount)
+  const deductNum = deductPreset === 'custom' ? amountValue(customDeduct) : amountValue(deductPreset)
   const hasValue  = giftNum > 0
 
   const taxBase  = Math.max(0, giftNum - deductNum)
-  const tax      = calcGiftTax(taxBase)            // 산출세액 (증여세 본세)
+  const tax      = Math.floor(inheritanceGiftTax(taxBase))            // 산출세액 (증여세 본세)
   const afterCredit = Math.floor(tax * 0.97)       // 신고세액공제 3% 적용 시 예상 납부액
 
   return (
@@ -51,13 +39,18 @@ export default function GiftTaxCalculatorPage() {
         <h2 className="text-base font-bold text-slate-800">증여 정보 입력</h2>
 
         <div>
-          <label className="calc-label">증여금액 <span className="text-red-400">*</span></label>
+          <label htmlFor="gift-amount" className="calc-label">증여금액 <span className="text-red-400">*</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" value={giftAmount}
-              onChange={(e) => setGiftAmount(formatInput(e.target.value))}
+            <input type="text" inputMode="numeric" id="gift-amount" value={formatAmount(giftAmount)}
+              onChange={(e) => setGiftAmount(e.target.value)}
+              aria-invalid={amountError(giftAmount) !== null}
+              aria-describedby={amountError(giftAmount) ? 'gift-amount-error' : undefined}
               placeholder="예: 100,000,000" className="calc-input pr-8" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
           </div>
+          {amountError(giftAmount) && (
+            <p id="gift-amount-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(giftAmount)}</p>
+          )}
           <p className="calc-hint">증여하는 재산의 시가 기준 금액</p>
         </div>
 
@@ -66,6 +59,7 @@ export default function GiftTaxCalculatorPage() {
           <div className="flex flex-wrap gap-2">
             {DEDUCTION_PRESETS.map(({ label, value }) => (
               <button key={value} type="button"
+                aria-pressed={deductPreset === value}
                 onClick={() => setDeductPreset(value)}
                 className={`px-3 py-2 rounded-xl text-sm font-semibold border transition-all ${
                   deductPreset === value
@@ -75,12 +69,19 @@ export default function GiftTaxCalculatorPage() {
             ))}
           </div>
           {deductPreset === 'custom' && (
-            <div className="relative mt-2">
-              <input type="text" inputMode="numeric" value={customDeduct}
-                onChange={(e) => setCustomDeduct(formatInput(e.target.value))}
-                placeholder="공제금액 직접 입력" className="calc-input pr-8" />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
-            </div>
+            <>
+              <div className="relative mt-2">
+                <input type="text" inputMode="numeric" id="custom-deduct" value={formatAmount(customDeduct)}
+                  onChange={(e) => setCustomDeduct(e.target.value)}
+                  aria-invalid={amountError(customDeduct) !== null}
+                  aria-describedby={amountError(customDeduct) ? 'custom-deduct-error' : undefined}
+                  placeholder="공제금액 직접 입력" className="calc-input pr-8" />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+              </div>
+              {amountError(customDeduct) && (
+                <p id="custom-deduct-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(customDeduct)}</p>
+              )}
+            </>
           )}
           <p className="calc-hint">10년 합산 기준 증여재산공제 한도 (배우자 6억, 직계존·비속 성인 5천만, 미성년 2천만)</p>
         </div>
@@ -96,7 +97,7 @@ export default function GiftTaxCalculatorPage() {
       </div>
 
       {hasValue ? (
-        <div className="mt-6 space-y-4 animate-slide-up">
+        <div className="mt-6 space-y-4 animate-slide-up" aria-live="polite">
           {taxBase > 0 ? (
             <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
               <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">예상 증여세 (산출세액)</p>
@@ -342,13 +343,7 @@ export default function GiftTaxCalculatorPage() {
           </p>
         </div>
 
-        <div className="text-xs text-slate-500 border-t pt-4">
-          <p className="font-semibold text-slate-700 mb-1">근거 자료</p>
-          <ul className="list-disc pl-5 space-y-0.5">
-            <li>상속세 및 증여세법 제56조(세율)·제53조(증여재산공제)·제68조(신고기한) — 국가법령정보센터</li>
-            <li>국세청 증여세 안내 (홈택스)</li>
-          </ul>
-        </div>
+        <SourceNote calculator="gift-tax-calculator" />
       </section>
 
       <RelatedCalculators current="gift-tax-calculator" />

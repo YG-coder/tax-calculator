@@ -3,26 +3,11 @@
 
 import { useState } from 'react'
 import RelatedCalculators from '@/components/RelatedCalculators'
+import SourceNote from '@/components/SourceNote'
+import { basicIncomeTax, localIncomeTax } from '@/lib/tax/rules/rates'
+import { amountError, amountValue, formatAmount } from '@/lib/utils/amount'
 
 function fmt(n: number) { return n.toLocaleString('ko-KR') }
-function parseNum(v: string) { return Number(v.replace(/[^0-9]/g, '')) || 0 }
-function formatInput(v: string) {
-  const n = v.replace(/[^0-9]/g, '')
-  return n ? Number(n).toLocaleString('ko-KR') : ''
-}
-
-// 양도소득세 누진세율 (기본세율, 2026년 기준)
-function calcCapitalGainsTax(base: number): number {
-  if (base <= 0) return 0
-  if (base <= 14_000_000)  return Math.floor(base * 0.06)
-  if (base <= 50_000_000)  return Math.floor(840_000    + (base - 14_000_000)  * 0.15)
-  if (base <= 88_000_000)  return Math.floor(6_240_000  + (base - 50_000_000)  * 0.24)
-  if (base <= 150_000_000) return Math.floor(15_360_000 + (base - 88_000_000)  * 0.35)
-  if (base <= 300_000_000) return Math.floor(37_060_000 + (base - 150_000_000) * 0.38)
-  if (base <= 500_000_000) return Math.floor(94_060_000 + (base - 300_000_000) * 0.40)
-  if (base <= 1_000_000_000) return Math.floor(174_060_000 + (base - 500_000_000) * 0.42)
-  return Math.floor(384_060_000 + (base - 1_000_000_000) * 0.45)
-}
 
 export default function CapitalGainsTaxCalculatorPage() {
   const [acquisition, setAcquisition] = useState('')
@@ -30,19 +15,19 @@ export default function CapitalGainsTaxCalculatorPage() {
   const [expense,     setExpense]     = useState('')
   const [deduction,   setDeduction]   = useState('2500000')  // 기본공제 250만원
 
-  const acqNum  = parseNum(acquisition)
-  const trnNum  = parseNum(transfer)
-  const expNum  = parseNum(expense)
-  const dedNum  = parseNum(deduction)
+  const acqNum  = amountValue(acquisition)
+  const trnNum  = amountValue(transfer)
+  const expNum  = amountValue(expense)
+  const dedNum  = amountValue(deduction)
 
   const hasValue = acqNum > 0 && trnNum > 0
 
   const gain    = Math.max(0, trnNum - acqNum - expNum)   // 양도차익
   const taxBase = Math.max(0, gain - dedNum)               // 과세표준
-  const tax     = calcCapitalGainsTax(taxBase)
+  const tax     = Math.floor(basicIncomeTax(taxBase))
   // 양도소득세에는 지방소득세 10%가 별도로 부과됨 (지방세법 제103조의3 등).
   // 양도소득세는 소득세의 한 종류이므로 지방소득세(소득분) 과세 대상 → localTax 유지.
-  const localTax = Math.floor(tax * 0.1)
+  const localTax = localIncomeTax(tax)
   const totalTax = tax + localTax
 
   return (
@@ -54,20 +39,25 @@ export default function CapitalGainsTaxCalculatorPage() {
         <h2 className="text-base font-bold text-slate-800">양도 정보 입력</h2>
 
         {[
-          { label: '취득가액', value: acquisition, set: setAcquisition, hint: '매입 당시 가격 (취득세·중개비 포함 가능)', required: true },
-          { label: '양도가액', value: transfer,    set: setTransfer,    hint: '매도 금액', required: true },
-          { label: '필요경비', value: expense,     set: setExpense,     hint: '중개수수료, 수리비, 취득세 등 (선택)', required: false },
-        ].map(({ label, value, set, hint, required }) => (
-          <div key={label}>
-            <label className="calc-label">
+          { id: 'acquisition', label: '취득가액', value: acquisition, set: setAcquisition, hint: '매입 당시 가격 (취득세·중개비 포함 가능)', required: true },
+          { id: 'transfer',    label: '양도가액', value: transfer,    set: setTransfer,    hint: '매도 금액', required: true },
+          { id: 'expense',     label: '필요경비', value: expense,     set: setExpense,     hint: '중개수수료, 수리비, 취득세 등 (선택)', required: false },
+        ].map(({ id, label, value, set, hint, required }) => (
+          <div key={id}>
+            <label htmlFor={id} className="calc-label">
               {label} {required && <span className="text-red-400">*</span>}
             </label>
             <div className="relative">
-              <input type="text" inputMode="numeric" value={value}
-                onChange={(e) => set(formatInput(e.target.value))}
+              <input type="text" inputMode="numeric" id={id} value={formatAmount(value)}
+                onChange={(e) => set(e.target.value)}
+                aria-invalid={amountError(value) !== null}
+                aria-describedby={amountError(value) ? `${id}-error` : undefined}
                 placeholder="예: 500,000,000" className="calc-input pr-8" />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
             </div>
+            {amountError(value) && (
+              <p id={`${id}-error`} role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(value)}</p>
+            )}
             <p className="calc-hint">{hint}</p>
           </div>
         ))}
@@ -77,6 +67,7 @@ export default function CapitalGainsTaxCalculatorPage() {
           <div className="flex gap-2">
             {[{ v: '2500000', l: '250만원 (일반)' }, { v: '0', l: '공제 없음' }].map(({ v, l }) => (
               <button key={v} type="button"
+                aria-pressed={deduction === v}
                 onClick={() => setDeduction(v)}
                 className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border transition-all ${
                   deduction === v
@@ -90,7 +81,7 @@ export default function CapitalGainsTaxCalculatorPage() {
       </div>
 
       {hasValue ? (
-        <div className="mt-6 space-y-4 animate-slide-up">
+        <div className="mt-6 space-y-4 animate-slide-up" aria-live="polite">
           {gain > 0 ? (
             <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
               <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">예상 양도소득세 (지방소득세 포함)</p>
@@ -315,14 +306,7 @@ export default function CapitalGainsTaxCalculatorPage() {
           </p>
         </div>
 
-        <div className="text-xs text-slate-500 border-t pt-4">
-          <p className="font-semibold text-slate-700 mb-1">근거 자료</p>
-          <ul className="list-disc pl-5 space-y-0.5">
-            <li>소득세법 제104조(세율)·제95조(장기보유특별공제)·제89조(비과세)·제105조(예정신고) — 국가법령정보센터</li>
-            <li>지방세법 제103조의3 (양도소득에 대한 개인지방소득세)</li>
-            <li>국세청 양도소득세 안내 (홈택스)</li>
-          </ul>
-        </div>
+        <SourceNote calculator="capital-gains-tax-calculator" />
       </section>
 
       <RelatedCalculators current="capital-gains-tax-calculator" />

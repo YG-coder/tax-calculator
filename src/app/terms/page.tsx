@@ -2,7 +2,7 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: '이용안내 | 세금계산기',
+  title: '이용안내',
   description:
     'taxsim.kr의 이용안내입니다. 서비스 목적, 계산 결과의 한계, 법적 책임 제한, 외부 링크 안내를 확인할 수 있습니다.',
 }

@@ -19,13 +19,10 @@
 
 import { useState } from 'react'
 import RelatedCalculators from '@/components/RelatedCalculators'
+import SourceNote from '@/components/SourceNote'
+import { amountError, amountValue, formatAmount } from '@/lib/utils/amount'
 
 function fmt(n: number) { return n.toLocaleString('ko-KR') }
-function parseNum(v: string) { return Number(v.replace(/[^0-9]/g, '')) || 0 }
-function formatInput(v: string) {
-  const n = v.replace(/[^0-9]/g, '')
-  return n ? Number(n).toLocaleString('ko-KR') : ''
-}
 
 // 간이과세자 업종별 부가가치율 (2021.7.1. 이후, 부가가치세법 시행령 §111)
 // 실효세율 = 부가가치율 × 10%
@@ -52,8 +49,8 @@ export default function VatTypeCompareClient() {
   const [industry, setIndustry] = useState<IndustryKey>('retail')
   const [txnType,  setTxnType]  = useState<'b2b' | 'b2c'>('b2c')
 
-  const revNum = parseNum(revenue)
-  const purNum = parseNum(purchase)
+  const revNum = amountValue(revenue)
+  const purNum = amountValue(purchase)
   const hasValue = revNum > 0
 
   const selectedIndustry = INDUSTRIES.find(i => i.key === industry)!
@@ -120,24 +117,34 @@ export default function VatTypeCompareClient() {
         <h2 className="text-base font-bold text-slate-800">사업 정보 입력</h2>
 
         <div>
-          <label className="calc-label">예상 연매출 (공급대가, 부가세 포함) <span className="text-red-400">*</span></label>
+          <label htmlFor="revenue" className="calc-label">예상 연매출 (공급대가, 부가세 포함) <span className="text-red-400">*</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" value={revenue}
-              onChange={(e) => setRevenue(formatInput(e.target.value))}
+            <input type="text" inputMode="numeric" id="revenue" value={formatAmount(revenue)}
+              onChange={(e) => setRevenue(e.target.value)}
+              aria-invalid={amountError(revenue) !== null}
+              aria-describedby={amountError(revenue) ? 'revenue-error' : undefined}
               placeholder="예: 60,000,000" className="calc-input pr-8" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
           </div>
+          {amountError(revenue) && (
+            <p id="revenue-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(revenue)}</p>
+          )}
           <p className="calc-hint">1년 동안의 예상 총 매출 (부가세 포함 금액)</p>
         </div>
 
         <div>
-          <label className="calc-label">연간 매입액 (부가세 포함, 선택)</label>
+          <label htmlFor="purchase" className="calc-label">연간 매입액 (부가세 포함, 선택)</label>
           <div className="relative">
-            <input type="text" inputMode="numeric" value={purchase}
-              onChange={(e) => setPurchase(formatInput(e.target.value))}
+            <input type="text" inputMode="numeric" id="purchase" value={formatAmount(purchase)}
+              onChange={(e) => setPurchase(e.target.value)}
+              aria-invalid={amountError(purchase) !== null}
+              aria-describedby={amountError(purchase) ? 'purchase-error' : undefined}
               placeholder="예: 20,000,000" className="calc-input pr-8" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
           </div>
+          {amountError(purchase) && (
+            <p id="purchase-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(purchase)}</p>
+          )}
           <p className="calc-hint">재료·설비·임차료 등 사업 관련 매입 (세금계산서·카드 증빙분)</p>
         </div>
 
@@ -146,6 +153,7 @@ export default function VatTypeCompareClient() {
           <div className="flex flex-wrap gap-2">
             {INDUSTRIES.map(({ key, label, rate, threshold }) => (
               <button key={key} type="button"
+                aria-pressed={industry === key}
                 onClick={() => setIndustry(key)}
                 className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all text-left ${
                   industry === key
@@ -168,6 +176,7 @@ export default function VatTypeCompareClient() {
           <div className="flex gap-2">
             {([['b2c','소비자 상대 (B2C)'],['b2b','사업자 상대 (B2B)']] as const).map(([v, l]) => (
               <button key={v} type="button"
+                aria-pressed={txnType === v}
                 onClick={() => setTxnType(v)}
                 className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border transition-all ${
                   txnType === v
@@ -182,7 +191,7 @@ export default function VatTypeCompareClient() {
 
       {/* 결과 */}
       {hasValue ? (
-        <div className="mt-6 space-y-4 animate-slide-up">
+        <div className="mt-6 space-y-4 animate-slide-up" aria-live="polite">
 
           {/* 자격 안내 (판정 아님) */}
           {overThreshold && (
@@ -397,14 +406,7 @@ export default function VatTypeCompareClient() {
           </ul>
         </div>
 
-        <div className="text-xs text-slate-500 border-t pt-4">
-          <p className="font-semibold text-slate-700 mb-1">근거 자료</p>
-          <ul className="list-disc pl-5 space-y-0.5">
-            <li>부가가치세법 제61조(간이과세)·제63조(납부세액)·제69조(납부의무 면제) — 국가법령정보센터</li>
-            <li>부가가치세법 시행령 — 업종별 부가가치율(2021.7.1. 이후)</li>
-            <li>국세청 「2026.1.1. 시행 간이과세배제기준 고시」</li>
-          </ul>
-        </div>
+        <SourceNote calculator="vat-type-compare" />
       </section>
 
       <RelatedCalculators current="vat-type-compare" />

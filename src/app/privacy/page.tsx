@@ -2,7 +2,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "개인정보처리방침 | 세금계산기",
+    title: "개인정보처리방침",
     description:
         "taxsim.kr의 개인정보처리방침 안내 페이지입니다. 수집 정보, 이용 목적, 보관 기간, 문의 방법을 확인할 수 있습니다.",
 };
@@ -59,9 +59,9 @@ export default function PrivacyPage() {
                 <section>
                     <h2 className="text-lg font-bold text-slate-800 mb-2">4. 쿠키 사용 안내</h2>
                     <p>
-                        본 사이트는 사용자 경험 개선, 방문 통계 분석, 광고 제공을 위해
-                        쿠키를 사용할 수 있습니다. 쿠키는 웹사이트가 사용자의 브라우저에 저장하는
-                        작은 텍스트 파일로, 접속 환경과 이용 패턴을 보다 효율적으로 분석하는 데 사용됩니다.
+                        본 사이트는 <strong>광고 게재를 위해 쿠키를 사용합니다.</strong> 쿠키는 웹사이트가
+                        이용자의 브라우저에 저장하는 작은 텍스트 파일입니다. 본 사이트가 직접 설정하는
+                        쿠키는 없으며, 아래 5항의 광고 서비스가 자체적으로 쿠키를 설정합니다.
                     </p>
                     <p>
                         사용자는 브라우저 설정을 통해 쿠키 저장을 거부하거나 삭제할 수 있습니다.
@@ -71,14 +71,34 @@ export default function PrivacyPage() {
 
                 <section>
                     <h2 className="text-lg font-bold text-slate-800 mb-2">5. 제3자 서비스 이용</h2>
-                    <p>
-                        본 사이트는 방문 통계 분석, 광고 게재, 서비스 개선을 위해
-                        제3자 서비스를 사용할 수 있습니다.
-                        예를 들어 Google Analytics, Google AdSense 등의 서비스가 적용될 수 있으며,
-                        각 서비스 제공업체는 자체 정책에 따라 데이터를 처리할 수 있습니다.
-                    </p>
-                    <p>
-                        제3자 서비스의 데이터 처리 방식은 각 업체의 개인정보처리방침 및 약관을 따릅니다.
+                    <p>본 사이트가 현재 사용하는 제3자 서비스는 다음과 같습니다.</p>
+                    <ul className="list-disc pl-5 space-y-2 mt-2">
+                        <li>
+                            <strong>Google AdSense (광고 게재)</strong> — Google 및 그 파트너는 쿠키를 사용해
+                            이용자의 본 사이트 및 다른 사이트 방문 기록을 바탕으로 광고를 게재합니다.
+                            이용자는{' '}
+                            <a href="https://myadcenter.google.com/" target="_blank" rel="noopener noreferrer"
+                               className="text-blue-700 hover:underline">Google 광고 설정</a>
+                            에서 맞춤 광고를 해제할 수 있고,{' '}
+                            <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer"
+                               className="text-blue-700 hover:underline">www.aboutads.info</a>
+                            에서 제3자 업체의 맞춤 광고 쿠키를 일괄 해제할 수 있습니다.
+                            처리 방식은{' '}
+                            <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer"
+                               className="text-blue-700 hover:underline">Google의 파트너 사이트 데이터 이용 정책</a>
+                            을 따릅니다.
+                        </li>
+                        <li>
+                            <strong>Vercel (호스팅)</strong> — 사이트 전송 과정에서 접속 로그가 기록됩니다.
+                        </li>
+                        <li>
+                            <strong>Google Search Console · 네이버 서치어드바이저</strong> — 사이트 소유 확인용
+                            메타 태그만 삽입되어 있으며 이용자 정보를 수집하지 않습니다.
+                        </li>
+                    </ul>
+                    <p className="mt-2">
+                        본 사이트는 <strong>Google Analytics 등 별도의 방문 분석 도구를 사용하지 않습니다.</strong>
+                        사용하는 서비스가 추가되면 본 방침을 갱신합니다.
                     </p>
                 </section>
 
@@ -127,7 +147,8 @@ export default function PrivacyPage() {
                 <section>
                     <h2 className="text-lg font-bold text-slate-800 mb-2">10. 시행일</h2>
                     <p>
-                        본 개인정보처리방침은 2026년 4월 24일부터 적용됩니다.
+                        본 개인정보처리방침은 2026년 4월 24일부터 적용되며,
+                        2026년 8월 24일에 실제 사용 중인 제3자 서비스 내역을 반영해 개정되었습니다.
                     </p>
                 </section>
             </div>

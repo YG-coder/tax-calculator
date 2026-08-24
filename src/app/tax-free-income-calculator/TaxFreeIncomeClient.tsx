@@ -4,13 +4,10 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import RelatedCalculators from '@/components/RelatedCalculators'
+import SourceNote from '@/components/SourceNote'
+import { amountError, amountValue, formatAmount } from '@/lib/utils/amount'
 
 function fmt(n: number) { return Math.round(n).toLocaleString('ko-KR') }
-function parseNum(v: string) { return Number(v.replace(/[^0-9]/g, '')) || 0 }
-function formatInput(v: string) {
-  const n = v.replace(/[^0-9]/g, '')
-  return n ? Number(n).toLocaleString('ko-KR') : ''
-}
 
 /* ────────────────────────────────────────────────────────────
    2026년 근로소득 비과세 한도 (국세청·국가법령정보센터 기준)
@@ -80,18 +77,18 @@ export default function TaxFreeIncomeCalculatorPage() {
   const [otherConfirm, setOtherConfirm] = useState(false)
 
   // ── 숫자 변환
-  const baseN = parseNum(base)
-  const mealN = parseNum(meal)
-  const carN = parseNum(car)
-  const childcareN = parseNum(childcare)
+  const baseN = amountValue(base)
+  const mealN = amountValue(meal)
+  const carN = amountValue(car)
+  const childcareN = amountValue(childcare)
   const childN = Math.max(0, Number(childCount) || 0)
-  const researchN = parseNum(research)
-  const overseasN = parseNum(overseas)
-  const productionN = parseNum(production)
-  const prodFixedN = parseNum(prodFixedPay)
-  const prodPrevN = parseNum(prodPrevSalary)
-  const prodYtdFreeN = parseNum(prodYtdFree)
-  const otherN = parseNum(other)
+  const researchN = amountValue(research)
+  const overseasN = amountValue(overseas)
+  const productionN = amountValue(production)
+  const prodFixedN = amountValue(prodFixedPay)
+  const prodPrevN = amountValue(prodPrevSalary)
+  const prodYtdFreeN = amountValue(prodYtdFree)
+  const otherN = amountValue(other)
 
   // ── 항목별 비과세 판정 (월 기준)
   const carOk = carOwn && carWork && carNoTravel
@@ -217,25 +214,35 @@ export default function TaxFreeIncomeCalculatorPage() {
       {/* ── 입력 ─────────────────────────────────────────── */}
       <div className="calc-card p-6 space-y-6">
         <div>
-          <label className="calc-label">월 기본급 및 과세 수당 <span className="text-red-400">*</span></label>
+          <label htmlFor="base" className="calc-label">월 기본급 및 과세 수당 <span className="text-red-400">*</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" value={base}
-              onChange={(e) => setBase(formatInput(e.target.value))}
+            <input type="text" inputMode="numeric" id="base" value={formatAmount(base)}
+              onChange={(e) => setBase(e.target.value)}
+              aria-invalid={amountError(base) !== null}
+              aria-describedby={amountError(base) ? 'base-error' : undefined}
               placeholder="예: 3,000,000" className="calc-input pr-8" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
           </div>
+          {amountError(base) && (
+            <p id="base-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(base)}</p>
+          )}
           <p className="calc-hint">비과세 항목을 뺀, 과세되는 급여(기본급·직책수당 등)를 입력하세요</p>
         </div>
 
         {/* 식대 */}
         <div className="border-t border-slate-100 pt-5">
-          <label className="calc-label">식대 <span className="text-slate-400 font-normal">(월 20만원 한도)</span></label>
+          <label htmlFor="meal" className="calc-label">식대 <span className="text-slate-400 font-normal">(월 20만원 한도)</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" value={meal}
-              onChange={(e) => setMeal(formatInput(e.target.value))}
+            <input type="text" inputMode="numeric" id="meal" value={formatAmount(meal)}
+              onChange={(e) => setMeal(e.target.value)}
+              aria-invalid={amountError(meal) !== null}
+              aria-describedby={amountError(meal) ? 'meal-error' : undefined}
               placeholder="예: 200,000" className="calc-input pr-8" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
           </div>
+          {amountError(meal) && (
+            <p id="meal-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(meal)}</p>
+          )}
           <label className="flex items-start gap-2 mt-2 cursor-pointer">
             <input type="checkbox" checked={mealNoMeals} onChange={(e) => setMealNoMeals(e.target.checked)}
               className="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
@@ -245,13 +252,18 @@ export default function TaxFreeIncomeCalculatorPage() {
 
         {/* 자가운전보조금 */}
         <div className="border-t border-slate-100 pt-5">
-          <label className="calc-label">자가운전보조금 <span className="text-slate-400 font-normal">(월 20만원 한도)</span></label>
+          <label htmlFor="car" className="calc-label">자가운전보조금 <span className="text-slate-400 font-normal">(월 20만원 한도)</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" value={car}
-              onChange={(e) => setCar(formatInput(e.target.value))}
+            <input type="text" inputMode="numeric" id="car" value={formatAmount(car)}
+              onChange={(e) => setCar(e.target.value)}
+              aria-invalid={amountError(car) !== null}
+              aria-describedby={amountError(car) ? 'car-error' : undefined}
               placeholder="예: 200,000" className="calc-input pr-8" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
           </div>
+          {amountError(car) && (
+            <p id="car-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(car)}</p>
+          )}
           <div className="mt-2 space-y-1.5">
             <label className="flex items-start gap-2 cursor-pointer">
               <input type="checkbox" checked={carOwn} onChange={(e) => setCarOwn(e.target.checked)}
@@ -273,17 +285,22 @@ export default function TaxFreeIncomeCalculatorPage() {
 
         {/* 출산·보육수당 */}
         <div className="border-t border-slate-100 pt-5">
-          <label className="calc-label">출산·보육수당 <span className="text-slate-400 font-normal">(6세 이하 자녀 1인당 월 20만원)</span></label>
+          <label htmlFor="childcare" className="calc-label">출산·보육수당 <span className="text-slate-400 font-normal">(6세 이하 자녀 1인당 월 20만원)</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" value={childcare}
-              onChange={(e) => setChildcare(formatInput(e.target.value))}
+            <input type="text" inputMode="numeric" id="childcare" value={formatAmount(childcare)}
+              onChange={(e) => setChildcare(e.target.value)}
+              aria-invalid={amountError(childcare) !== null}
+              aria-describedby={amountError(childcare) ? 'childcare-error' : undefined}
               placeholder="예: 200,000" className="calc-input pr-8" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
           </div>
+          {amountError(childcare) && (
+            <p id="childcare-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(childcare)}</p>
+          )}
           <p className="calc-hint mb-1.5">6세 이하(만 6세가 되는 날이 속하는 과세기간까지) 자녀 수</p>
           <div className="flex gap-2">
             {[0, 1, 2, 3, 4].map((n) => (
-              <button key={n} type="button" onClick={() => setChildCount(String(n))}
+              <button key={n} type="button" aria-pressed={childCount === String(n)} onClick={() => setChildCount(String(n))}
                 className={`flex-1 py-2 rounded-xl text-sm font-semibold border transition-all ${
                   childCount === String(n)
                     ? 'bg-blue-600 border-blue-600 text-white'
@@ -295,13 +312,18 @@ export default function TaxFreeIncomeCalculatorPage() {
 
         {/* 연구보조비 */}
         <div className="border-t border-slate-100 pt-5">
-          <label className="calc-label">연구보조비·연구활동비 <span className="text-slate-400 font-normal">(월 20만원 한도)</span></label>
+          <label htmlFor="research" className="calc-label">연구보조비·연구활동비 <span className="text-slate-400 font-normal">(월 20만원 한도)</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" value={research}
-              onChange={(e) => setResearch(formatInput(e.target.value))}
+            <input type="text" inputMode="numeric" id="research" value={formatAmount(research)}
+              onChange={(e) => setResearch(e.target.value)}
+              aria-invalid={amountError(research) !== null}
+              aria-describedby={amountError(research) ? 'research-error' : undefined}
               placeholder="예: 200,000" className="calc-input pr-8" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
           </div>
+          {amountError(research) && (
+            <p id="research-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(research)}</p>
+          )}
           <label className="flex items-start gap-2 mt-2 cursor-pointer">
             <input type="checkbox" checked={researchEligible} onChange={(e) => setResearchEligible(e.target.checked)}
               className="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
@@ -311,13 +333,18 @@ export default function TaxFreeIncomeCalculatorPage() {
 
         {/* 국외근로소득 */}
         <div className="border-t border-slate-100 pt-5">
-          <label className="calc-label">국외근로소득</label>
+          <label htmlFor="overseas" className="calc-label">국외근로소득</label>
           <div className="relative">
-            <input type="text" inputMode="numeric" value={overseas}
-              onChange={(e) => setOverseas(formatInput(e.target.value))}
+            <input type="text" inputMode="numeric" id="overseas" value={formatAmount(overseas)}
+              onChange={(e) => setOverseas(e.target.value)}
+              aria-invalid={amountError(overseas) !== null}
+              aria-describedby={amountError(overseas) ? 'overseas-error' : undefined}
               placeholder="예: 1,000,000" className="calc-input pr-8" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
           </div>
+          {amountError(overseas) && (
+            <p id="overseas-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(overseas)}</p>
+          )}
           <p className="calc-hint mb-1.5">근무 유형을 선택하세요 (한도가 달라집니다)</p>
           <div className="grid grid-cols-3 gap-2">
             {([
@@ -325,7 +352,7 @@ export default function TaxFreeIncomeCalculatorPage() {
               ['general', '일반 (월 100만)'],
               ['special', '건설·해운 (월 500만)'],
             ] as const).map(([v, l]) => (
-              <button key={v} type="button" onClick={() => setOverseasType(v)}
+              <button key={v} type="button" aria-pressed={overseasType === v} onClick={() => setOverseasType(v)}
                 className={`py-2 rounded-xl text-xs font-semibold border transition-all ${
                   overseasType === v
                     ? 'bg-blue-600 border-blue-600 text-white'
@@ -337,13 +364,18 @@ export default function TaxFreeIncomeCalculatorPage() {
 
         {/* 생산직 초과근로수당 */}
         <div className="border-t border-slate-100 pt-5">
-          <label className="calc-label">생산직 연장·야간·휴일근로수당 <span className="text-slate-400 font-normal">(연 240만원 누적 한도)</span></label>
+          <label htmlFor="production" className="calc-label">생산직 연장·야간·휴일근로수당 <span className="text-slate-400 font-normal">(연 240만원 누적 한도)</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" value={production}
-              onChange={(e) => setProduction(formatInput(e.target.value))}
+            <input type="text" inputMode="numeric" id="production" value={formatAmount(production)}
+              onChange={(e) => setProduction(e.target.value)}
+              aria-invalid={amountError(production) !== null}
+              aria-describedby={amountError(production) ? 'production-error' : undefined}
               placeholder="이번 달 지급액 예: 500,000" className="calc-input pr-8" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
           </div>
+          {amountError(production) && (
+            <p id="production-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(production)}</p>
+          )}
           <p className="calc-hint">이번 달 지급된 연장·야간·휴일근로수당을 입력하세요 (월 한도가 아니라 연 240만원 누적 한도가 적용됩니다)</p>
           <label className="flex items-start gap-2 mt-2 cursor-pointer">
             <input type="checkbox" checked={prodIsProduction} onChange={(e) => setProdIsProduction(e.target.checked)}
@@ -354,34 +386,49 @@ export default function TaxFreeIncomeCalculatorPage() {
             <div className="mt-3 space-y-3 animate-fade-in">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-600 mb-1 block">월정액급여</label>
+                  <label htmlFor="prod-fixed-pay" className="text-xs font-semibold text-slate-600 mb-1 block">월정액급여</label>
                   <div className="relative">
-                    <input type="text" inputMode="numeric" value={prodFixedPay}
-                      onChange={(e) => setProdFixedPay(formatInput(e.target.value))}
+                    <input type="text" inputMode="numeric" id="prod-fixed-pay" value={formatAmount(prodFixedPay)}
+                      onChange={(e) => setProdFixedPay(e.target.value)}
+                      aria-invalid={amountError(prodFixedPay) !== null}
+                      aria-describedby={amountError(prodFixedPay) ? 'prod-fixed-pay-error' : undefined}
                       placeholder="예: 2,000,000" className="calc-input pr-8 text-sm" />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none">원</span>
                   </div>
+                  {amountError(prodFixedPay) && (
+                    <p id="prod-fixed-pay-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(prodFixedPay)}</p>
+                  )}
                   <p className="calc-hint">260만원 이하 요건</p>
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-600 mb-1 block">직전연도 총급여</label>
+                  <label htmlFor="prod-prev-salary" className="text-xs font-semibold text-slate-600 mb-1 block">직전연도 총급여</label>
                   <div className="relative">
-                    <input type="text" inputMode="numeric" value={prodPrevSalary}
-                      onChange={(e) => setProdPrevSalary(formatInput(e.target.value))}
+                    <input type="text" inputMode="numeric" id="prod-prev-salary" value={formatAmount(prodPrevSalary)}
+                      onChange={(e) => setProdPrevSalary(e.target.value)}
+                      aria-invalid={amountError(prodPrevSalary) !== null}
+                      aria-describedby={amountError(prodPrevSalary) ? 'prod-prev-salary-error' : undefined}
                       placeholder="예: 28,000,000" className="calc-input pr-8 text-sm" />
                     <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none">원</span>
                   </div>
+                  {amountError(prodPrevSalary) && (
+                    <p id="prod-prev-salary-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(prodPrevSalary)}</p>
+                  )}
                   <p className="calc-hint">3,700만원 이하 요건</p>
                 </div>
               </div>
               <div>
-                <label className="text-xs font-semibold text-slate-600 mb-1 block">올해 이번 달 직전까지 적용받은 비과세 초과근로수당</label>
+                <label htmlFor="prod-ytd-free" className="text-xs font-semibold text-slate-600 mb-1 block">올해 이번 달 직전까지 적용받은 비과세 초과근로수당</label>
                 <div className="relative">
-                  <input type="text" inputMode="numeric" value={prodYtdFree}
-                    onChange={(e) => setProdYtdFree(formatInput(e.target.value))}
+                  <input type="text" inputMode="numeric" id="prod-ytd-free" value={formatAmount(prodYtdFree)}
+                    onChange={(e) => setProdYtdFree(e.target.value)}
+                    aria-invalid={amountError(prodYtdFree) !== null}
+                    aria-describedby={amountError(prodYtdFree) ? 'prod-ytd-free-error' : undefined}
                     placeholder="예: 0 (없으면 0)" className="calc-input pr-8 text-sm" />
                   <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none">원</span>
                 </div>
+                {amountError(prodYtdFree) && (
+                  <p id="prod-ytd-free-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(prodYtdFree)}</p>
+                )}
                 <p className="calc-hint">연 240만원 한도 중 이미 사용한 금액. 잔여 한도 내에서 이번 달 지급액이 비과세됩니다. 누적액을 입력하지 않으면 올해 처음 비과세 적용을 받는 것으로 계산합니다.</p>
               </div>
             </div>
@@ -390,13 +437,18 @@ export default function TaxFreeIncomeCalculatorPage() {
 
         {/* 기타 비과세 */}
         <div className="border-t border-slate-100 pt-5">
-          <label className="calc-label">기타 비과세 급여</label>
+          <label htmlFor="other" className="calc-label">기타 비과세 급여</label>
           <div className="relative">
-            <input type="text" inputMode="numeric" value={other}
-              onChange={(e) => setOther(formatInput(e.target.value))}
+            <input type="text" inputMode="numeric" id="other" value={formatAmount(other)}
+              onChange={(e) => setOther(e.target.value)}
+              aria-invalid={amountError(other) !== null}
+              aria-describedby={amountError(other) ? 'other-error' : undefined}
               placeholder="예: 0" className="calc-input pr-8" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
           </div>
+          {amountError(other) && (
+            <p id="other-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(other)}</p>
+          )}
           <label className="flex items-start gap-2 mt-2 cursor-pointer">
             <input type="checkbox" checked={otherConfirm} onChange={(e) => setOtherConfirm(e.target.checked)}
               className="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
@@ -407,7 +459,7 @@ export default function TaxFreeIncomeCalculatorPage() {
 
       {/* ── 결과 ─────────────────────────────────────────── */}
       {hasValue ? (
-        <div className="mt-6 space-y-4 animate-slide-up">
+        <div className="mt-6 space-y-4 animate-slide-up" aria-live="polite">
           <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
             <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">월 비과세 금액</p>
             <p className="text-4xl font-black tabular-nums">{fmt(monthlyFree)}<span className="text-2xl font-bold ml-1">원</span></p>
@@ -565,14 +617,7 @@ export default function TaxFreeIncomeCalculatorPage() {
           </p>
         </div>
 
-        <div className="text-xs text-slate-500 border-t pt-4">
-          <p className="font-semibold text-slate-700 mb-1">근거 자료</p>
-          <ul className="list-disc pl-5 space-y-0.5">
-            <li>소득세법 제12조(비과세소득) — 국가법령정보센터</li>
-            <li>소득세법 시행령 제12조·제16조·제17조·제17조의2 — 국가법령정보센터</li>
-            <li>국세청 「비과세 근로소득」 안내 (홈택스)</li>
-          </ul>
-        </div>
+        <SourceNote calculator="tax-free-income-calculator" />
       </section>
 
       <RelatedCalculators current="tax-free-income-calculator" />

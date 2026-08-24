@@ -3,54 +3,18 @@
 
 import { useState } from 'react'
 import RelatedCalculators from '@/components/RelatedCalculators'
+import SourceNote from '@/components/SourceNote'
+import { amountError, amountValue, formatAmount } from '@/lib/utils/amount'
+import { calcWithholdingTax, childMonthlyCredit } from '@/lib/tax/rules/withholding'
 
 function fmt(n: number) { return n.toLocaleString('ko-KR') }
-function parseNum(v: string) { return Number(v.replace(/[^0-9]/g, '')) || 0 }
-function formatInput(v: string) {
-  const n = v.replace(/[^0-9]/g, '')
-  return n ? Number(n).toLocaleString('ko-KR') : ''
-}
-
-// 간이세액표 근사 계산 (2025~2026년 기준)
-// 정확한 결과는 국세청 간이세액표 사용 필요
-function calcWithholdingTax(monthlyTaxable: number, dependents: number): number {
-  const annual = monthlyTaxable * 12
-
-  // 근로소득공제
-  let wageDeduction = 0
-  if      (annual <= 5_000_000)   wageDeduction = annual * 0.70
-  else if (annual <= 15_000_000)  wageDeduction = 3_500_000  + (annual - 5_000_000)   * 0.40
-  else if (annual <= 45_000_000)  wageDeduction = 7_500_000  + (annual - 15_000_000)  * 0.15
-  else if (annual <= 100_000_000) wageDeduction = 12_000_000 + (annual - 45_000_000)  * 0.05
-  else                            wageDeduction = 14_750_000
-  wageDeduction = Math.min(wageDeduction, 14_000_000)
-
-  const basicDeduction = 1_500_000 * Math.max(1, dependents)
-  const taxBase = Math.max(0, annual - wageDeduction - basicDeduction)
-
-  let grossTax = 0
-  if      (taxBase <= 14_000_000)    grossTax = taxBase * 0.06
-  else if (taxBase <= 50_000_000)    grossTax = 840_000    + (taxBase - 14_000_000)  * 0.15
-  else if (taxBase <= 88_000_000)    grossTax = 6_240_000  + (taxBase - 50_000_000)  * 0.24
-  else if (taxBase <= 150_000_000)   grossTax = 15_360_000 + (taxBase - 88_000_000)  * 0.35
-  else if (taxBase <= 300_000_000)   grossTax = 37_060_000 + (taxBase - 150_000_000) * 0.38
-  else if (taxBase <= 500_000_000)   grossTax = 94_060_000 + (taxBase - 300_000_000) * 0.40
-  else if (taxBase <= 1_000_000_000) grossTax = 174_060_000 + (taxBase - 500_000_000) * 0.42
-  else                               grossTax = 384_060_000 + (taxBase - 1_000_000_000) * 0.45
-
-  let credit = grossTax <= 1_300_000 ? grossTax * 0.55 : 715_000 + (grossTax - 1_300_000) * 0.30
-  credit = Math.min(credit, 740_000)
-
-  const annualTax = Math.max(0, grossTax - credit)
-  return Math.floor(Math.floor(annualTax / 12) / 10) * 10
-}
 
 export default function WithholdingCalculatorPage() {
   const [salary,     setSalary]     = useState('')
   const [dependents, setDependents] = useState('1')
   const [childCount, setChildCount] = useState('0')
 
-  const salaryNum   = parseNum(salary)
+  const salaryNum   = amountValue(salary)
   const depNum      = Math.max(1, Number(dependents) || 1)
   const childNum    = Math.max(0, Number(childCount) || 0)
   const hasValue    = salaryNum > 0
@@ -59,14 +23,8 @@ export default function WithholdingCalculatorPage() {
   // 근로소득세 원천징수 시 지방소득세도 함께 특별징수 → 아래 finalLocalTax에서 반영.
   const incomeTax  = calcWithholdingTax(salaryNum, depNum)
 
-  // 간이세액표 자녀수별 공제 (8세 이상 20세 이하, 2026.2.27 개정 간이세액표 기준, 2026.3.1 지급분부터 적용)
-  // ※ 연말정산용 연간 자녀세액공제(25만/55만원 등)를 12개월로 나눈 값이 아니라,
-  //   국세청 간이세액표 자체에 내장된 월 단위 자녀수 공제액입니다.
-  // 1명: 월 12,500원, 2명: 월 29,160원, 3명 이상: 29,160원 + 초과 1명당 월 25,000원
-  const childCredit = childNum === 0 ? 0
-    : childNum === 1 ? 12_500
-    : childNum === 2 ? 29_160
-    : 29_160 + (childNum - 2) * 25_000
+  // 간이세액표 자녀수별 공제 (8세 이상 20세 이하)
+  const childCredit = childMonthlyCredit(childNum)
 
   const finalIncomeTax = Math.max(0, incomeTax - childCredit)
   const finalLocalTax  = Math.floor(finalIncomeTax * 0.1 / 10) * 10
@@ -76,19 +34,40 @@ export default function WithholdingCalculatorPage() {
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-2">원천징수세액 계산기</h1>
-      <p className="text-slate-500 mb-6">월 급여·부양가족 기준 예상 원천징수세액 간이 계산 · 참고용</p>
+      <p className="text-slate-500 mb-4">월 급여·부양가족 기준 근로소득 원천징수세액 근사 계산 · 참고용</p>
+
+      <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 p-4 text-xs text-slate-700">
+        <p className="font-semibold text-slate-900 mb-1">이 계산기는 공식 간이세액표를 조회하지 않습니다</p>
+        <p>
+          국세청 <strong>근로소득 간이세액표</strong>(소득세법 시행령 별표2)를 직접 조회하는 대신,
+          연 환산 후 연말정산 방식으로 재계산한 <strong>근사값</strong>을 보여줍니다. 공식 표 금액과
+          차이가 날 수 있으므로(급여 구간에 따라 수천~수만 원) 실제 원천징수액은 아래 홈택스
+          간이세액표 조회로 확인하세요.
+        </p>
+        <p className="mt-2">
+          <a href="https://hometax.go.kr" target="_blank" rel="noopener noreferrer"
+             className="font-semibold text-blue-700 underline">
+            홈택스 근로소득 간이세액표 조회 →
+          </a>
+        </p>
+      </div>
 
       <div className="calc-card p-6 space-y-5">
         <h2 className="text-base font-bold text-slate-800">급여 정보 입력</h2>
 
         <div>
-          <label className="calc-label">월 급여 (세전) <span className="text-red-400">*</span></label>
+          <label htmlFor="salary" className="calc-label">월 급여 (세전) <span className="text-red-400">*</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" value={salary}
-              onChange={(e) => setSalary(formatInput(e.target.value))}
+            <input type="text" inputMode="numeric" id="salary" value={formatAmount(salary)}
+              onChange={(e) => setSalary(e.target.value)}
+              aria-invalid={amountError(salary) !== null}
+              aria-describedby={amountError(salary) ? 'salary-error' : undefined}
               placeholder="예: 3,500,000" className="calc-input pr-8" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
           </div>
+          {amountError(salary) && (
+            <p id="salary-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(salary)}</p>
+          )}
           <p className="calc-hint">월 세전 급여를 입력하세요</p>
         </div>
 
@@ -97,6 +76,7 @@ export default function WithholdingCalculatorPage() {
           <div className="flex gap-2">
             {[1,2,3,4,5].map((n) => (
               <button key={n} type="button"
+                aria-pressed={dependents === String(n)}
                 onClick={() => setDependents(String(n))}
                 className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border transition-all ${
                   dependents === String(n)
@@ -113,6 +93,7 @@ export default function WithholdingCalculatorPage() {
           <div className="flex gap-2">
             {[0,1,2,3].map((n) => (
               <button key={n} type="button"
+                aria-pressed={childCount === String(n)}
                 onClick={() => setChildCount(String(n))}
                 className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border transition-all ${
                   childCount === String(n)
@@ -121,12 +102,12 @@ export default function WithholdingCalculatorPage() {
                 }`}>{n}명</button>
             ))}
           </div>
-          <p className="calc-hint">간이세액표 자녀수 공제 반영 · 8세 이상 자녀 (1명 월 12,500원, 2명 월 29,160원, 3명~ +월 25,000원/명)</p>
+          <p className="calc-hint">간이세액표 자녀수 공제 반영 · 8세 이상 자녀 (1명 월 20,830원, 2명 월 45,830원, 3명~ +월 33,330원/명)</p>
         </div>
       </div>
 
       {hasValue ? (
-        <div className="mt-6 space-y-4 animate-slide-up">
+        <div className="mt-6 space-y-4 animate-slide-up" aria-live="polite">
           <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
             <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">예상 실수령액 (세금만 차감)</p>
             <p className="text-4xl font-black tabular-nums">{fmt(finalNet)}<span className="text-2xl font-bold ml-1">원</span></p>
@@ -139,7 +120,7 @@ export default function WithholdingCalculatorPage() {
           <div className="calc-card p-5">
             <h3 className="text-sm font-bold text-slate-700 mb-4">원천징수 내역 (세금만)</h3>
             <ul className="space-y-2.5">
-              <li className="flex justify-between text-sm"><span className="text-slate-600">소득세 (간이세액표 근사)</span><span className="font-bold text-blue-600 tabular-nums">{fmt(finalIncomeTax)} 원</span></li>
+              <li className="flex justify-between text-sm"><span className="text-slate-600">소득세 (공식 표 아님 · 근사값)</span><span className="font-bold text-blue-600 tabular-nums">{fmt(finalIncomeTax)} 원</span></li>
               <li className="flex justify-between text-sm"><span className="text-slate-600">지방소득세 (소득세×10%)</span><span className="font-bold text-slate-600 tabular-nums">{fmt(finalLocalTax)} 원</span></li>
               {childCredit > 0 && (
                 <li className="flex justify-between text-sm"><span className="text-emerald-600">자녀수 공제 적용 (간이세액표)</span><span className="font-bold text-emerald-600 tabular-nums">−{fmt(childCredit)} 원/월</span></li>
@@ -264,13 +245,7 @@ export default function WithholdingCalculatorPage() {
           </p>
         </div>
 
-        <div className="text-xs text-slate-500 border-t pt-4">
-          <p className="font-semibold text-slate-700 mb-1">근거 자료</p>
-          <ul className="list-disc pl-5 space-y-0.5">
-            <li>소득세법 제134조(근로소득 원천징수)·제59조(근로소득세액공제) — 국가법령정보센터</li>
-            <li>국세청 근로소득 간이세액표 (홈택스)</li>
-          </ul>
-        </div>
+        <SourceNote calculator="withholding-calculator" />
       </section>
 
       <RelatedCalculators current="withholding-calculator" />

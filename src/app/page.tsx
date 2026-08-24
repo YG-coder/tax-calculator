@@ -31,14 +31,7 @@ const websiteJsonLd = {
       height: 630,
     },
   },
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: {
-      '@type': 'EntryPoint',
-      urlTemplate: 'https://taxsim.kr/?q={search_term_string}',
-    },
-    'query-input': 'required name=search_term_string',
-  },
+  // 사이트 내 검색 기능이 없으므로 SearchAction은 선언하지 않는다.
 }
 
 // 계산기 ItemList (홈에서 컬렉션을 검색엔진에 알림)

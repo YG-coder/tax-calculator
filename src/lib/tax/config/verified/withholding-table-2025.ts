@@ -1,7 +1,13 @@
 /**
- * @file 2025 근로소득 간이세액표 (샘플)
- * @description 실제 전체 데이터 대신 일부 구간만 포함
+ * @file 근로소득 간이세액표 — ⚠️ 공식 데이터 아님 (샘플 스텁)
+ *
+ * 아래 값은 전체 표가 아니라 몇 개 구간만 넣어 둔 자리표시자다.
+ * 공식 표(소득세법 시행령 별표2 / 홈택스 다운로드)를 받아 채우기 전까지는
+ * 서비스 계산에 사용하면 안 된다. 사용을 막기 위해 IS_OFFICIAL_TABLE = false 로 둔다.
  */
+
+/** 공식 간이세액표 전체 데이터를 채운 뒤 true 로 바꿀 것. */
+export const IS_OFFICIAL_TABLE = false;
 
 import { WithholdingRow } from "../../types";
 

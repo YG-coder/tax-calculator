@@ -3,24 +3,19 @@
 
 import { useState } from 'react'
 import RelatedCalculators from '@/components/RelatedCalculators'
+import SourceNote from '@/components/SourceNote'
+import { freelancerWithholding } from '@/lib/tax/rules/freelancer'
+import { amountError, amountValue, formatAmount } from '@/lib/utils/amount'
 
 function fmt(n: number) { return n.toLocaleString('ko-KR') }
-function parseNum(v: string) { return Number(v.replace(/[^0-9]/g, '')) || 0 }
-function formatInput(v: string) {
-  const n = v.replace(/[^0-9]/g, '')
-  return n ? Number(n).toLocaleString('ko-KR') : ''
-}
 
 export default function FreelancerTaxClient() {
   const [amount, setAmount] = useState('')
 
-  const parsed   = parseNum(amount)
+  const parsed   = amountValue(amount)
   const hasValue = parsed > 0
 
-  const incomeTax = Math.floor(parsed * 0.03)
-  const localTax  = Math.floor(parsed * 0.003)
-  const totalTax  = incomeTax + localTax
-  const net       = parsed - totalTax
+  const { incomeTax, localTax, totalTax, net } = freelancerWithholding(parsed)
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">
@@ -30,19 +25,24 @@ export default function FreelancerTaxClient() {
       <div className="calc-card p-6 space-y-4">
         <h2 className="text-base font-bold text-slate-800">계약 금액 입력</h2>
         <div>
-          <label className="calc-label">수입 금액 <span className="text-red-400">*</span></label>
+          <label htmlFor="amount" className="calc-label">수입 금액 <span className="text-red-400">*</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" value={amount}
-              onChange={(e) => setAmount(formatInput(e.target.value))}
+            <input type="text" inputMode="numeric" id="amount" value={formatAmount(amount)}
+              onChange={(e) => setAmount(e.target.value)}
+              aria-invalid={amountError(amount) !== null}
+              aria-describedby={amountError(amount) ? 'amount-error' : undefined}
               placeholder="예: 1,000,000" className="calc-input pr-8" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
           </div>
+          {amountError(amount) && (
+            <p id="amount-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(amount)}</p>
+          )}
           <p className="calc-hint">계약금액(세전)을 입력하세요</p>
         </div>
       </div>
 
       {hasValue ? (
-        <div className="mt-6 space-y-4 animate-slide-up">
+        <div className="mt-6 space-y-4 animate-slide-up" aria-live="polite">
           <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
             <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">실수령액</p>
             <p className="text-4xl font-black tabular-nums">{fmt(net)}<span className="text-2xl font-bold ml-1">원</span></p>
@@ -270,14 +270,7 @@ export default function FreelancerTaxClient() {
           </p>
         </div>
 
-        <div className="text-xs text-slate-500 border-t pt-4">
-          <p className="font-semibold text-slate-700 mb-1">근거 자료</p>
-          <ul className="list-disc pl-5 space-y-0.5">
-            <li>소득세법 제129조 (원천징수세율) — 사업소득 3%</li>
-            <li>지방세법 — 지방소득세 10% 부가</li>
-            <li>국세청 「프리랜서 종합소득세 신고 안내」</li>
-          </ul>
-        </div>
+        <SourceNote calculator="freelancer-tax-calculator" />
       </section>
 
       <RelatedCalculators current="freelancer-tax-calculator" />

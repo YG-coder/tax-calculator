@@ -7,6 +7,8 @@ import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { calcPropertyTax, TAX_YEAR } from './calc'
 import RelatedCalculators from '@/components/RelatedCalculators'
+import SourceNote from '@/components/SourceNote'
+import { amountError, amountValue, formatAmount, readPercent } from '@/lib/utils/amount'
 
 const won = (n: number) => Math.round(n).toLocaleString('ko-KR') + '원'
 
@@ -21,22 +23,27 @@ const eokMan = (amount: number) => {
   )
 }
 
-const parseNum = (s: string) => {
-  const n = Number(s.replace(/[^0-9]/g, ''))
-  return Number.isFinite(n) ? n : 0
-}
-
 export default function PropertyTaxCalculatorClient() {
-  const [publishedPrice, setPublishedPrice] = useState<number>(0)
+  // 금액·비율은 입력 문자열 그대로 보관하고 공용 파서로 검증한다.
+  // (숫자 아닌 문자를 조용히 지우면 -100 -> 100 처럼 의도하지 않은 값으로 계산된다)
+  const [publishedPriceText, setPublishedPriceText] = useState<string>('')
   const [isSingleHome, setIsSingleHome] = useState<boolean>(true)
-  const [ownershipPct, setOwnershipPct] = useState<number>(100)
+  const [ownershipText, setOwnershipText] = useState<string>('100')
   const [applyUrbanArea, setApplyUrbanArea] = useState<boolean>(true)
 
   const [useCeiling, setUseCeiling] = useState<boolean>(false)
-  const [prevBase, setPrevBase] = useState<number>(0)
-  const [prevUrban, setPrevUrban] = useState<number>(0)
+  const [prevBaseText, setPrevBaseText] = useState<string>('')
+  const [prevUrbanText, setPrevUrbanText] = useState<string>('')
 
-  const ownershipValid = ownershipPct > 0 && ownershipPct <= 100
+  const publishedPrice = amountValue(publishedPriceText)
+  const prevBase = amountValue(prevBaseText)
+  const prevUrban = amountValue(prevUrbanText)
+
+  const ownership = readPercent(ownershipText)
+  const ownershipPct = ownership.value
+  const ownershipError =
+    ownership.error ?? (ownershipPct > 0 ? null : '소유지분율은 1% 이상 100% 이하로 입력하세요.')
+  const ownershipValid = ownershipError === null
 
   const result = useMemo(() => {
     if (publishedPrice <= 0 || !ownershipValid) return null
@@ -83,13 +90,19 @@ export default function PropertyTaxCalculatorClient() {
             <div className="mt-1 flex items-center gap-2">
               <input
                 inputMode="numeric"
-                value={publishedPrice ? publishedPrice.toLocaleString('ko-KR') : ''}
-                onChange={(e) => setPublishedPrice(parseNum(e.target.value))}
+                value={formatAmount(publishedPriceText)}
+                onChange={(e) => setPublishedPriceText(e.target.value)}
+                aria-invalid={amountError(publishedPriceText) !== null}
                 placeholder="예) 500000000 (5억원)"
                 className="w-full rounded-lg border border-slate-300 px-3 py-2 text-right"
               />
               <span className="shrink-0 text-sm text-slate-500">원</span>
             </div>
+            {amountError(publishedPriceText) && (
+              <span role="alert" className="mt-1 block text-xs font-semibold text-red-600">
+                {amountError(publishedPriceText)}
+              </span>
+            )}
             {publishedPrice > 0 && (
               <span className="mt-1 block text-xs text-slate-500">{eokMan(publishedPrice)}</span>
             )}
@@ -99,6 +112,7 @@ export default function PropertyTaxCalculatorClient() {
             <span className="text-sm font-medium text-slate-700">1세대 1주택 여부</span>
             <button
               type="button"
+              aria-pressed={isSingleHome}
               onClick={() => setIsSingleHome((v) => !v)}
               className={`rounded-full px-4 py-1.5 text-sm font-medium ${
                 isSingleHome ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600'
@@ -113,15 +127,16 @@ export default function PropertyTaxCalculatorClient() {
             <div className="mt-1 flex items-center gap-2">
               <input
                 inputMode="numeric"
-                value={ownershipPct || ''}
-                onChange={(e) => setOwnershipPct(Math.min(parseNum(e.target.value), 100))}
+                value={ownershipText}
+                onChange={(e) => setOwnershipText(e.target.value)}
+                aria-invalid={!ownershipValid}
                 className="w-24 rounded-lg border border-slate-300 px-3 py-2 text-right"
               />
               <span className="text-sm text-slate-500">%</span>
             </div>
-            {!ownershipValid && (
-              <span className="mt-1 block text-xs text-red-500">
-                소유지분율은 1% 이상 100% 이하로 입력하세요.
+            {ownershipError && (
+              <span role="alert" className="mt-1 block text-xs font-semibold text-red-600">
+                {ownershipError}
               </span>
             )}
           </label>
@@ -130,6 +145,7 @@ export default function PropertyTaxCalculatorClient() {
             <span className="text-sm font-medium text-slate-700">도시지역분 적용</span>
             <button
               type="button"
+              aria-pressed={applyUrbanArea}
               onClick={() => setApplyUrbanArea((v) => !v)}
               className={`rounded-full px-4 py-1.5 text-sm font-medium ${
                 applyUrbanArea ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600'
@@ -152,22 +168,34 @@ export default function PropertyTaxCalculatorClient() {
                   <span className="text-xs text-slate-600">전년도 재산세 본세</span>
                   <input
                     inputMode="numeric"
-                    value={prevBase ? prevBase.toLocaleString('ko-KR') : ''}
-                    onChange={(e) => setPrevBase(parseNum(e.target.value))}
+                    value={formatAmount(prevBaseText)}
+                    onChange={(e) => setPrevBaseText(e.target.value)}
+                    aria-invalid={amountError(prevBaseText) !== null}
                     placeholder="원"
                     className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-right"
                   />
+                  {amountError(prevBaseText) && (
+                    <span role="alert" className="mt-1 block text-xs font-semibold text-red-600">
+                      {amountError(prevBaseText)}
+                    </span>
+                  )}
                 </label>
                 {applyUrbanArea && (
                   <label className="block">
                     <span className="text-xs text-slate-600">전년도 도시지역분</span>
                     <input
                       inputMode="numeric"
-                      value={prevUrban ? prevUrban.toLocaleString('ko-KR') : ''}
-                      onChange={(e) => setPrevUrban(parseNum(e.target.value))}
+                      value={formatAmount(prevUrbanText)}
+                      onChange={(e) => setPrevUrbanText(e.target.value)}
+                      aria-invalid={amountError(prevUrbanText) !== null}
                       placeholder="원"
                       className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-right"
                     />
+                    {amountError(prevUrbanText) && (
+                      <span role="alert" className="mt-1 block text-xs font-semibold text-red-600">
+                        {amountError(prevUrbanText)}
+                      </span>
+                    )}
                   </label>
                 )}
                 <p className="text-xs text-slate-500">
@@ -247,6 +275,8 @@ export default function PropertyTaxCalculatorClient() {
           </Link>
         </div>
       </div>
+
+      <SourceNote calculator="property-tax-calculator" />
 
       <RelatedCalculators current="property-tax-calculator" />
     </main>

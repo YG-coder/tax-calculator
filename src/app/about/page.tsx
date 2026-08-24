@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: '사이트 소개 | 세금계산기',
+  title: '사이트 소개',
   description:
     'taxsim.kr는 여러 세금 계산기와 세금 가이드를 무료로 제공하는 온라인 세금 계산 서비스입니다. 운영자 소개, 정보 출처, 업데이트 정책을 안내합니다.',
   alternates: { canonical: '/about' },

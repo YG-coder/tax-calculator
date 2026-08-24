@@ -3,24 +3,20 @@
 
 import { useState } from 'react'
 import RelatedCalculators from '@/components/RelatedCalculators'
+import SourceNote from '@/components/SourceNote'
+import { splitVat } from '@/lib/tax/rules/vat'
+import { amountError, amountValue, formatAmount } from '@/lib/utils/amount'
 
 function fmt(n: number) { return n.toLocaleString('ko-KR') }
-function parseNum(v: string) { return Number(v.replace(/[^0-9]/g, '')) || 0 }
-function formatInput(v: string) {
-  const n = v.replace(/[^0-9]/g, '')
-  return n ? Number(n).toLocaleString('ko-KR') : ''
-}
 
 export default function VatCalculatorClient() {
   const [amount, setAmount] = useState('')
   const [mode, setMode] = useState<'inclusive' | 'exclusive'>('inclusive')
 
-  const parsed = parseNum(amount)
+  const parsed = amountValue(amount)
   const hasValue = parsed > 0
 
-  const supply = mode === 'inclusive' ? Math.floor(parsed / 1.1) : parsed
-  const vat    = mode === 'inclusive' ? parsed - supply : Math.floor(parsed * 0.1)
-  const total  = mode === 'inclusive' ? parsed : supply + vat
+  const { supply, vat, total } = splitVat(parsed, mode)
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-10">
@@ -36,6 +32,7 @@ export default function VatCalculatorClient() {
             <button
               key={m}
               type="button"
+              aria-pressed={mode === m}
               onClick={() => setMode(m)}
               className={`flex-1 py-2.5 rounded-xl text-sm font-semibold border transition-all ${
                 mode === m
@@ -49,7 +46,7 @@ export default function VatCalculatorClient() {
         </div>
 
         <div>
-          <label className="calc-label">
+          <label htmlFor="amount" className="calc-label">
             {mode === 'inclusive' ? '부가세 포함 금액' : '공급가액 (부가세 제외)'}
             <span className="text-red-400 ml-1">*</span>
           </label>
@@ -57,13 +54,18 @@ export default function VatCalculatorClient() {
             <input
               type="text"
               inputMode="numeric"
-              value={amount}
-              onChange={(e) => setAmount(formatInput(e.target.value))}
+              id="amount" value={formatAmount(amount)}
+              onChange={(e) => setAmount(e.target.value)}
+              aria-invalid={amountError(amount) !== null}
+              aria-describedby={amountError(amount) ? 'amount-error' : undefined}
               placeholder="예: 1,100,000"
               className="calc-input pr-8"
             />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
           </div>
+          {amountError(amount) && (
+            <p id="amount-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(amount)}</p>
+          )}
           <p className="calc-hint">
             {mode === 'inclusive' ? '부가세가 포함된 총금액을 입력하세요' : '부가세를 제외한 순수 공급가액을 입력하세요'}
           </p>
@@ -72,7 +74,7 @@ export default function VatCalculatorClient() {
 
       {/* 결과 */}
       {hasValue ? (
-        <div className="mt-6 space-y-4 animate-slide-up">
+        <div className="mt-6 space-y-4 animate-slide-up" aria-live="polite">
           <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
             <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">총 금액</p>
             <p className="text-4xl font-black tabular-nums">{fmt(total)}<span className="text-2xl font-bold ml-1">원</span></p>
@@ -284,14 +286,7 @@ export default function VatCalculatorClient() {
           </p>
         </div>
 
-        <div className="text-xs text-slate-500 border-t pt-4">
-          <p className="font-semibold text-slate-700 mb-1">근거 자료</p>
-          <ul className="list-disc pl-5 space-y-0.5">
-            <li>부가가치세법 제30조 (세율) — 국세법령정보시스템</li>
-            <li>부가가치세법 시행령 — 일반과세자/간이과세자 구분</li>
-            <li>국세청 홈택스 부가세 신고 안내</li>
-          </ul>
-        </div>
+        <SourceNote calculator="vat-calculator" />
       </section>
 
       <RelatedCalculators current="vat-calculator" />

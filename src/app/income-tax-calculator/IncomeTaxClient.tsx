@@ -3,37 +3,23 @@
 
 import { useState } from 'react'
 import RelatedCalculators from '@/components/RelatedCalculators'
+import SourceNote from '@/components/SourceNote'
+import { basicIncomeTax, localIncomeTax } from '@/lib/tax/rules/rates'
+import { amountError, amountValue, formatAmount } from '@/lib/utils/amount'
 
 function fmt(n: number) { return n.toLocaleString('ko-KR') }
-function parseNum(v: string) { return Number(v.replace(/[^0-9]/g, '')) || 0 }
-function formatInput(v: string) {
-  const n = v.replace(/[^0-9]/g, '')
-  return n ? Number(n).toLocaleString('ko-KR') : ''
-}
-
-// 2026년 종합소득세 누진세율
-function calcIncomeTax(base: number): number {
-  if (base <= 14_000_000)  return Math.floor(base * 0.06)
-  if (base <= 50_000_000)  return Math.floor(840_000    + (base - 14_000_000)  * 0.15)
-  if (base <= 88_000_000)  return Math.floor(6_240_000  + (base - 50_000_000)  * 0.24)
-  if (base <= 150_000_000) return Math.floor(15_360_000 + (base - 88_000_000)  * 0.35)
-  if (base <= 300_000_000) return Math.floor(37_060_000 + (base - 150_000_000) * 0.38)
-  if (base <= 500_000_000) return Math.floor(94_060_000 + (base - 300_000_000) * 0.40)
-  if (base <= 1_000_000_000) return Math.floor(174_060_000 + (base - 500_000_000) * 0.42)
-  return Math.floor(384_060_000 + (base - 1_000_000_000) * 0.45)
-}
 
 export default function IncomeTaxClient() {
   const [income, setIncome]   = useState('')
   const [expense, setExpense] = useState('')
 
-  const incomeNum  = parseNum(income)
-  const expenseNum = parseNum(expense)
+  const incomeNum  = amountValue(income)
+  const expenseNum = amountValue(expense)
   const hasValue   = incomeNum > 0
 
   const taxBase    = Math.max(0, incomeNum - expenseNum)
-  const incomeTax  = calcIncomeTax(taxBase)
-  const localTax   = Math.floor(incomeTax * 0.1)
+  const incomeTax  = Math.floor(basicIncomeTax(taxBase))
+  const localTax   = localIncomeTax(incomeTax)
   const totalTax   = incomeTax + localTax
   const netIncome  = incomeNum - totalTax
   const effectiveRate = incomeNum > 0 ? ((totalTax / incomeNum) * 100).toFixed(1) : '0'
@@ -48,24 +34,34 @@ export default function IncomeTaxClient() {
         <h2 className="text-base font-bold text-slate-800">소득 정보 입력</h2>
 
         <div>
-          <label className="calc-label">연 소득 <span className="text-red-400">*</span></label>
+          <label htmlFor="income" className="calc-label">연 소득 <span className="text-red-400">*</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" value={income}
-              onChange={(e) => setIncome(formatInput(e.target.value))}
+            <input type="text" inputMode="numeric" id="income" value={formatAmount(income)}
+              onChange={(e) => setIncome(e.target.value)}
+              aria-invalid={amountError(income) !== null}
+              aria-describedby={amountError(income) ? 'income-error' : undefined}
               placeholder="예: 50,000,000" className="calc-input pr-8" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
           </div>
+          {amountError(income) && (
+            <p id="income-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(income)}</p>
+          )}
           <p className="calc-hint">세전 연간 총 소득을 입력하세요</p>
         </div>
 
         <div>
-          <label className="calc-label">필요경비 / 공제액 <span className="text-xs font-normal text-slate-400">(선택)</span></label>
+          <label htmlFor="expense" className="calc-label">필요경비 / 공제액 <span className="text-xs font-normal text-slate-400">(선택)</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" value={expense}
-              onChange={(e) => setExpense(formatInput(e.target.value))}
+            <input type="text" inputMode="numeric" id="expense" value={formatAmount(expense)}
+              onChange={(e) => setExpense(e.target.value)}
+              aria-invalid={amountError(expense) !== null}
+              aria-describedby={amountError(expense) ? 'expense-error' : undefined}
               placeholder="예: 10,000,000" className="calc-input pr-8" />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
           </div>
+          {amountError(expense) && (
+            <p id="expense-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(expense)}</p>
+          )}
           <p className="calc-hint">필요경비, 소득공제 합계 (입력 시 과세표준에서 차감)</p>
         </div>
 
@@ -81,7 +77,7 @@ export default function IncomeTaxClient() {
 
       {/* 결과 */}
       {hasValue ? (
-        <div className="mt-6 space-y-4 animate-slide-up">
+        <div className="mt-6 space-y-4 animate-slide-up" aria-live="polite">
           <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
             <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">총 세액</p>
             <p className="text-4xl font-black tabular-nums">{fmt(totalTax)}<span className="text-2xl font-bold ml-1">원</span></p>
@@ -329,14 +325,7 @@ export default function IncomeTaxClient() {
           </p>
         </div>
 
-        <div className="text-xs text-slate-500 border-t pt-4">
-          <p className="font-semibold text-slate-700 mb-1">근거 자료</p>
-          <ul className="list-disc pl-5 space-y-0.5">
-            <li>소득세법 제55조 (세율) — 국세법령정보시스템</li>
-            <li>소득세법 시행령 — 필요경비·소득공제 기준</li>
-            <li>국세청 종합소득세 신고 안내 (홈택스)</li>
-          </ul>
-        </div>
+        <SourceNote calculator="income-tax-calculator" />
       </section>
 
       <RelatedCalculators current="income-tax-calculator" />

@@ -30,6 +30,8 @@ export type ContentMeta = {
     appliesTo: string;
     /** 근거 법령·자료 직통 링크 */
     sources: SourceLink[];
+    /** 계산 결과를 최종 확인할 기관·서비스 안내 */
+    confirmationGuidance?: string;
 };
 
 export const CALCULATOR_META: Record<CalculatorSlug, ContentMeta> = {
@@ -125,6 +127,7 @@ export const CALCULATOR_META: Record<CalculatorSlug, ContentMeta> = {
             { label: '지방세법 시행령 제125조(연납 공제)', url: law('지방세법 시행령', '제125조') },
             { label: '위택스 자동차세 조회·연납 신청·납부', url: 'https://www.wetax.go.kr' },
         ],
+        confirmationGuidance: '실제 부과·납부 세액은 위택스 또는 관할 지방자치단체를 통해 확인하세요.',
     },
     'vat-type-compare': {
         lastReviewed: '2026-08-24',

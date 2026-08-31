@@ -114,6 +114,18 @@ export const CALCULATOR_META: Record<CalculatorSlug, ContentMeta> = {
             { label: '소득세법 시행령 제12조(실비변상적 급여)', url: law('소득세법 시행령', '제12조') },
         ],
     },
+    'car-tax-calculator': {
+        lastReviewed: '2026-08-31',
+        appliesTo: '2026년 지방세법 표준세율 기준 · 차령 경감·지방교육세·연납 공제 반영 · 조례 탄력세율과 지방세특례제한법 감면 미반영',
+        sources: [
+            { label: '지방세법 제127조(과세표준과 세율)', url: law('지방세법', '제127조') },
+            { label: '지방세법 제128조(납기와 징수방법)', url: law('지방세법', '제128조') },
+            { label: '지방세법 제130조(수시부과 시의 세액계산)', url: law('지방세법', '제130조') },
+            { label: '지방세법 시행령 제122조(영업용과 비영업용의 구분 및 차령 계산)', url: law('지방세법 시행령', '제122조') },
+            { label: '지방세법 시행령 제125조(연납 공제)', url: law('지방세법 시행령', '제125조') },
+            { label: '위택스 자동차세 조회·연납 신청·납부', url: 'https://www.wetax.go.kr' },
+        ],
+    },
     'vat-type-compare': {
         lastReviewed: '2026-08-24',
         appliesTo: '2026년 간이과세 기준 · 납부의무 면제 4,800만원',
@@ -152,7 +164,7 @@ export const GUIDE_LAST_MODIFIED = {
 export type GuideSlug = keyof typeof GUIDE_LAST_MODIFIED;
 
 export const STATIC_PAGE_LAST_MODIFIED = {
-    '/': '2026-08-24',
+    '/': '2026-08-31',
     '/guide': '2026-07-27',
     '/about': '2026-07-27',
     '/privacy': '2026-08-24',

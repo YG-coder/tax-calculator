@@ -65,6 +65,13 @@ export const CALCULATORS = [
     enabled: true,
   },
   {
+    slug: 'car-tax-calculator',
+    title: '자동차세 계산기',
+    description: '배기량·차령 경감·지방교육세·연납 공제까지 구분해 계산.',
+    emoji: '🚗',
+    enabled: true,
+  },
+  {
     slug: 'vat-type-compare',
     title: '간이과세 vs 일반과세 비교',
     description: '연매출·매입·업종 기준 간이·일반과세 부가세 비교 및 유불리 안내.',

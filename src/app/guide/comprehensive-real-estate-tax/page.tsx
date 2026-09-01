@@ -1,6 +1,7 @@
 // src/app/guide/comprehensive-real-estate-tax/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import GuideReviewDate from '@/components/GuideReviewDate'
 
 export const metadata: Metadata = {
     title: '종합부동산세 계산 방법과 12월 납부기간',
@@ -18,7 +19,7 @@ export default function CretGuidePage() {
             <div className="mb-8">
                 <div className="mb-3 flex items-center gap-2">
                     <span className="inline-block rounded-md bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700">종합부동산세</span>
-                    <span className="text-xs text-slate-400">약 9분 읽기</span>
+                    <GuideReviewDate slug="comprehensive-real-estate-tax" />
                 </div>
                 <h1 className="mb-3 text-3xl font-bold leading-tight text-slate-900">
                     종합부동산세 계산 방법과 12월 납부기간

@@ -2,6 +2,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import CalculatorDirectory from '@/components/CalculatorDirectory'
+import GuideReviewDate from '@/components/GuideReviewDate'
 import {
   AUDIENCE_GROUPS,
   ENABLED_CALCULATORS,
@@ -281,9 +282,12 @@ export default function HomePage() {
                   href={guideHref(guide.slug)}
                   className="calc-card group block p-4 transition-all hover:border-blue-200 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
                 >
-                  <span className="mb-1 inline-block rounded-md bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700">
-                    {guide.category}
-                  </span>
+                  <div className="mb-1 flex flex-wrap items-center gap-2">
+                    <span className="inline-block rounded-md bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700">
+                      {guide.category}
+                    </span>
+                    <GuideReviewDate slug={guide.slug} />
+                  </div>
                   <h3 className="text-sm font-bold text-slate-800 transition-colors group-hover:text-blue-700">
                     {guide.title}
                   </h3>

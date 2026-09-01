@@ -1,6 +1,7 @@
 // src/app/guide/tax-free-income/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import GuideReviewDate from '@/components/GuideReviewDate'
 
 const title = '근로소득 비과세 판정 방법｜항목별 적용 조건과 자주 틀리는 사례'
 const description =
@@ -110,7 +111,7 @@ export default function TaxFreeIncomeGuidePage() {
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-3">
           <span className="inline-block px-2 py-0.5 text-xs font-semibold rounded-md bg-blue-50 text-blue-700">근로소득</span>
-          <span className="text-xs text-slate-400">약 8분 읽기 · 2026년 기준</span>
+          <GuideReviewDate slug="tax-free-income" />
         </div>
         <h1 className="text-3xl font-bold text-slate-900 mb-3 leading-tight">
           근로소득 비과세 판정 방법

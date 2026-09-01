@@ -1,6 +1,7 @@
 // src/app/guide/freelancer-refund/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import GuideReviewDate from '@/components/GuideReviewDate'
 
 export const metadata: Metadata = {
   title: '프리랜서 3.3%, 환급받는 사람 vs 추가납부하는 사람 (2026)',
@@ -15,7 +16,7 @@ export default function FreelancerRefundGuidePage() {
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-3">
           <span className="inline-block px-2 py-0.5 text-xs font-semibold rounded-md bg-blue-50 text-blue-700">프리랜서</span>
-          <span className="text-xs text-slate-400">약 7분 읽기</span>
+          <GuideReviewDate slug="freelancer-refund" />
         </div>
         <h1 className="text-3xl font-bold text-slate-900 mb-3 leading-tight">
           프리랜서 3.3%, 환급받는 사람 vs 추가납부하는 사람

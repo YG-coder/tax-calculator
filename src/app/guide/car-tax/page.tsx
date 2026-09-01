@@ -1,6 +1,7 @@
 // src/app/guide/car-tax/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import GuideReviewDate from '@/components/GuideReviewDate'
 
 export const metadata: Metadata = {
     title: '자동차세 과세 기준과 연납 완전 정리',
@@ -18,7 +19,7 @@ export default function CarTaxGuidePage() {
             <div className="mb-8">
                 <div className="mb-3 flex items-center gap-2">
                     <span className="inline-block rounded-md bg-blue-50 px-2 py-0.5 text-xs font-semibold text-blue-700">자동차세</span>
-                    <span className="text-xs text-slate-400">약 8분 읽기</span>
+                    <GuideReviewDate slug="car-tax" />
                 </div>
                 <h1 className="mb-3 text-3xl font-bold leading-tight text-slate-900">
                     자동차세 과세 기준과 연납 완전 정리

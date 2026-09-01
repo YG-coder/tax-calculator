@@ -1,6 +1,7 @@
 // src/app/guide/freelancer-tax/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import GuideReviewDate from '@/components/GuideReviewDate'
 
 export const metadata: Metadata = {
   title: '프리랜서 종합소득세 신고 완벽 가이드 (2026)',
@@ -16,7 +17,7 @@ export default function FreelancerTaxGuidePage() {
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-3">
           <span className="inline-block px-2 py-0.5 text-xs font-semibold rounded-md bg-blue-50 text-blue-700">프리랜서</span>
-          <span className="text-xs text-slate-400">약 8분 읽기</span>
+          <GuideReviewDate slug="freelancer-tax" />
         </div>
         <h1 className="text-3xl font-bold text-slate-900 mb-3 leading-tight">
           프리랜서 종합소득세 신고 완벽 가이드

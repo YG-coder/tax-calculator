@@ -1,6 +1,7 @@
 // src/app/guide/withholding-year-end/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import GuideReviewDate from '@/components/GuideReviewDate'
 
 export const metadata: Metadata = {
   title: '원천징수와 연말정산은 어떻게 연결되나 (2026)',
@@ -15,7 +16,7 @@ export default function WithholdingYearEndGuidePage() {
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-3">
           <span className="inline-block px-2 py-0.5 text-xs font-semibold rounded-md bg-blue-50 text-blue-700">근로소득</span>
-          <span className="text-xs text-slate-400">약 7분 읽기</span>
+          <GuideReviewDate slug="withholding-year-end" />
         </div>
         <h1 className="text-3xl font-bold text-slate-900 mb-3 leading-tight">
           원천징수와 연말정산은 어떻게 연결되나

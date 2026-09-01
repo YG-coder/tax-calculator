@@ -1,6 +1,7 @@
 // src/app/guide/property-tax/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import GuideReviewDate from '@/components/GuideReviewDate'
 
 export const metadata: Metadata = {
   title: '2026년 재산세 계산 방법과 7월·9월 납부기간',
@@ -15,7 +16,7 @@ export default function PropertyTaxGuidePage() {
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-3">
           <span className="inline-block px-2 py-0.5 text-xs font-semibold rounded-md bg-blue-50 text-blue-700">재산세</span>
-          <span className="text-xs text-slate-400">약 7분 읽기</span>
+          <GuideReviewDate slug="property-tax" />
         </div>
         <h1 className="text-3xl font-bold text-slate-900 mb-3 leading-tight">
           2026년 재산세 계산 방법과 7월·9월 납부기간

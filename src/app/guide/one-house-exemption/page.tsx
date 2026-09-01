@@ -1,6 +1,7 @@
 // src/app/guide/one-house-exemption/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import GuideReviewDate from '@/components/GuideReviewDate'
 
 export const metadata: Metadata = {
   title: '1세대 1주택 양도세 비과세 요건 총정리 (12억 기준, 2026)',
@@ -15,7 +16,7 @@ export default function OneHouseExemptionGuidePage() {
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-3">
           <span className="inline-block px-2 py-0.5 text-xs font-semibold rounded-md bg-blue-50 text-blue-700">양도소득세</span>
-          <span className="text-xs text-slate-400">약 8분 읽기</span>
+          <GuideReviewDate slug="one-house-exemption" />
         </div>
         <h1 className="text-3xl font-bold text-slate-900 mb-3 leading-tight">
           1세대 1주택 양도세 비과세 요건 총정리

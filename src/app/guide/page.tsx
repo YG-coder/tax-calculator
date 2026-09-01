@@ -1,6 +1,7 @@
 // src/app/guide/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import GuideReviewDate from '@/components/GuideReviewDate'
 import { GUIDES, guideHref } from '@/lib/guides'
 
 export const metadata: Metadata = {
@@ -30,6 +31,7 @@ export default function GuideIndexPage() {
               <span className="inline-block px-2 py-0.5 text-xs font-semibold rounded-md bg-blue-50 text-blue-700">
                 {category}
               </span>
+              <GuideReviewDate slug={slug} />
             </div>
             <h2 className="text-base font-bold text-slate-800 group-hover:text-blue-700 transition-colors mb-1">
               {title}

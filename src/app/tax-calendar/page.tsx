@@ -2,6 +2,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { buildMetadata } from '@/lib/metadata'
+import { calculatorBySlug, calculatorHref } from '@/lib/calculators'
+import { guideBySlug, guideHref } from '@/lib/guides'
 import { EVENT_DRIVEN_SCHEDULE, MONTH_LABELS, TAX_SCHEDULE } from '@/lib/tax-calendar'
 
 const title = '세금 납부 일정 달력'
@@ -75,13 +77,19 @@ export default function TaxCalendarPage() {
                                     <p className="text-sm leading-relaxed text-slate-600">{item.summary}</p>
                                     <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
                                         {item.calculator && (
-                                            <Link href={item.calculator.href} className="font-semibold text-blue-700 hover:underline">
-                                                {item.calculator.label} →
+                                            <Link
+                                                href={calculatorHref(item.calculator)}
+                                                className="font-semibold text-blue-700 hover:underline"
+                                            >
+                                                {calculatorBySlug(item.calculator).title} →
                                             </Link>
                                         )}
-                                        {item.guide && (
-                                            <Link href={item.guide.href} className="font-semibold text-blue-700 hover:underline">
-                                                {item.guide.label} →
+                                        {item.guide && guideBySlug(item.guide) && (
+                                            <Link
+                                                href={guideHref(item.guide)}
+                                                className="font-semibold text-blue-700 hover:underline"
+                                            >
+                                                {guideBySlug(item.guide)!.title} →
                                             </Link>
                                         )}
                                         <a
@@ -117,11 +125,14 @@ export default function TaxCalendarPage() {
                             <h3 className="mb-1.5 text-base font-bold text-slate-800">{item.title}</h3>
                             <p className="text-sm leading-relaxed text-slate-600">{item.summary}</p>
                             <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-                                <Link href={item.calculator.href} className="font-semibold text-blue-700 hover:underline">
-                                    {item.calculator.label} →
+                                <Link
+                                    href={calculatorHref(item.calculator)}
+                                    className="font-semibold text-blue-700 hover:underline"
+                                >
+                                    {calculatorBySlug(item.calculator).title} →
                                 </Link>
-                                <Link href={item.guide.href} className="font-semibold text-blue-700 hover:underline">
-                                    {item.guide.label} →
+                                <Link href={guideHref(item.guide)} className="font-semibold text-blue-700 hover:underline">
+                                    {guideBySlug(item.guide)?.title ?? '가이드'} →
                                 </Link>
                                 <a
                                     href={item.basisUrl}

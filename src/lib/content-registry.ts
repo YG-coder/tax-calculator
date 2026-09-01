@@ -60,13 +60,22 @@ export const CALCULATOR_META: Record<CalculatorSlug, ContentMeta> = {
         ],
     },
     'capital-gains-tax-calculator': {
-        lastReviewed: '2026-08-24',
-        appliesTo: '2년 이상 보유 자산의 기본세율만 적용 (장기보유특별공제·중과세율 미반영)',
+        lastReviewed: '2026-09-01',
+        appliesTo:
+            '2026년 양도분 기준 · 장기보유특별공제(표1·표2)·1세대 1주택 비과세·단기 보유 세율·조정대상지역 다주택 중과 반영 · 1세대 1주택 특례와 감면·이월과세 미반영',
         sources: [
-            { label: '소득세법 제104조(세율)', url: law('소득세법', '제104조') },
-            { label: '소득세법 제95조(장기보유특별공제)', url: law('소득세법', '제95조') },
             { label: '소득세법 제89조(비과세 양도소득)', url: law('소득세법', '제89조') },
+            { label: '소득세법 제95조(양도소득금액과 장기보유 특별공제액)', url: law('소득세법', '제95조') },
+            { label: '소득세법 제103조(양도소득 기본공제)', url: law('소득세법', '제103조') },
+            { label: '소득세법 제104조(양도소득세의 세율)', url: law('소득세법', '제104조') },
+            { label: '소득세법 시행령 제154조(1세대1주택의 범위)', url: law('소득세법 시행령', '제154조') },
+            { label: '소득세법 시행령 제159조의4(장기보유특별공제)', url: law('소득세법 시행령', '제159조의4') },
+            { label: '소득세법 시행령 제160조(고가주택에 대한 양도차익등의 계산)', url: law('소득세법 시행령', '제160조') },
+            { label: '소득세법 시행령 제167조의3(1세대 3주택 이상에 해당하는 주택의 범위)', url: law('소득세법 시행령', '제167조의3') },
+            { label: '국세청 양도소득세 세율', url: 'https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2312&cntntsId=7711' },
+            { label: '국세청 장기보유특별공제율', url: 'https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?mi=2311&cntntsId=7710' },
         ],
+        confirmationGuidance: '실제 신고 세액은 국세청 홈택스 양도소득세 모의계산 또는 세무 전문가를 통해 확인하세요.',
     },
     'property-tax-calculator': {
         lastReviewed: '2026-08-24',
@@ -76,6 +85,23 @@ export const CALCULATOR_META: Record<CalculatorSlug, ContentMeta> = {
             { label: '지방세법 제110조(과세표준)', url: law('지방세법', '제110조') },
             { label: '지방세법 제122조(세부담의 상한)', url: law('지방세법', '제122조') },
         ],
+    },
+    'comprehensive-real-estate-tax-calculator': {
+        lastReviewed: '2026-09-01',
+        appliesTo:
+            '2026년 개인 주택분 기준 · 기본공제(1세대 1주택자 12억원 / 그 밖 9억원)·공정시장가액비율 60%·구간별 세율·재산세 중복분 공제·고령자 및 장기보유 세액공제·세부담 상한·농어촌특별세 반영 · 법인·토지분·합산배제 미지원',
+        sources: [
+            { label: '종합부동산세법 제8조(과세표준)', url: law('종합부동산세법', '제8조') },
+            { label: '종합부동산세법 제9조(세율 및 세액)', url: law('종합부동산세법', '제9조') },
+            { label: '종합부동산세법 제10조(세부담의 상한)', url: law('종합부동산세법', '제10조') },
+            { label: '종합부동산세법 제10조의2(공동명의 1주택자 특례)', url: law('종합부동산세법', '제10조의2') },
+            { label: '종합부동산세법 제16조(부과·징수 등)', url: law('종합부동산세법', '제16조') },
+            { label: '종합부동산세법 시행령 제2조의4(공정시장가액비율)', url: law('종합부동산세법 시행령', '제2조의4') },
+            { label: '종합부동산세법 시행령 제4조의3(공제되는 재산세액의 계산)', url: law('종합부동산세법 시행령', '제4조의3') },
+            { label: '농어촌특별세법 제5조(과세표준과 세율)', url: law('농어촌특별세법', '제5조') },
+            { label: '지방세법 시행령 제109조(공정시장가액비율)', url: law('지방세법 시행령', '제109조') },
+        ],
+        confirmationGuidance: '실제 고지 세액은 국세청 홈택스 또는 관할 세무서를 통해 확인하세요.',
     },
     'gift-tax-calculator': {
         lastReviewed: '2026-08-24',
@@ -117,8 +143,8 @@ export const CALCULATOR_META: Record<CalculatorSlug, ContentMeta> = {
         ],
     },
     'car-tax-calculator': {
-        lastReviewed: '2026-08-31',
-        appliesTo: '2026년 지방세법 표준세율 기준 · 차령 경감·지방교육세·연납 공제 반영 · 조례 탄력세율과 지방세특례제한법 감면 미반영',
+        lastReviewed: '2026-09-01',
+        appliesTo: '2026년 지방세법 표준세율 기준 · 차령 경감·지방교육세·연납 공제(1·3·6·9월) 반영 · 조례 탄력세율과 지방세특례제한법 감면 미반영',
         sources: [
             { label: '지방세법 제127조(과세표준과 세율)', url: law('지방세법', '제127조') },
             { label: '지방세법 제128조(납기와 징수방법)', url: law('지방세법', '제128조') },
@@ -162,13 +188,16 @@ export const GUIDE_LAST_MODIFIED = {
     'non-taxable-allowance': '2026-07-27',
     'tax-free-income': '2026-08-17',
     'property-tax': '2026-07-27',
+    'car-tax': '2026-09-01',
+    'comprehensive-real-estate-tax': '2026-09-01',
 } as const;
 
 export type GuideSlug = keyof typeof GUIDE_LAST_MODIFIED;
 
 export const STATIC_PAGE_LAST_MODIFIED = {
-    '/': '2026-08-31',
-    '/guide': '2026-07-27',
+    '/': '2026-09-01',
+    '/guide': '2026-09-01',
+    '/tax-calendar': '2026-09-01',
     '/about': '2026-07-27',
     '/privacy': '2026-08-24',
     '/terms': '2026-07-27',

@@ -7,6 +7,7 @@ import { useMemo, useState } from 'react'
 import Link from 'next/link'
 import { calcPropertyTax, TAX_YEAR } from './calc'
 import RelatedCalculators from '@/components/RelatedCalculators'
+import ResultActions from '@/components/ResultActions'
 import SourceNote from '@/components/SourceNote'
 import { amountError, amountValue, formatAmount, readPercent } from '@/lib/utils/amount'
 
@@ -90,6 +91,7 @@ export default function PropertyTaxCalculatorClient() {
             <div className="mt-1 flex items-center gap-2">
               <input
                 inputMode="numeric"
+                pattern="[0-9,]*"
                 value={formatAmount(publishedPriceText)}
                 onChange={(e) => setPublishedPriceText(e.target.value)}
                 aria-invalid={amountError(publishedPriceText) !== null}
@@ -127,6 +129,7 @@ export default function PropertyTaxCalculatorClient() {
             <div className="mt-1 flex items-center gap-2">
               <input
                 inputMode="numeric"
+                pattern="[0-9,]*"
                 value={ownershipText}
                 onChange={(e) => setOwnershipText(e.target.value)}
                 aria-invalid={!ownershipValid}
@@ -168,6 +171,7 @@ export default function PropertyTaxCalculatorClient() {
                   <span className="text-xs text-slate-600">전년도 재산세 본세</span>
                   <input
                     inputMode="numeric"
+                    pattern="[0-9,]*"
                     value={formatAmount(prevBaseText)}
                     onChange={(e) => setPrevBaseText(e.target.value)}
                     aria-invalid={amountError(prevBaseText) !== null}
@@ -185,6 +189,7 @@ export default function PropertyTaxCalculatorClient() {
                     <span className="text-xs text-slate-600">전년도 도시지역분</span>
                     <input
                       inputMode="numeric"
+                      pattern="[0-9,]*"
                       value={formatAmount(prevUrbanText)}
                       onChange={(e) => setPrevUrbanText(e.target.value)}
                       aria-invalid={amountError(prevUrbanText) !== null}
@@ -268,10 +273,45 @@ export default function PropertyTaxCalculatorClient() {
           </section>
         )}
 
+        {result && (
+          <ResultActions
+            title={`재산세 예상액 — ${TAX_YEAR}년 주택분`}
+            lines={[
+              { label: '적용 공정시장가액비율', value: `${(result.fmvRatio * 100).toFixed(0)}%` },
+              { label: '적용 세율', value: result.rateType },
+              { label: '주택 전체 과세표준', value: won(result.taxBase) },
+              { label: '재산세 본세', value: won(result.baseTax) },
+              ...(applyUrbanArea ? [{ label: '도시지역분', value: won(result.urbanTax) }] : []),
+              { label: '지방교육세', value: won(result.eduTax) },
+              { label: '연간 예상 세액', value: won(result.annualTotal) },
+              { label: `${TAX_YEAR}년 7월 예상 납부액`, value: won(result.july) },
+              {
+                label: `${TAX_YEAR}년 9월 예상 납부액`,
+                value: result.lumpSumEligible ? '0원 (7월 일괄 예상)' : won(result.sept),
+              },
+              { label: '세부담 상한', value: ceilingStatus ?? '미검토' },
+            ]}
+            footer={[
+              '근거: 지방세법 제110조·제111조·제111조의2·제115조·제122조, 같은 법 시행령 제109조',
+              '이 결과는 참고용입니다. 실제 부과 세액은 관할 지방자치단체 고지서를 기준으로 합니다.',
+              'taxsim.kr 재산세 계산기',
+            ]}
+          />
+        )}
+
         {/* 가이드 링크 */}
-        <div className="text-sm">
-          <Link href="/guide/property-tax" className="text-blue-700 hover:underline font-semibold">
+        <div className="space-y-2 text-sm">
+          <Link href="/guide/property-tax" className="block font-semibold text-blue-700 hover:underline">
             → {TAX_YEAR}년 재산세 계산 방법과 7월·9월 납부기간 가이드
+          </Link>
+          <Link
+            href="/comprehensive-real-estate-tax-calculator"
+            className="block font-semibold text-blue-700 hover:underline"
+          >
+            → 공시가격이 9억원(1세대 1주택 12억원)을 넘는다면 종합부동산세 계산기
+          </Link>
+          <Link href="/tax-calendar" className="block font-semibold text-blue-700 hover:underline">
+            → 세금 납부 일정 달력
           </Link>
         </div>
       </div>

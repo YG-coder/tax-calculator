@@ -2,6 +2,13 @@
 // 2026년 주택 재산세 계산 엔진 (주택분 전용)
 // 검증 완료: 공정시장가액비율 3분기 / 세율특례 9억 경계 / 세부담상한 항목별 처리 / null-vs-0
 
+import {
+  PROPERTY_SPECIAL_RATE_LIMIT,
+  propertyFairMarketRatio,
+  propertySpecialTax,
+  propertyStandardTax,
+} from "../../lib/tax/rules/property-tax.ts";
+
 export const TAX_YEAR = 2026; // 연도 단일 소스. 메타데이터·본문·라벨이 이 값을 공유.
 
 export interface PropertyTaxInput {
@@ -33,26 +40,11 @@ export interface PropertyTaxResult {
 const ceilingRate = (price: number): number =>
   price <= 300_000_000 ? 1.05 : price <= 600_000_000 ? 1.1 : 1.3;
 
-const fairMarketRatio = (isSingleHome: boolean, price: number): number => {
-  if (!isSingleHome) return 0.6;
-  if (price <= 300_000_000) return 0.43;
-  if (price <= 600_000_000) return 0.44;
-  return 0.45; // 6억 초과 (9억 초과 1주택 포함)
-};
-
-const standardTax = (base: number): number => {
-  if (base <= 60_000_000) return base * 0.001;
-  if (base <= 150_000_000) return 60_000 + (base - 60_000_000) * 0.0015;
-  if (base <= 300_000_000) return 195_000 + (base - 150_000_000) * 0.0025;
-  return 570_000 + (base - 300_000_000) * 0.004;
-};
-
-const specialTax = (base: number): number => {
-  if (base <= 60_000_000) return base * 0.0005;
-  if (base <= 150_000_000) return 30_000 + (base - 60_000_000) * 0.001;
-  if (base <= 300_000_000) return 120_000 + (base - 150_000_000) * 0.002;
-  return 420_000 + (base - 300_000_000) * 0.0035;
-};
+// 세율표와 공정시장가액비율은 종합부동산세 계산기와 공유한다.
+// (종부세는 「종합부동산세법 시행령」 제4조의3에서 같은 표를 인용한다)
+const fairMarketRatio = propertyFairMarketRatio;
+const standardTax = propertyStandardTax;
+const specialTax = propertySpecialTax;
 
 export function calcPropertyTax(input: PropertyTaxInput): PropertyTaxResult {
   const {
@@ -68,7 +60,7 @@ export function calcPropertyTax(input: PropertyTaxInput): PropertyTaxResult {
   const taxBase = publishedPrice * ratio;
 
   // 세율특례는 1주택 AND 공시가격 9억 이하만. 9억 초과 1주택은 45%비율 + 일반세율.
-  const useSpecialRate = isSingleHome && publishedPrice <= 900_000_000;
+  const useSpecialRate = isSingleHome && publishedPrice <= PROPERTY_SPECIAL_RATE_LIMIT;
   const rawBaseTax = useSpecialRate ? specialTax(taxBase) : standardTax(taxBase);
 
   const cRate = ceilingRate(publishedPrice);

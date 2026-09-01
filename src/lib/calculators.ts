@@ -25,7 +25,7 @@ export const CALCULATORS = [
   {
     slug: 'capital-gains-tax-calculator',
     title: '양도소득세 계산기',
-    description: '취득가액·양도가액 기준 예상 양도차익 및 세액 계산.',
+    description: '장기보유특별공제·1세대 1주택 비과세·단기·다주택 중과까지 반영한 양도세 계산.',
     emoji: '🏠',
     enabled: true,
   },
@@ -34,6 +34,13 @@ export const CALCULATORS = [
     title: '재산세 계산기',
     description: '주택 공시가격으로 연간 재산세와 7월·9월 납부액을 계산합니다.',
     emoji: '🏡',
+    enabled: true,
+  },
+  {
+    slug: 'comprehensive-real-estate-tax-calculator',
+    title: '종합부동산세 계산기',
+    description: '공시가격 합계 기준 개인 주택분 종부세와 농어촌특별세를 단계별로 계산.',
+    emoji: '🏢',
     enabled: true,
   },
   {

@@ -56,7 +56,7 @@ export default function WithholdingCalculatorPage() {
         <div>
           <label htmlFor="salary" className="calc-label">월 급여 (세전) <span className="text-red-400">*</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" id="salary" value={formatAmount(salary)}
+            <input type="text" inputMode="numeric" pattern="[0-9,]*" id="salary" value={formatAmount(salary)}
               onChange={(e) => setSalary(e.target.value)}
               aria-invalid={amountError(salary) !== null}
               aria-describedby={amountError(salary) ? 'salary-error' : undefined}

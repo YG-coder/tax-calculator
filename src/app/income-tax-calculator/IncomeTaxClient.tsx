@@ -36,7 +36,7 @@ export default function IncomeTaxClient() {
         <div>
           <label htmlFor="income" className="calc-label">연 소득 <span className="text-red-400">*</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" id="income" value={formatAmount(income)}
+            <input type="text" inputMode="numeric" pattern="[0-9,]*" id="income" value={formatAmount(income)}
               onChange={(e) => setIncome(e.target.value)}
               aria-invalid={amountError(income) !== null}
               aria-describedby={amountError(income) ? 'income-error' : undefined}
@@ -52,7 +52,7 @@ export default function IncomeTaxClient() {
         <div>
           <label htmlFor="expense" className="calc-label">필요경비 / 공제액 <span className="text-xs font-normal text-slate-400">(선택)</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" id="expense" value={formatAmount(expense)}
+            <input type="text" inputMode="numeric" pattern="[0-9,]*" id="expense" value={formatAmount(expense)}
               onChange={(e) => setExpense(e.target.value)}
               aria-invalid={amountError(expense) !== null}
               aria-describedby={amountError(expense) ? 'expense-error' : undefined}

@@ -119,7 +119,7 @@ export default function VatTypeCompareClient() {
         <div>
           <label htmlFor="revenue" className="calc-label">예상 연매출 (공급대가, 부가세 포함) <span className="text-red-400">*</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" id="revenue" value={formatAmount(revenue)}
+            <input type="text" inputMode="numeric" pattern="[0-9,]*" id="revenue" value={formatAmount(revenue)}
               onChange={(e) => setRevenue(e.target.value)}
               aria-invalid={amountError(revenue) !== null}
               aria-describedby={amountError(revenue) ? 'revenue-error' : undefined}
@@ -135,7 +135,7 @@ export default function VatTypeCompareClient() {
         <div>
           <label htmlFor="purchase" className="calc-label">연간 매입액 (부가세 포함, 선택)</label>
           <div className="relative">
-            <input type="text" inputMode="numeric" id="purchase" value={formatAmount(purchase)}
+            <input type="text" inputMode="numeric" pattern="[0-9,]*" id="purchase" value={formatAmount(purchase)}
               onChange={(e) => setPurchase(e.target.value)}
               aria-invalid={amountError(purchase) !== null}
               aria-describedby={amountError(purchase) ? 'purchase-error' : undefined}

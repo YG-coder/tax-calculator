@@ -51,3 +51,29 @@
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 input[type='number'] { -moz-appearance: textfield; }
+
+/* 인쇄: 계산 결과만 깔끔하게 남긴다 */
+@media print {
+  body {
+    background: #fff;
+  }
+  nav,
+  footer,
+  .print\:hidden {
+    display: none !important;
+  }
+  .calc-card {
+    box-shadow: none;
+    border-color: #cbd5e1;
+    break-inside: avoid;
+  }
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 10px;
+    color: #64748b;
+  }
+  main {
+    max-width: none;
+    padding: 0;
+  }
+}

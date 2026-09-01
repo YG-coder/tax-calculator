@@ -54,6 +54,7 @@ export default function VatCalculatorClient() {
             <input
               type="text"
               inputMode="numeric"
+              pattern="[0-9,]*"
               id="amount" value={formatAmount(amount)}
               onChange={(e) => setAmount(e.target.value)}
               aria-invalid={amountError(amount) !== null}

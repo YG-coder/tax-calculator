@@ -55,7 +55,7 @@ export default function InheritanceTaxCalculatorPage() {
         <div>
           <label htmlFor="estate" className="calc-label">상속재산 총액 <span className="text-red-400">*</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" id="estate" value={formatAmount(estate)}
+            <input type="text" inputMode="numeric" pattern="[0-9,]*" id="estate" value={formatAmount(estate)}
               onChange={(e) => setEstate(e.target.value)}
               aria-invalid={amountError(estate) !== null}
               aria-describedby={amountError(estate) ? 'estate-error' : undefined}
@@ -71,7 +71,7 @@ export default function InheritanceTaxCalculatorPage() {
         <div>
           <label htmlFor="debts" className="calc-label">채무·공과금·장례비</label>
           <div className="relative">
-            <input type="text" inputMode="numeric" id="debts" value={formatAmount(debts)}
+            <input type="text" inputMode="numeric" pattern="[0-9,]*" id="debts" value={formatAmount(debts)}
               onChange={(e) => setDebts(e.target.value)}
               aria-invalid={amountError(debts) !== null}
               aria-describedby={amountError(debts) ? 'debts-error' : undefined}
@@ -104,7 +104,7 @@ export default function InheritanceTaxCalculatorPage() {
           {deductPreset === 'custom' && (
             <>
               <div className="relative mt-2">
-                <input type="text" inputMode="numeric" id="custom-deduct" value={formatAmount(customDeduct)}
+                <input type="text" inputMode="numeric" pattern="[0-9,]*" id="custom-deduct" value={formatAmount(customDeduct)}
                   onChange={(e) => setCustomDeduct(e.target.value)}
                   aria-invalid={amountError(customDeduct) !== null}
                   aria-describedby={amountError(customDeduct) ? 'custom-deduct-error' : undefined}
@@ -154,7 +154,7 @@ export default function InheritanceTaxCalculatorPage() {
               <div>
                 <label htmlFor="spouse-share" className="calc-label">배우자가 실제 상속받는 금액</label>
                 <div className="relative">
-                  <input type="text" inputMode="numeric" id="spouse-share" value={formatAmount(spouseShare)}
+                  <input type="text" inputMode="numeric" pattern="[0-9,]*" id="spouse-share" value={formatAmount(spouseShare)}
                     onChange={(e) => setSpouseShare(e.target.value)}
                     aria-invalid={amountError(spouseShare) !== null}
                     aria-describedby={amountError(spouseShare) ? 'spouse-share-error' : undefined}

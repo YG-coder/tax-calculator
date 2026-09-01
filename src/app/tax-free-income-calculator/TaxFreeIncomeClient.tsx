@@ -216,7 +216,7 @@ export default function TaxFreeIncomeCalculatorPage() {
         <div>
           <label htmlFor="base" className="calc-label">월 기본급 및 과세 수당 <span className="text-red-400">*</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" id="base" value={formatAmount(base)}
+            <input type="text" inputMode="numeric" pattern="[0-9,]*" id="base" value={formatAmount(base)}
               onChange={(e) => setBase(e.target.value)}
               aria-invalid={amountError(base) !== null}
               aria-describedby={amountError(base) ? 'base-error' : undefined}
@@ -233,7 +233,7 @@ export default function TaxFreeIncomeCalculatorPage() {
         <div className="border-t border-slate-100 pt-5">
           <label htmlFor="meal" className="calc-label">식대 <span className="text-slate-400 font-normal">(월 20만원 한도)</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" id="meal" value={formatAmount(meal)}
+            <input type="text" inputMode="numeric" pattern="[0-9,]*" id="meal" value={formatAmount(meal)}
               onChange={(e) => setMeal(e.target.value)}
               aria-invalid={amountError(meal) !== null}
               aria-describedby={amountError(meal) ? 'meal-error' : undefined}
@@ -254,7 +254,7 @@ export default function TaxFreeIncomeCalculatorPage() {
         <div className="border-t border-slate-100 pt-5">
           <label htmlFor="car" className="calc-label">자가운전보조금 <span className="text-slate-400 font-normal">(월 20만원 한도)</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" id="car" value={formatAmount(car)}
+            <input type="text" inputMode="numeric" pattern="[0-9,]*" id="car" value={formatAmount(car)}
               onChange={(e) => setCar(e.target.value)}
               aria-invalid={amountError(car) !== null}
               aria-describedby={amountError(car) ? 'car-error' : undefined}
@@ -287,7 +287,7 @@ export default function TaxFreeIncomeCalculatorPage() {
         <div className="border-t border-slate-100 pt-5">
           <label htmlFor="childcare" className="calc-label">출산·보육수당 <span className="text-slate-400 font-normal">(6세 이하 자녀 1인당 월 20만원)</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" id="childcare" value={formatAmount(childcare)}
+            <input type="text" inputMode="numeric" pattern="[0-9,]*" id="childcare" value={formatAmount(childcare)}
               onChange={(e) => setChildcare(e.target.value)}
               aria-invalid={amountError(childcare) !== null}
               aria-describedby={amountError(childcare) ? 'childcare-error' : undefined}
@@ -314,7 +314,7 @@ export default function TaxFreeIncomeCalculatorPage() {
         <div className="border-t border-slate-100 pt-5">
           <label htmlFor="research" className="calc-label">연구보조비·연구활동비 <span className="text-slate-400 font-normal">(월 20만원 한도)</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" id="research" value={formatAmount(research)}
+            <input type="text" inputMode="numeric" pattern="[0-9,]*" id="research" value={formatAmount(research)}
               onChange={(e) => setResearch(e.target.value)}
               aria-invalid={amountError(research) !== null}
               aria-describedby={amountError(research) ? 'research-error' : undefined}
@@ -335,7 +335,7 @@ export default function TaxFreeIncomeCalculatorPage() {
         <div className="border-t border-slate-100 pt-5">
           <label htmlFor="overseas" className="calc-label">국외근로소득</label>
           <div className="relative">
-            <input type="text" inputMode="numeric" id="overseas" value={formatAmount(overseas)}
+            <input type="text" inputMode="numeric" pattern="[0-9,]*" id="overseas" value={formatAmount(overseas)}
               onChange={(e) => setOverseas(e.target.value)}
               aria-invalid={amountError(overseas) !== null}
               aria-describedby={amountError(overseas) ? 'overseas-error' : undefined}
@@ -366,7 +366,7 @@ export default function TaxFreeIncomeCalculatorPage() {
         <div className="border-t border-slate-100 pt-5">
           <label htmlFor="production" className="calc-label">생산직 연장·야간·휴일근로수당 <span className="text-slate-400 font-normal">(연 240만원 누적 한도)</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" id="production" value={formatAmount(production)}
+            <input type="text" inputMode="numeric" pattern="[0-9,]*" id="production" value={formatAmount(production)}
               onChange={(e) => setProduction(e.target.value)}
               aria-invalid={amountError(production) !== null}
               aria-describedby={amountError(production) ? 'production-error' : undefined}
@@ -388,7 +388,7 @@ export default function TaxFreeIncomeCalculatorPage() {
                 <div>
                   <label htmlFor="prod-fixed-pay" className="text-xs font-semibold text-slate-600 mb-1 block">월정액급여</label>
                   <div className="relative">
-                    <input type="text" inputMode="numeric" id="prod-fixed-pay" value={formatAmount(prodFixedPay)}
+                    <input type="text" inputMode="numeric" pattern="[0-9,]*" id="prod-fixed-pay" value={formatAmount(prodFixedPay)}
                       onChange={(e) => setProdFixedPay(e.target.value)}
                       aria-invalid={amountError(prodFixedPay) !== null}
                       aria-describedby={amountError(prodFixedPay) ? 'prod-fixed-pay-error' : undefined}
@@ -403,7 +403,7 @@ export default function TaxFreeIncomeCalculatorPage() {
                 <div>
                   <label htmlFor="prod-prev-salary" className="text-xs font-semibold text-slate-600 mb-1 block">직전연도 총급여</label>
                   <div className="relative">
-                    <input type="text" inputMode="numeric" id="prod-prev-salary" value={formatAmount(prodPrevSalary)}
+                    <input type="text" inputMode="numeric" pattern="[0-9,]*" id="prod-prev-salary" value={formatAmount(prodPrevSalary)}
                       onChange={(e) => setProdPrevSalary(e.target.value)}
                       aria-invalid={amountError(prodPrevSalary) !== null}
                       aria-describedby={amountError(prodPrevSalary) ? 'prod-prev-salary-error' : undefined}
@@ -419,7 +419,7 @@ export default function TaxFreeIncomeCalculatorPage() {
               <div>
                 <label htmlFor="prod-ytd-free" className="text-xs font-semibold text-slate-600 mb-1 block">올해 이번 달 직전까지 적용받은 비과세 초과근로수당</label>
                 <div className="relative">
-                  <input type="text" inputMode="numeric" id="prod-ytd-free" value={formatAmount(prodYtdFree)}
+                  <input type="text" inputMode="numeric" pattern="[0-9,]*" id="prod-ytd-free" value={formatAmount(prodYtdFree)}
                     onChange={(e) => setProdYtdFree(e.target.value)}
                     aria-invalid={amountError(prodYtdFree) !== null}
                     aria-describedby={amountError(prodYtdFree) ? 'prod-ytd-free-error' : undefined}
@@ -439,7 +439,7 @@ export default function TaxFreeIncomeCalculatorPage() {
         <div className="border-t border-slate-100 pt-5">
           <label htmlFor="other" className="calc-label">기타 비과세 급여</label>
           <div className="relative">
-            <input type="text" inputMode="numeric" id="other" value={formatAmount(other)}
+            <input type="text" inputMode="numeric" pattern="[0-9,]*" id="other" value={formatAmount(other)}
               onChange={(e) => setOther(e.target.value)}
               aria-invalid={amountError(other) !== null}
               aria-describedby={amountError(other) ? 'other-error' : undefined}

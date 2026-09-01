@@ -27,7 +27,7 @@ export default function FreelancerTaxClient() {
         <div>
           <label htmlFor="amount" className="calc-label">수입 금액 <span className="text-red-400">*</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" id="amount" value={formatAmount(amount)}
+            <input type="text" inputMode="numeric" pattern="[0-9,]*" id="amount" value={formatAmount(amount)}
               onChange={(e) => setAmount(e.target.value)}
               aria-invalid={amountError(amount) !== null}
               aria-describedby={amountError(amount) ? 'amount-error' : undefined}

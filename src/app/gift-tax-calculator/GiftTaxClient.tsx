@@ -41,7 +41,7 @@ export default function GiftTaxCalculatorPage() {
         <div>
           <label htmlFor="gift-amount" className="calc-label">증여금액 <span className="text-red-400">*</span></label>
           <div className="relative">
-            <input type="text" inputMode="numeric" id="gift-amount" value={formatAmount(giftAmount)}
+            <input type="text" inputMode="numeric" pattern="[0-9,]*" id="gift-amount" value={formatAmount(giftAmount)}
               onChange={(e) => setGiftAmount(e.target.value)}
               aria-invalid={amountError(giftAmount) !== null}
               aria-describedby={amountError(giftAmount) ? 'gift-amount-error' : undefined}
@@ -71,7 +71,7 @@ export default function GiftTaxCalculatorPage() {
           {deductPreset === 'custom' && (
             <>
               <div className="relative mt-2">
-                <input type="text" inputMode="numeric" id="custom-deduct" value={formatAmount(customDeduct)}
+                <input type="text" inputMode="numeric" pattern="[0-9,]*" id="custom-deduct" value={formatAmount(customDeduct)}
                   onChange={(e) => setCustomDeduct(e.target.value)}
                   aria-invalid={amountError(customDeduct) !== null}
                   aria-describedby={amountError(customDeduct) ? 'custom-deduct-error' : undefined}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import ResultActions from "@/components/ResultActions";
 import {
   CAR_TAX_YEAR,
   LAST_VERIFIED_PREPAY_YEAR,
@@ -161,6 +162,7 @@ export default function CarTaxClient() {
               <input
                 id="cc"
                 inputMode="numeric"
+                pattern="[0-9,]*"
                 value={ccText}
                 onChange={(event) => setCcText(event.target.value)}
                 aria-invalid={ccError ? true : undefined}
@@ -187,6 +189,7 @@ export default function CarTaxClient() {
               <input
                 id="load"
                 inputMode="numeric"
+                pattern="[0-9,]*"
                 value={loadText}
                 onChange={(event) => setLoadText(event.target.value)}
                 aria-invalid={loadError ? true : undefined}
@@ -308,12 +311,11 @@ export default function CarTaxClient() {
               })}
             </select>
             <p id="prepay-help" className="mt-1.5 text-xs text-slate-500">
-              공제액은 고정 할인율이 아니라 납부기한 다음 날부터 12월 31일까지의 실제 일수로 계산합니다.
+              공제액은 고정 할인율이 아니라 「지방세법」 제128조 제3항의 계산식으로 산출합니다. 1월·3월은 연세액에 남은
+              일수 비율을, 6월은 제2기분 세액에, 9월은 제2기분 세액에 남은 일수 비율(÷184일)을 곱합니다.
             </p>
-            <p className="mt-1.5 text-xs text-amber-700">
-              6월·9월 연납은 공식 고지 방식 확인 중이라 선택할 수 없습니다. 「지방세법 시행령」 제125조 제3항이 6월분을
-              ‘제2기분에 해당하는 세액’으로 규정하는데, 이 계산기의 일수 비례 방식과 일치하는지 확인되지 않았습니다.
-              해당 시기의 연납액은 위택스 고지 내용을 확인해 주세요.
+            <p className="mt-1.5 text-xs text-slate-500">
+              9월 연납은 제1기분이 이미 부과·납부된 뒤이므로 <strong>제2기분(7~12월분)만</strong> 납부합니다.
             </p>
             {showAssumption && (
               <div className="mt-3 flex items-start gap-3 rounded-xl border border-orange-200 bg-orange-50 p-4">
@@ -366,6 +368,7 @@ export default function CarTaxClient() {
                 <input
                   id="already-paid"
                   inputMode="numeric"
+                  pattern="[0-9,]*"
                   value={alreadyPaidText}
                   placeholder="예: 390000"
                   onChange={(event) => setAlreadyPaidText(event.target.value)}
@@ -430,9 +433,19 @@ export default function CarTaxClient() {
               </p>
               <p className="mt-2 text-4xl font-bold tracking-tight">{won(result.finalPayable)}</p>
               {result.prepay && (
-                <p className="mt-2 text-sm text-slate-300">
-                  연납 공제 {won(result.prepay.totalDeduction)} 반영 (공제 전 {won(result.subtotal)})
-                </p>
+                <>
+                  <p className="mt-2 text-sm text-slate-300">
+                    연납 공제 {won(result.prepay.totalDeduction)} 반영 (공제 전{" "}
+                    {won(result.prepay.payableBeforeDeduction)})
+                  </p>
+                  <p className="mt-1 text-xs text-slate-400">
+                    {result.prepay.payableScope === "secondHalf"
+                      ? "제2기분(7~12월분)만 미리 납부하는 금액입니다"
+                      : "연세액 전액을 미리 납부하는 금액입니다"}
+                    {" · "}
+                    납부 대상 세액 대비 {(result.prepay.effectiveRateOnPayable * 100).toFixed(2)}% 공제
+                  </p>
+                </>
               )}
               {result.status === "verificationRequired" && (
                 <p className="mt-2 inline-block rounded-full bg-orange-400/20 px-3 py-1 text-xs font-medium text-orange-200">
@@ -467,9 +480,7 @@ export default function CarTaxClient() {
                 <dt className="text-sm text-slate-600">
                   연납 공제액
                   {result.prepay && (
-                    <span className="ml-1.5 text-xs text-slate-500">
-                      ({result.prepay.deductiblePeriod.days}일 / 365일 × {(result.prepay.interestRate * 100).toFixed(0)}%)
-                    </span>
+                    <span className="ml-1.5 text-xs text-slate-500">({result.prepay.formula})</span>
                   )}
                 </dt>
                 <dd className="text-sm font-semibold text-slate-900">
@@ -609,6 +620,20 @@ export default function CarTaxClient() {
               지방자치단체의 탄력세율 조례, 감면 적용 여부에 따라 달라질 수 있습니다. 납부할 정확한 금액은 위택스 또는
               관할 시·군·구청 고지서에서 확인하세요.
             </div>
+
+            <ResultActions
+              title={`자동차세 예상액 — ${result.year}년 ${result.rateLabel}`}
+              lines={result.steps.map((step) => ({
+                label: step.label,
+                value: step.value,
+                note: step.expression,
+              }))}
+              footer={[
+                "근거: 지방세법 제127조·제128조·제130조, 같은 법 시행령 제122조·제125조",
+                "이 결과는 참고용입니다. 실제 부과·납부 세액은 위택스 또는 관할 지방자치단체에서 확인하세요.",
+                "taxsim.kr 자동차세 계산기",
+              ]}
+            />
           </div>
         )}
       </div>

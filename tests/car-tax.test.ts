@@ -1,15 +1,20 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
+  ageDiscountPercent,
   ageDiscountRate,
   calculateCarTax,
   floorTo10,
   parseIntegerInput,
   prepayDeductiblePeriod,
   prepayInterestRate,
+  prepayDayBase,
+  isLeapYear,
   isPrepayTimingSupported,
   UNVERIFIED_PREPAY_TIMINGS,
   LAST_VERIFIED_PREPAY_YEAR,
+  SECOND_HALF_DAY_BASE,
+  LUMP_SUM_LEVY_THRESHOLD,
   vehicleAgeForHalf,
   type CarTaxInput,
   type CarTaxSuccess,
@@ -425,7 +430,7 @@ describe("연납 이자율의 과세연도별 관리 — 영 제125조 제6항",
     assert.ok(Math.abs(r.prepay.effectiveRate - (334 / 365) * 0.07) < 10 ** -6 / 2);
   });
 
-  it("윤년 과세연도에는 분모 확인 안내가 붙는다", () => {
+  it("윤년 과세연도에는 분모가 366일이 된다 (법 §128③ 계산식)", () => {
     const r = ok({
       ...base,
       year: 2028,
@@ -435,9 +440,9 @@ describe("연납 이자율의 과세연도별 관리 — 영 제125조 제6항",
       assumeLatestPrepayRate: true,
     });
     assert.equal(r.notes.some((n) => n.includes("윤년")), true);
-    // 분모는 365로 고정: 335/365 × 5%
     assert.ok(r.prepay);
-    assert.ok(Math.abs(r.prepay.effectiveRate - (335 / 365) * 0.05) < 10 ** -6 / 2);
+    assert.equal(r.prepay.dayBase, 366);
+    assert.ok(Math.abs(r.prepay.effectiveRate - (335 / 366) * 0.05) < 10 ** -6 / 2);
   });
 });
 
@@ -659,17 +664,12 @@ describe("검증 필요 상태", () => {
     assert.equal(ok({ ...car, prepay: "mar" }).status, "confirmed");
   });
 
-  it("6월·9월 연납은 검증 필요 표시가 아니라 계산 자체를 거부한다", () => {
-    for (const timing of ["jun", "sep"] as const) {
-      const r = calculateCarTax({ ...car, prepay: timing });
-      assert.equal(r.ok, false);
-      if (!r.ok) {
-        assert.equal(r.errors.some((e) => e.includes("공식 고지 방식을 확인하는 중")), true);
-      }
-    }
+  it("6월·9월 연납도 확정 상태다 (법 §128③ 계산식 원문 확인)", () => {
+    assert.equal(ok({ ...car, prepay: "jun" }).status, "confirmed");
+    assert.equal(ok({ ...car, prepay: "sep" }).status, "confirmed");
   });
 
-  it("윤년 연납은 분모 미확정 사유가 붙는다", () => {
+  it("윤년 연납은 더 이상 검증 필요 사유가 아니다", () => {
     const r = ok({
       ...base,
       year: 2028,
@@ -678,8 +678,9 @@ describe("검증 필요 상태", () => {
       prepay: "jan",
       assumeLatestPrepayRate: true,
     });
-    assert.equal(r.status, "verificationRequired");
-    assert.equal(r.verificationNotes.some((n) => n.includes("366")), true);
+    // 이자율 미확인(가정 계산)만 남는다. 분모는 확정됐다.
+    assert.equal(r.verificationNotes.some((n) => n.includes("366")), false);
+    assert.equal(r.verificationNotes.some((n) => n.includes("이자율")), true);
   });
 
   it("환급 예상액이 산출되면 검증 필요 상태가 된다", () => {
@@ -726,79 +727,314 @@ describe("alreadyPaid 직접 호출 검증 — 순수 함수 경계", () => {
   });
 });
 
-describe("미검증 연납 시기 거부 — 6월·9월", () => {
+/* ------------------------------------------------------------------ */
+/* 연납 6월·9월 — 법 제128조 제3항 계산식 (2026-09-01 원문 확인)        */
+/*                                                                     */
+/*  | 신고납부기간 | 계산식                                            */
+/*  | 1·3월        | 연세액 × 일수/365(윤년 366) × 이자율               */
+/*  | 6월          | 제2기분 세액 × 이자율                              */
+/*  | 9월          | 제2기분 세액 × 일수/184 × 이자율                   */
+/* ------------------------------------------------------------------ */
+
+describe("연납 6월·9월 — 법 제128조 제3항 계산식", () => {
+  // 2,000cc 비영업용, 2025-03-01 최초등록 → 2026년 차령 2년(경감 없음)
+  // 연세액 400,000 / 기분세액 200,000 / 기분 지방교육세 60,000
   const car: CarTaxInput = {
     ...base,
     displacementCc: 2000,
-    firstRegistrationDate: "2020-01-10",
+    firstRegistrationDate: "2025-03-01",
     period: "year",
   };
 
-  it("비활성 목록에 6월·9월이 들어 있다", () => {
-    assert.deepEqual([...UNVERIFIED_PREPAY_TIMINGS], ["jun", "sep"]);
-    assert.equal(isPrepayTimingSupported("jun"), false);
-    assert.equal(isPrepayTimingSupported("sep"), false);
-  });
-
-  it("none·1월·3월은 계속 지원한다", () => {
-    assert.equal(isPrepayTimingSupported("none"), true);
-    assert.equal(isPrepayTimingSupported("jan"), true);
-    assert.equal(isPrepayTimingSupported("mar"), true);
-    assert.equal(ok({ ...car, prepay: "jan" }).status, "confirmed");
-    assert.equal(ok({ ...car, prepay: "mar" }).status, "confirmed");
-  });
-
-  it("6월 연납은 오류로 거부하고 계산 결과를 내지 않는다", () => {
-    const r = calculateCarTax({ ...car, prepay: "jun" });
-    assert.equal(r.ok, false);
-    if (!r.ok) {
-      assert.equal(r.errors.some((e) => e.includes("제125조 제3항")), true);
-      assert.equal(r.errors.some((e) => e.includes("위택스")), true);
+  it("비활성 목록이 비어 있고 모든 신청 시기를 지원한다", () => {
+    assert.deepEqual([...UNVERIFIED_PREPAY_TIMINGS], []);
+    for (const t of ["none", "jan", "mar", "jun", "sep"] as const) {
+      assert.equal(isPrepayTimingSupported(t), true);
     }
   });
 
-  it("9월 연납도 같은 사유로 거부한다", () => {
-    const r = calculateCarTax({ ...car, prepay: "sep" });
-    assert.equal(r.ok, false);
-    if (!r.ok) {
-      assert.equal(r.errors.some((e) => e.includes("공식 고지 방식을 확인하는 중")), true);
-    }
+  it("6월 연납: 제2기분 세액 × 5% — 일수 비례가 없다", () => {
+    const r = ok({ ...car, prepay: "jun" });
+    assert.ok(r.prepay);
+    assert.equal(r.prepay.deductionBase, "secondHalf");
+    assert.equal(r.prepay.dayBase, null);
+    assert.equal(r.prepay.effectiveRate, 0.05);
+    // 200,000 × 5% = 10,000 / 60,000 × 5% = 3,000
+    assert.equal(r.prepay.carTaxDeduction, 10_000);
+    assert.equal(r.prepay.educationTaxDeduction, 3_000);
+    assert.equal(r.prepay.totalDeduction, 13_000);
   });
 
-  it("기분(제1기분·제2기분) 선택과 무관하게 거부한다", () => {
-    for (const period of ["year", "first", "second"] as const) {
-      assert.equal(calculateCarTax({ ...car, period, prepay: "jun" }).ok, false);
-      assert.equal(calculateCarTax({ ...car, period, prepay: "sep" }).ok, false);
-    }
+  it("6월 연납은 연세액 전액을 납부한다 (제1기분 포함)", () => {
+    const r = ok({ ...car, prepay: "jun" });
+    assert.equal(r.prepay?.payableScope, "annual");
+    assert.equal(r.prepay?.payableBeforeDeduction, 520_000);
+    assert.equal(r.finalPayable, 507_000);
   });
 
-  it("가정 계산 옵션으로도 우회할 수 없다", () => {
-    const r = calculateCarTax({ ...car, prepay: "jun", assumeLatestPrepayRate: true });
-    assert.equal(r.ok, false);
+  it("6월 연납의 연세액 대비 실효 공제율은 2.5%다", () => {
+    const r = ok({ ...car, prepay: "jun" });
+    assert.ok(r.prepay);
+    assert.ok(Math.abs(r.prepay.effectiveRateOnPayable - 0.025) < 10 ** -6 / 2);
   });
 
-  it("차종·용도를 바꿔도 우회할 수 없다", () => {
-    const truck = calculateCarTax({
-      ...car,
+  it("9월 연납: 제2기분 세액 × 92일/184일 × 5%", () => {
+    const r = ok({ ...car, prepay: "sep" });
+    assert.ok(r.prepay);
+    assert.equal(r.prepay.deductionBase, "secondHalf");
+    assert.equal(r.prepay.dayBase, SECOND_HALF_DAY_BASE);
+    assert.equal(r.prepay.deductiblePeriod.days, 92);
+    assert.ok(Math.abs(r.prepay.effectiveRate - 0.025) < 10 ** -9);
+    // 200,000 × 2.5% = 5,000 / 60,000 × 2.5% = 1,500
+    assert.equal(r.prepay.carTaxDeduction, 5_000);
+    assert.equal(r.prepay.educationTaxDeduction, 1_500);
+    assert.equal(r.prepay.totalDeduction, 6_500);
+  });
+
+  it("9월 연납은 제2기분만 납부한다", () => {
+    const r = ok({ ...car, prepay: "sep" });
+    assert.equal(r.prepay?.payableScope, "secondHalf");
+    assert.equal(r.prepay?.payableBeforeDeduction, 260_000);
+    assert.equal(r.finalPayable, 253_500);
+  });
+
+  it("9월 연납의 연세액 대비 공제율은 1.25% (서울시 공식 안내와 일치)", () => {
+    const r = ok({ ...car, prepay: "sep" });
+    assert.ok(r.prepay);
+    assert.ok(Math.abs(r.prepay.totalDeduction / 520_000 - 0.0125) < 10 ** -6 / 2);
+  });
+
+  it("공제액은 1월 > 3월 > 6월 > 9월 순으로 줄어든다", () => {
+    const d = (t: CarTaxInput["prepay"]) => ok({ ...car, prepay: t }).prepay!.totalDeduction;
+    assert.ok(d("jan") > d("mar"));
+    assert.ok(d("mar") > d("jun"));
+    assert.ok(d("jun") > d("sep"));
+  });
+
+  it("9월 연납 공제액은 6월 연납 공제액의 정확히 절반이다", () => {
+    const jun = ok({ ...car, prepay: "jun" }).prepay!.totalDeduction;
+    const sep = ok({ ...car, prepay: "sep" }).prepay!.totalDeduction;
+    assert.equal(sep * 2, jun);
+  });
+
+  it("차령 경감이 있으면 제2기분 세액이 줄어 6·9월 공제액도 함께 줄어든다", () => {
+    // 2018-01-10 최초등록 → 2026년 차령 9년, 경감률 35%
+    const aged: CarTaxInput = { ...car, firstRegistrationDate: "2018-01-10" };
+    const r = ok({ ...aged, prepay: "jun" });
+    const second = r.halves.find((h) => h.half === 2)!;
+    assert.equal(second.ageDiscountRate, 0.35);
+    assert.equal(second.carTax, 130_000); // 200,000 × 65%
+    assert.equal(second.educationTax, 39_000);
+    assert.equal(r.prepay?.carTaxDeduction, 6_500);
+    assert.equal(r.prepay?.educationTaxDeduction, 1_950);
+  });
+
+  it("기분 상·하반기 차령이 다르면 6·9월 공제는 제2기분 세액만 쓴다", () => {
+    // 2017-08-01 최초등록 → 2026년 제1기분 차령 9년(35%), 제2기분 차령 10년(40%)
+    const r = ok({ ...car, firstRegistrationDate: "2017-08-01", prepay: "jun" });
+    const first = r.halves.find((h) => h.half === 1)!;
+    const second = r.halves.find((h) => h.half === 2)!;
+    assert.equal(first.vehicleAge, 9);
+    assert.equal(second.vehicleAge, 10);
+    assert.equal(second.carTax, 120_000); // 200,000 × 60%
+    assert.equal(r.prepay?.carTaxDeduction, 6_000); // 제1기분(130,000)이 아니라 제2기분 기준
+  });
+
+  it("영업용 화물차는 지방교육세가 없어 자동차세 공제만 생긴다", () => {
+    const r = ok({
+      ...base,
       usage: "business",
       vehicleType: "truck",
-      loadCapacityKg: 1000,
+      loadCapacityKg: 1_000,
       displacementCc: null,
-      prepay: "sep",
+      firstRegistrationDate: null,
+      prepay: "jun",
     });
-    assert.equal(truck.ok, false);
+    assert.equal(r.educationTax, 0);
+    assert.equal(r.prepay?.educationTaxDeduction, 0);
+    // 연세액 6,600 → 제2기분 3,300 × 5% = 165 → 10원 미만 절사 160
+    assert.equal(r.prepay?.carTaxDeduction, 160);
   });
 
-  it("다른 입력 오류와 함께 있어도 거부 사유가 함께 보고된다", () => {
-    const r = calculateCarTax({ ...car, displacementCc: -1, prepay: "jun" });
-    assert.equal(r.ok, false);
-    if (!r.ok) {
-      assert.equal(r.errors.some((e) => e.includes("공식 고지 방식을 확인하는 중")), true);
+  it("과세기간을 기분으로 선택하면 연납 공제를 계산하지 않고 안내만 남긴다", () => {
+    for (const period of ["first", "second"] as const) {
+      const r = ok({ ...car, period, prepay: "jun" });
+      assert.equal(r.prepay, null);
+      assert.equal(r.notes.some((n) => n.includes("연간")), true);
     }
   });
 
-  it("공제대상 일수 계산 함수 자체는 살아 있다 (재개 시 근거)", () => {
+  it("일할계산과 6·9월 연납을 함께 요청하면 거부한다", () => {
+    const r = calculateCarTax({
+      ...car,
+      prepay: "sep",
+      prorate: { kind: "deregistration", date: "2026-08-31" },
+    });
+    assert.equal(r.ok, false);
+    if (!r.ok) assert.equal(r.errors.some((e) => e.includes("일할계산과 연납")), true);
+  });
+
+  it("공제대상 일수는 신청 시기가 늦을수록 짧아진다", () => {
+    assert.equal(prepayDeductiblePeriod(2026, "jan").days, 334);
+    assert.equal(prepayDeductiblePeriod(2026, "mar").days, 275);
     assert.equal(prepayDeductiblePeriod(2026, "jun").days, 184);
     assert.equal(prepayDeductiblePeriod(2026, "sep").days, 92);
+  });
+});
+
+describe("연납 계산식 분모 — 법 제128조 제3항 (윤년 366일)", () => {
+  it("isLeapYear", () => {
+    assert.equal(isLeapYear(2026), false);
+    assert.equal(isLeapYear(2028), true);
+    assert.equal(isLeapYear(2100), false);
+    assert.equal(isLeapYear(2000), true);
+  });
+
+  it("prepayDayBase는 평년 365일, 윤년 366일", () => {
+    assert.equal(prepayDayBase(2026), 365);
+    assert.equal(prepayDayBase(2028), 366);
+  });
+
+  it("9월 연납 분모는 윤년에도 184일로 고정된다", () => {
+    const r = ok({
+      ...base,
+      year: 2028,
+      displacementCc: 2000,
+      firstRegistrationDate: "2027-03-01",
+      prepay: "sep",
+      assumeLatestPrepayRate: true,
+    });
+    assert.equal(r.prepay?.dayBase, 184);
+    assert.equal(r.prepay?.deductiblePeriod.days, 92);
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/* 제2기분(7~12월분) — 법 제128조 제1항                                 */
+/* ------------------------------------------------------------------ */
+
+describe("제2기분(12월 납기, 7~12월분) 계산", () => {
+  it("경감 없는 차량의 제2기분은 연세액의 정확히 절반이다", () => {
+    const r = ok({ ...base, displacementCc: 2000, firstRegistrationDate: "2025-03-01", period: "second" });
+    assert.equal(r.annualBaseTax, 400_000);
+    assert.equal(r.carTax, 200_000);
+    assert.equal(r.educationTax, 60_000);
+    assert.equal(r.finalPayable, 260_000);
+    assert.equal(r.halves.length, 1);
+    assert.equal(r.halves[0].half, 2);
+  });
+
+  it("제1기분 + 제2기분 = 연간 세액", () => {
+    const args = { ...base, displacementCc: 1998, firstRegistrationDate: "2016-11-20" };
+    const first = ok({ ...args, period: "first" });
+    const second = ok({ ...args, period: "second" });
+    const year = ok({ ...args, period: "year" });
+    assert.equal(first.carTax + second.carTax, year.carTax);
+    assert.equal(first.educationTax + second.educationTax, year.educationTax);
+    assert.equal(first.finalPayable + second.finalPayable, year.finalPayable);
+  });
+
+  it("하반기 등록 차량은 제2기분 차령이 제1기분보다 1년 많다", () => {
+    // 2016-11-20 등록 → 2026년 제1기분 10년, 제2기분 11년
+    const args = { ...base, displacementCc: 1998, firstRegistrationDate: "2016-11-20" };
+    const first = ok({ ...args, period: "first" });
+    const second = ok({ ...args, period: "second" });
+    assert.equal(first.halves[0].vehicleAge, 10);
+    assert.equal(second.halves[0].vehicleAge, 11);
+    assert.equal(first.halves[0].ageDiscountRate, 0.4);
+    assert.equal(second.halves[0].ageDiscountRate, 0.45);
+    assert.ok(second.carTax < first.carTax);
+  });
+
+  it("전기차 제2기분은 정액의 절반이고 지방교육세가 붙는다", () => {
+    const r = ok({
+      ...base,
+      vehicleType: "otherPassenger",
+      displacementCc: null,
+      firstRegistrationDate: "2020-01-01",
+      period: "second",
+    });
+    assert.equal(r.carTax, 50_000);
+    assert.equal(r.educationTax, 15_000);
+    assert.equal(r.ageReduction, 0);
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/* 법 제128조 제4항 — 연세액 10만원 이하 일시부과 안내                   */
+/* ------------------------------------------------------------------ */
+
+describe("연세액 10만원 이하 안내 — 법 제128조 제4항", () => {
+  it("연세액이 10만원 이하이면 일시부과 안내가 붙는다", () => {
+    // 1,000cc 비영업용 = 80,000원
+    const r = ok({ ...base, displacementCc: 1_000, firstRegistrationDate: "2025-01-01" });
+    assert.equal(r.annualBaseTax, 80_000);
+    assert.equal(r.notes.some((n) => n.includes("제128조 제4항")), true);
+  });
+
+  it("경계값 정확히 10만원도 안내 대상이다", () => {
+    // 1,250cc × 140원 = 175,000 → 아님. 전기차 비영업용 정액 100,000원으로 경계 확인
+    const r = ok({
+      ...base,
+      vehicleType: "otherPassenger",
+      displacementCc: null,
+      firstRegistrationDate: "2025-01-01",
+    });
+    assert.equal(r.annualBaseTax, LUMP_SUM_LEVY_THRESHOLD);
+    assert.equal(r.notes.some((n) => n.includes("제128조 제4항")), true);
+  });
+
+  it("10만원을 넘으면 안내가 붙지 않는다", () => {
+    const r = ok({ ...base, displacementCc: 2_000, firstRegistrationDate: "2025-01-01" });
+    assert.equal(r.notes.some((n) => n.includes("제128조 제4항")), false);
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/* 회귀: 차령 경감률의 부동소수점 오차                                   */
+/* ------------------------------------------------------------------ */
+
+describe("회귀 — 차령 경감 부동소수점", () => {
+  it("경감률은 백분율 정수에서 파생되어 오차가 없다", () => {
+    for (let age = 3; age <= 12; age += 1) {
+      const pct = ageDiscountPercent(age);
+      assert.equal(pct, 5 * (age - 2));
+      assert.equal(ageDiscountRate(age), pct / 100);
+    }
+    assert.equal(ageDiscountPercent(2), 0);
+    assert.equal(ageDiscountPercent(13), 50);
+    assert.equal(ageDiscountPercent(30), 50);
+  });
+
+  it("경감률 35%에서 200,000원 기분세액이 129,990원으로 잘리지 않는다", () => {
+    // 0.05 * 7 = 0.35000000000000003 으로 계산하면 129,999.99…원 → 129,990원이 됐다.
+    const r = ok({
+      ...base,
+      displacementCc: 2000,
+      firstRegistrationDate: "2018-01-10",
+      period: "second",
+    });
+    assert.equal(r.halves[0].vehicleAge, 9);
+    assert.equal(r.carTax, 130_000);
+    assert.equal(r.educationTax, 39_000);
+  });
+
+  it("차령 3~12년 전 구간에서 기분세액이 100원 단위로 떨어진다 (400,000원 연세액)", () => {
+    const expected: Record<number, number> = {
+      3: 190_000, 4: 180_000, 5: 170_000, 6: 160_000, 7: 150_000,
+      8: 140_000, 9: 130_000, 10: 120_000, 11: 110_000, 12: 100_000,
+    };
+    for (const [ageText, tax] of Object.entries(expected)) {
+      const age = Number(ageText);
+      const regYear = 2026 - age + 1; // 1~6월 등록 → 차령 = 과세연도 − 등록연도 + 1
+      const r = ok({
+        ...base,
+        displacementCc: 2000,
+        firstRegistrationDate: `${regYear}-01-10`,
+        period: "second",
+      });
+      assert.equal(r.halves[0].vehicleAge, age);
+      assert.equal(r.carTax, tax);
+    }
   });
 });

@@ -3,7 +3,7 @@
  *
  * 근거 법령
  * - 「지방세법」 제127조(과세표준과 세율)  [시행 2026. 1. 1.] [법률 제21308호, 2025. 12. 31., 일부개정]
- * - 「지방세법」 제128조(납기와 징수방법) 제3항 — 연납 공제
+ * - 「지방세법」 제128조(납기와 징수방법) — 제1항 기분·납기, 제3항 연납 공제 계산식, 제4항 소액 일시부과
  * - 「지방세법」 제130조(수시부과 시의 세액계산) — 일할계산, 2천원 미만 미징수
  * - 「지방세법 시행령」 제122조(영업용과 비영업용의 구분 및 차령 계산)
  * - 「지방세법 시행령」 제123조(자동차의 종류)
@@ -11,11 +11,13 @@
  *   [시행 2026. 7. 1.] [대통령령 제36445호, 2026. 6. 23., 타법개정]
  * - 지방교육세: 비영업용 승용자동차에 대한 자동차세액의 100분의 30
  *
- * 최근 점검일: 2026-08-31
+ * 최근 점검일: 2026-09-01
+ *   2026-09-01 법 제128조 제3항의 계산식 표 원문(국가법령정보센터)을 직접 확인해
+ *   6월·9월 연납 계산식과 윤년 분모(366일)를 확정하고 계산을 활성화했다.
  */
 
 export const CAR_TAX_YEAR = 2026;
-export const CAR_TAX_LAST_REVIEWED = "2026-08-31";
+export const CAR_TAX_LAST_REVIEWED = "2026-09-01";
 
 /**
  * 연납 공제 이자율을 실제로 확인한 마지막 과세연도.
@@ -74,15 +76,35 @@ export function prepayInterestRate(
 }
 
 /**
- * 「지방세법」 제128조 제3항 계산식의 분모.
+ * 「지방세법」 제128조 제3항 계산식 — 2026-09-01 국가법령정보센터에서 원문(계산식 표)을 직접 확인했다.
+ * [시행 2026. 1. 1.] [법률 제21308호, 2025. 12. 31., 일부개정]
  *
- * ⚠ 미확정: 법 제128조 제3항의 계산식은 국가법령정보센터에서 이미지로만 제공되어 원문을 읽지 못했다.
- * 분모 365는 부산 사하구 등 지자체의 공식 안내("연세액 × (2월~12월 일수 / 365일)의 5%")와
- * 공표된 연도별 실효 공제율(2026년 1월 약 4.57%)로 역산해 확인한 값이다.
- * 윤년의 분모가 366으로 바뀌는지 여부는 확인되지 않았으므로 365로 고정하고,
- * 윤년 과세연도에는 결과 화면에 확인 필요 안내를 띄운다.
+ * | 신고납부기간        | 계산식                                                                  |
+ * |---------------------|-------------------------------------------------------------------------|
+ * | 1/16~1/31, 3/16~3/31 | 연세액 × (납부기한 다음 날 ~ 12/31 일수) / 365(윤년 366) × 이자율        |
+ * | 6/16~6/30            | 제2기분 세액 × 이자율                                                   |
+ * | 9/16~9/30            | 제2기분 세액 × (납부기한 다음 날 ~ 12/31 일수) / 184 × 이자율            |
+ *
+ * 공제액은 「과세기간 경과분을 차감한 연세액」의 100분의 10을 넘지 못한다(법 §128③ 본문).
+ * 「과세기간 경과분을 차감한 연세액」의 범위는 영 제125조 제3항이 정한다.
  */
-export const PREPAY_DAY_BASE = 365;
+export function isLeapYear(year: number): boolean {
+  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+}
+
+/** 1월·3월 연납 계산식의 분모 — 365일, 윤년은 366일 (법 §128③ 계산식) */
+export function prepayDayBase(year: number): number {
+  return isLeapYear(year) ? 366 : 365;
+}
+
+/** 9월 연납 계산식의 분모 — 제2기분 기간(7월 1일 ~ 12월 31일)의 일수 184일로 법에 고정되어 있다 */
+export const SECOND_HALF_DAY_BASE = 184;
+
+/** 법 §128③ 본문 — 공제액 상한 100분의 10 */
+export const PREPAY_DEDUCTION_CAP_RATE = 0.1;
+
+/** 법 §128④ — 연세액이 이 금액 이하이면 제1기분 부과 시 전액을 부과·징수할 수 있다 */
+export const LUMP_SUM_LEVY_THRESHOLD = 100_000;
 /** 지방교육세율 — 비영업용 승용자동차 자동차세액의 30% */
 export const EDUCATION_TAX_RATE = 0.3;
 /** 「지방세법」 제127조 제1항 제2호 — 차령 1년당 경감률 */
@@ -188,18 +210,37 @@ export interface HalfBreakdown {
   belowMinLevy: boolean;
 }
 
+/** 법 §128③ 계산식이 공제 기준으로 삼는 세액의 범위 */
+export type PrepayDeductionBase = "annual" | "secondHalf";
+
 export interface PrepayBreakdown {
   timing: Exclude<PrepayTiming, "none">;
   /** 연납 납부기한 */
   dueDate: string;
   /** 공제대상 기간 (납부기한 다음 날 ~ 12월 31일) */
   deductiblePeriod: { from: string; to: string; days: number };
+  /** 법 §128③ 계산식의 공제 기준 세액 — 1·3월은 연세액, 6·9월은 제2기분 세액 */
+  deductionBase: PrepayDeductionBase;
+  /** 공제 기준 세액의 표시용 이름 */
+  deductionBaseLabel: string;
+  /** 계산식의 분모. 6월 연납은 일수 비례가 없어 null */
+  dayBase: number | null;
   /** 해당 과세연도에 적용된 이자율 */
   interestRate: number;
   /** 이자율의 근거 (시행령 개정 이력) */
   interestRateBasis: string;
-  /** 연세액 대비 실효 공제율 */
+  /** 공제 기준 세액 대비 실효 공제율 (= 계산식에서 이자율에 곱해지는 비율 × 이자율) */
   effectiveRate: number;
+  /** 연납으로 실제 납부하는 세액의 범위 — 9월 연납은 제2기분만 납부한다 */
+  payableScope: "annual" | "secondHalf";
+  /** 연납으로 납부하는 세액 (공제 전, 자동차세 + 지방교육세) */
+  payableBeforeDeduction: number;
+  /** 연납 대상 납부세액 대비 실효 공제율 */
+  effectiveRateOnPayable: number;
+  /** 화면 표시용 계산식 */
+  formula: string;
+  /** 법 §128③ 본문의 100분의 10 상한에 걸렸는지 */
+  capApplied: boolean;
   carTaxDeduction: number;
   educationTaxDeduction: number;
   totalDeduction: number;
@@ -344,23 +385,21 @@ const PREPAY_DUE: Record<Exclude<PrepayTiming, "none">, { month: number; day: nu
 };
 
 /**
- * 공식 고지 방식을 확인하지 못해 잠정 비활성화한 연납 신청 시기.
+ * 공식 근거를 확인하지 못해 계산을 제공하지 않는 연납 신청 시기.
  *
- * 「지방세법 시행령」 제125조 제3항은 6월 연납을 ‘제2기분에 해당하는 세액’으로 규정한다.
- * 제1기분은 이미 정기분으로 고지·납부된 뒤이므로, 연세액에 일수 비율을 곱하는 방식은
- * 실제 고지 구성과 어긋날 가능성이 크다. 9월분도 같은 구조다.
- * 위택스 실제 고지액과 대조해 계산식을 확정하기 전까지는 계산을 거부한다.
+ * 2026-08-31 시점에는 6월·9월이 여기 있었다. 「지방세법」 제128조 제3항의 계산식이
+ * 국가법령정보센터에 이미지로만 제공되어 원문을 읽지 못했기 때문이다.
+ * 2026-09-01 원문(계산식 표)을 직접 확인해 6월·9월 계산식이 확정되었으므로 목록을 비웠다.
+ *   · 6월: 제2기분 세액 × 이자율
+ *   · 9월: 제2기분 세액 × (납부기한 다음 날 ~ 12/31 일수) / 184 × 이자율
  *
- * 재개할 때는 이 배열을 비우고, 아래 UNVERIFIED_PREPAY_REASON 을 쓰는 곳과
- * tests/car-tax.test.ts 의 거부 테스트를 함께 정리한다.
+ * 앞으로 근거가 불확실한 시기가 다시 생기면 이 배열에 넣는다. 그러면 UI와 순수 함수 양쪽에서 거부된다.
  */
-export const UNVERIFIED_PREPAY_TIMINGS: readonly PrepayTiming[] = ["jun", "sep"];
+export const UNVERIFIED_PREPAY_TIMINGS: readonly PrepayTiming[] = [];
 
 /** UNVERIFIED_PREPAY_TIMINGS 를 선택했을 때 돌려주는 거부 사유 */
 export const UNVERIFIED_PREPAY_REASON =
-  "6월·9월 연납은 공식 고지 방식을 확인하는 중이어서 계산을 제공하지 않습니다. " +
-  "「지방세법 시행령」 제125조 제3항이 6월분을 ‘제2기분에 해당하는 세액’으로 규정하는데, " +
-  "이 계산기가 쓰는 일수 비례 방식이 실제 고지 구성과 일치하는지 확인되지 않았습니다. " +
+  "이 신청 시기의 연납 계산식은 공식 근거를 확인하는 중이어서 계산을 제공하지 않습니다. " +
   "위택스에서 고지액을 확인해 주세요.";
 
 /** 해당 연납 신청 시기의 계산을 제공하는지 */
@@ -458,11 +497,22 @@ export function vehicleAgeForHalf(registrationYear: number, registrationMonth: n
   return half === 1 ? diff : diff + 1;
 }
 
-/** 차령에 따른 경감률 (0 ~ 0.5). 차령 3년 미만은 0 */
-export function ageDiscountRate(age: number): number {
+/**
+ * 차령에 따른 경감률(%) — 정수. 차령 3년 미만은 0, 12년 초과는 12년으로 본다.
+ *
+ * 부동소수점 오차를 피하려고 백분율 정수로 다룬다.
+ * 0.05 * 7 은 0.35000000000000003 이 되어 200,000원 기분세액이 129,999.99…원이 되고,
+ * 10원 미만 절사에서 130,000원이 아니라 129,990원으로 잘리는 문제가 있었다.
+ */
+export function ageDiscountPercent(age: number): number {
   if (age < AGE_DISCOUNT_START) return 0;
   const capped = Math.min(age, AGE_CAP);
-  return AGE_DISCOUNT_PER_YEAR * (capped - 2);
+  return 5 * (capped - 2);
+}
+
+/** 차령에 따른 경감률 (0 ~ 0.5). 차령 3년 미만은 0 */
+export function ageDiscountRate(age: number): number {
+  return ageDiscountPercent(age) / 100;
 }
 
 /* ------------------------------------------------------------------ */
@@ -704,13 +754,16 @@ export function calculateCarTax(input: CarTaxInput): CarTaxResult {
     const baseHalfTax = base.annual / 2;
 
     let age: number | null = null;
-    let discount = 0;
+    let discountPercent = 0;
     if (hasAgeDiscount(input) && regYear !== null && regMonth !== null) {
       age = vehicleAgeForHalf(regYear, regMonth, year, half);
-      discount = ageDiscountRate(age);
+      discountPercent = ageDiscountPercent(age);
     }
+    const discount = discountPercent / 100;
 
-    const afterAge = baseHalfTax * (1 - discount);
+    // 법 §127①2: 각 기분세액 = A/2 − (A/2 × 5/100)(n − 2)
+    // 백분율 정수로 곱한 뒤 100으로 나눠 부동소수점 오차를 없앤다.
+    const afterAge = (baseHalfTax * (100 - discountPercent)) / 100;
     const ageReductionRaw = baseHalfTax - afterAge;
 
     let prorateInfo: { usedDays: number; totalDays: number } | null = null;
@@ -763,6 +816,9 @@ export function calculateCarTax(input: CarTaxInput): CarTaxResult {
   const targetHalves: (1 | 2)[] = period === "first" ? [1] : period === "second" ? [2] : [1, 2];
   const halves: HalfBreakdown[] = allHalves.filter((h) => targetHalves.includes(h.half));
 
+  /** 법 §128③ 계산식이 말하는 "제2기분 세액" — 차령 경감 후 제2기분 세액 */
+  const secondHalf = allHalves[1];
+
   const carTax = halves.reduce((sum, h) => sum + h.carTax, 0);
   const educationTax = halves.reduce((sum, h) => sum + h.educationTax, 0);
   const ageReduction = halves.reduce((sum, h) => sum + h.ageReduction, 0);
@@ -795,33 +851,97 @@ export function calculateCarTax(input: CarTaxInput): CarTaxResult {
           ],
         };
       }
-      const factor = (p.days / PREPAY_DAY_BASE) * rateInfo.rate;
       if (!rateInfo.verified) {
         unverifiedPrepayYear = true;
       }
-      const carTaxDeduction = floorTo10(carTax * factor);
-      const educationTaxDeduction = floorTo10(educationTax * factor);
-      const isLeap = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-      if (isLeap) {
-        notes.push(
-          "윤년 과세연도입니다. 이 계산기는 분모를 365일로 고정합니다. 법 제128조 제3항 계산식의 분모가 윤년에 366일로 바뀌는지는 확인되지 않았으므로, 실제 고지액은 위택스에서 대조하세요.",
-        );
+
+      const ratePct = `${(rateInfo.rate * 100).toFixed(0)}%`;
+      const dayBaseForYear = prepayDayBase(year);
+
+      /*
+       * 법 §128③ 계산식 (2026-09-01 국가법령정보센터 원문 확인)
+       *   1·3월: 연세액       × 일수/365(윤년 366) × 이자율
+       *   6월  : 제2기분 세액 × 이자율
+       *   9월  : 제2기분 세액 × 일수/184           × 이자율
+       */
+      let baseCarTax: number;
+      let baseEducationTax: number;
+      /** 계산식에서 이자율 앞에 곱해지는 기간 비율 */
+      let periodRatio: number;
+      let dayBase: number | null;
+      let deductionBase: PrepayDeductionBase;
+      let deductionBaseLabel: string;
+      let payableScope: "annual" | "secondHalf";
+      let formula: string;
+
+      if (prepayTiming === "jan" || prepayTiming === "mar") {
+        baseCarTax = carTax;
+        baseEducationTax = educationTax;
+        periodRatio = p.days / dayBaseForYear;
+        dayBase = dayBaseForYear;
+        deductionBase = "annual";
+        deductionBaseLabel = "연세액";
+        payableScope = "annual";
+        formula = `연세액 × ${p.days}일 / ${dayBaseForYear}일 × ${ratePct}`;
+      } else if (prepayTiming === "jun") {
+        baseCarTax = secondHalf.carTax;
+        baseEducationTax = secondHalf.educationTax;
+        periodRatio = 1;
+        dayBase = null;
+        deductionBase = "secondHalf";
+        deductionBaseLabel = "제2기분 세액";
+        payableScope = "annual";
+        formula = `제2기분 세액 × ${ratePct}`;
+      } else {
+        baseCarTax = secondHalf.carTax;
+        baseEducationTax = secondHalf.educationTax;
+        periodRatio = p.days / SECOND_HALF_DAY_BASE;
+        dayBase = SECOND_HALF_DAY_BASE;
+        deductionBase = "secondHalf";
+        deductionBaseLabel = "제2기분 세액";
+        payableScope = "secondHalf";
+        formula = `제2기분 세액 × ${p.days}일 / ${SECOND_HALF_DAY_BASE}일 × ${ratePct}`;
       }
+
+      // 법 §128③ 본문: 공제액은 「과세기간 경과분을 차감한 연세액」의 100분의 10을 넘지 못한다.
+      // 그 금액은 계산식의 (기준 세액 × 기간 비율)과 같으므로, 비율로 비교하면 이자율 vs 10%가 된다.
+      const capApplied = rateInfo.rate > PREPAY_DEDUCTION_CAP_RATE;
+      const appliedRate = Math.min(rateInfo.rate, PREPAY_DEDUCTION_CAP_RATE);
+      const factor = periodRatio * appliedRate;
+
+      const carTaxDeduction = floorTo10(baseCarTax * factor);
+      const educationTaxDeduction = floorTo10(baseEducationTax * factor);
+      const totalDeduction = carTaxDeduction + educationTaxDeduction;
+
+      const payableBeforeDeduction =
+        payableScope === "annual" ? subtotal : secondHalf.carTax + secondHalf.educationTax;
+
       prepay = {
         timing: prepayTiming,
         interestRate: rateInfo.rate,
         interestRateBasis: rateInfo.basis,
         dueDate: p.dueDate,
         deductiblePeriod: { from: p.from, to: p.to, days: p.days },
+        deductionBase,
+        deductionBaseLabel,
+        dayBase,
         effectiveRate: factor,
+        payableScope,
+        payableBeforeDeduction,
+        effectiveRateOnPayable:
+          payableBeforeDeduction > 0 ? totalDeduction / payableBeforeDeduction : 0,
+        formula,
+        capApplied,
         carTaxDeduction,
         educationTaxDeduction,
-        totalDeduction: carTaxDeduction + educationTaxDeduction,
+        totalDeduction,
       };
     }
   }
 
-  const finalPayable = subtotal - (prepay?.totalDeduction ?? 0);
+  const finalPayable = prepay
+    ? prepay.payableBeforeDeduction - prepay.totalDeduction
+    : subtotal;
 
   /* 일할계산 공통 정보와, 말소등록에 한정한 환급 정보 */
   let prorationInfo: ProrationInfo | null = null;
@@ -860,12 +980,7 @@ export function calculateCarTax(input: CarTaxInput): CarTaxResult {
       `${year}년 연납 공제 이자율은 사용자가 선택한 가정 계산입니다. ${LAST_VERIFIED_PREPAY_YEAR}년까지 확인한 값(100분의 5)을 그대로 적용했으며, 이후 시행령 개정 여부는 확인되지 않았습니다.`,
     );
   }
-  // 6월·9월 연납은 UNVERIFIED_PREPAY_TIMINGS 로 아예 거부하므로 검증 사유가 생기지 않는다.
-  if (prepay && ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0)) {
-    verificationNotes.push(
-      "윤년 과세연도의 연납 계산식 분모가 365일인지 366일인지 확인되지 않아 365일로 고정했습니다.",
-    );
-  }
+  // 윤년 분모(366일)와 6월·9월 계산식은 2026-09-01 법 §128③ 원문으로 확정되어 검증 사유에서 제외했다.
   if (refund) {
     verificationNotes.push(
       "환급 예상액은 연간 기납부액에서 연간 일할계산 후 부담액을 뺀 값입니다. 과세기간을 기분으로 선택해도 환급 산정은 연간 기준으로 계산됩니다. 실제 환급은 관할 지자체 신청 절차와 처리 기준에 따릅니다.",
@@ -911,14 +1026,22 @@ export function calculateCarTax(input: CarTaxInput): CarTaxResult {
   if (prepay) {
     steps.push({
       label: "④ 연납 공제",
-      expression: `(자동차세 ${carTax.toLocaleString("ko-KR")}원 + 지방교육세 ${educationTax.toLocaleString("ko-KR")}원) × ${prepay.deductiblePeriod.days}일 / 365일 × 5% — 공제대상 기간 ${prepay.deductiblePeriod.from} ~ ${prepay.deductiblePeriod.to}`,
+      expression:
+        `${prepay.formula} — 법 제128조 제3항 계산식` +
+        (prepay.dayBase !== null
+          ? ` · 공제대상 기간 ${prepay.deductiblePeriod.from} ~ ${prepay.deductiblePeriod.to} (${prepay.deductiblePeriod.days}일)`
+          : ` · 제2기분 과세기간 ${year}-07-01 ~ ${year}-12-31`),
       value: `−${prepay.totalDeduction.toLocaleString("ko-KR")}원`,
     });
   }
 
   steps.push({
     label: "⑤ 최종 납부액",
-    expression: prepay ? "자동차세 + 지방교육세 − 연납 공제액" : "자동차세 + 지방교육세",
+    expression: prepay
+      ? prepay.payableScope === "secondHalf"
+        ? "제2기분 자동차세 + 제2기분 지방교육세 − 연납 공제액"
+        : "자동차세 + 지방교육세 − 연납 공제액"
+      : "자동차세 + 지방교육세",
     value: `${finalPayable.toLocaleString("ko-KR")}원`,
   });
 
@@ -937,6 +1060,25 @@ export function calculateCarTax(input: CarTaxInput): CarTaxResult {
   if (proration) {
     notes.push(
       "일할계산은 신규등록·말소등록만 지원합니다. 매매·증여에 따른 승계취득(법 제129조)은 양도인·양수인 귀속일 경계를 공식 자료로 확정하지 못해 지원하지 않습니다.",
+    );
+  }
+  if (prepay) {
+    if (prepay.payableScope === "secondHalf") {
+      notes.push(
+        "9월 연납은 제2기분(7~12월분)만 미리 납부합니다. 제1기분은 6월 정기분으로 이미 부과·납부된 것으로 보고 최종 납부액에서 제외했습니다.",
+      );
+    } else if (prepay.timing === "jun") {
+      notes.push(
+        "6월 연납은 제1기분 납기(6월 16~30일) 중에 연세액 전액을 신고납부하는 방식입니다. 공제는 「지방세법」 제128조 제3항에 따라 제2기분 세액에만 이자율을 곱해 계산합니다.",
+      );
+    }
+    if (isLeapYear(year) && prepay.dayBase === 366) {
+      notes.push("윤년 과세연도이므로 법 제128조 제3항 계산식의 분모를 366일로 적용했습니다.");
+    }
+  }
+  if (base.annual <= LUMP_SUM_LEVY_THRESHOLD) {
+    notes.push(
+      `연세액이 ${LUMP_SUM_LEVY_THRESHOLD.toLocaleString("ko-KR")}원 이하입니다. 「지방세법」 제128조 제4항에 따라 지방자치단체가 제1기분을 부과할 때 연세액 전액을 한 번에 부과·징수할 수 있으며, 이 경우 제2기분 세액에 이자율을 곱한 금액이 공제됩니다. 실제 고지 방식은 관할 지자체에 따라 다를 수 있습니다.`,
     );
   }
   notes.push(

@@ -118,10 +118,40 @@ export default function CarTaxCalculatorPage() {
         <div className="rounded-2xl border border-slate-200 bg-white p-5">
           <h3 className="text-sm font-semibold text-slate-800">연납 공제</h3>
           <p className="mt-2 text-sm leading-relaxed text-slate-600">
-            연납 공제액은 고정 할인율이 아니라 <span className="font-mono text-xs">연세액 × (공제대상 일수 ÷ 365) × 5%</span>{" "}
-            로 산출합니다. 공제대상 기간은 한꺼번에 납부하는 납부기한의 다음 날부터 12월 31일까지이며, {CAR_TAX_YEAR}년
-            기준으로 1월 334일, 3월 275일, 6월 184일, 9월 92일입니다. 이자율 5%는 「지방세법 시행령」 제125조 제6항에
-            따른 값입니다. 다만 6월·9월 연납은 공식 고지 방식을 확인하는 중이어서 계산을 제공하지 않습니다.
+            연납 공제액은 고정 할인율이 아니라 「지방세법」 제128조 제3항의 계산식으로 산출합니다. 신청 시기마다
+            계산식이 다릅니다. 이자율 5%는 「지방세법 시행령」 제125조 제6항에 따른 값입니다.
+          </p>
+          <div className="mt-3 overflow-x-auto">
+            <table className="w-full min-w-[520px] border-collapse text-xs">
+              <thead>
+                <tr className="bg-slate-50">
+                  <th className="px-3 py-2 text-left font-semibold text-slate-600">신고납부기간</th>
+                  <th className="px-3 py-2 text-left font-semibold text-slate-600">계산식 (법 제128조 제3항)</th>
+                  <th className="px-3 py-2 text-right font-semibold text-slate-600">
+                    {CAR_TAX_YEAR}년 연세액 대비
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {[
+                  ['1월 16~31일', '연세액 × 334일 / 365일 × 5%', '약 4.58%'],
+                  ['3월 16~31일', '연세액 × 275일 / 365일 × 5%', '약 3.77%'],
+                  ['6월 16~30일', '제2기분 세액 × 5%', '2.50%'],
+                  ['9월 16~30일', '제2기분 세액 × 92일 / 184일 × 5%', '1.25%'],
+                ].map(([period, formula, rate]) => (
+                  <tr key={period} className="bg-white">
+                    <td className="whitespace-nowrap px-3 py-2 text-slate-600">{period}</td>
+                    <td className="px-3 py-2 font-mono text-[11px] text-slate-600">{formula}</td>
+                    <td className="whitespace-nowrap px-3 py-2 text-right font-semibold text-blue-600">{rate}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-2 text-xs leading-relaxed text-slate-500">
+            1월·3월 연납의 분모는 365일이며 윤년에는 366일입니다. 9월 연납의 분모 184일은 제2기분 과세기간(7월 1일 ~
+            12월 31일)의 일수로 법에 고정되어 있습니다. 1월·3월·6월 연납은 연세액 전액을, 9월 연납은 제2기분
+            (7~12월분)만 납부합니다.
           </p>
         </div>
 
@@ -137,10 +167,10 @@ export default function CarTaxCalculatorPage() {
             </li>
             <li>· 일할계산: 신규등록·말소등록만 지원. 매매·증여에 따른 승계취득(법 제129조)은 미지원</li>
             <li>
-              · 잠정 제외: 6월·9월 연납. 「지방세법 시행령」 제125조 제3항이 6월분을 ‘제2기분에 해당하는 세액’으로
-              규정하는데 이 계산기의 일수 비례 방식과 일치하는지 확인되지 않아, 확정 전까지 계산을 제공하지 않습니다.
+              · 참고: 연세액이 10만원 이하이면 「지방세법」 제128조 제4항에 따라 지방자치단체가 제1기분을 부과할 때
+              연세액 전액을 한 번에 부과·징수할 수 있습니다. 실제 고지 방식은 관할 지자체에 따라 다릅니다.
             </li>
-            <li>· 미확정: 연납 계산식의 분모가 윤년에 366일로 바뀌는지, 10원 미만 절사가 단계별인지 최종인지는 확인되지 않았습니다</li>
+            <li>· 미확정: 10원 미만 절사가 단계별인지 최종 세액 기준인지는 근거 조문을 특정하지 못했습니다</li>
           </ul>
         </div>
       </section>

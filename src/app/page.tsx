@@ -4,9 +4,9 @@ import Link from 'next/link'
 import { CALCULATORS } from '@/lib/calculators'
 
 export const metadata: Metadata = {
-  title: '세금 계산기 모음 | 부가세·소득세·양도세·재산세·증여세·상속세',
+  title: '세금 계산기 모음 | 부가세·소득세·양도세·재산세·종부세·자동차세',
   description:
-    '2026년 적용 기준 부가세, 종합소득세, 프리랜서 3.3%, 양도소득세, 재산세, 근로소득 비과세, 증여세, 상속세, 원천징수세액 계산기를 한 곳에서 무료로 제공합니다.',
+    '2026년 적용 기준 부가세, 종합소득세, 프리랜서 3.3%, 양도소득세, 재산세, 종합부동산세, 자동차세, 근로소득 비과세, 증여세, 상속세, 원천징수세액 계산기를 한 곳에서 무료로 제공합니다.',
   alternates: { canonical: '/' },
 }
 
@@ -35,27 +35,24 @@ const websiteJsonLd = {
 }
 
 // 계산기 ItemList (홈에서 컬렉션을 검색엔진에 알림)
+// 목록을 손으로 적으면 계산기를 추가할 때마다 어긋나므로 CALCULATORS 에서 생성한다.
+const enabledCalculators = CALCULATORS.filter((c) => c.enabled)
+
 const itemListJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'ItemList',
   name: '세금 계산기 모음',
-  numberOfItems: 10,
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: '부가세 계산기', url: 'https://taxsim.kr/vat-calculator' },
-    { '@type': 'ListItem', position: 2, name: '종합소득세 계산기', url: 'https://taxsim.kr/income-tax-calculator' },
-    { '@type': 'ListItem', position: 3, name: '프리랜서 3.3% 계산기', url: 'https://taxsim.kr/freelancer-tax-calculator' },
-    { '@type': 'ListItem', position: 4, name: '양도소득세 계산기', url: 'https://taxsim.kr/capital-gains-tax-calculator' },
-    { '@type': 'ListItem', position: 5, name: '재산세 계산기', url: 'https://taxsim.kr/property-tax-calculator' },
-    { '@type': 'ListItem', position: 6, name: '증여세 계산기', url: 'https://taxsim.kr/gift-tax-calculator' },
-    { '@type': 'ListItem', position: 7, name: '상속세 계산기', url: 'https://taxsim.kr/inheritance-tax-calculator' },
-    { '@type': 'ListItem', position: 8, name: '원천징수세액 계산기', url: 'https://taxsim.kr/withholding-calculator' },
-    { '@type': 'ListItem', position: 9, name: '간이과세 vs 일반과세 비교', url: 'https://taxsim.kr/vat-type-compare' },
-    { '@type': 'ListItem', position: 10, name: '근로소득 비과세 계산기', url: 'https://taxsim.kr/tax-free-income-calculator' },
-  ],
+  numberOfItems: enabledCalculators.length,
+  itemListElement: enabledCalculators.map((c, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: c.title,
+    url: `https://taxsim.kr/${c.slug}`,
+  })),
 }
 
 export default function HomePage() {
-  const list = CALCULATORS.filter((c) => c.enabled)
+  const list = enabledCalculators
 
   return (
     <>
@@ -101,6 +98,29 @@ export default function HomePage() {
             </Link>
           ))}
         </div>
+
+        {/* 세금 일정 CTA */}
+        <section className="mb-10 rounded-2xl border border-slate-200 bg-white p-6">
+          <h2 className="mb-1 text-base font-bold text-slate-900">이번 달 세금 일정 확인하기</h2>
+          <p className="mb-4 text-sm text-slate-600">
+            1월 자동차세 연납, 5월 종합소득세, 6월 자동차세 제1기분, 7·9월 재산세, 12월 종합부동산세와
+            자동차세 제2기분까지 — 법령에 규정된 기한을 월별로 정리했습니다.
+          </p>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-3">
+            {[
+              { href: '/tax-calendar', label: '세금 일정 달력' },
+              { href: '/car-tax-calculator', label: '자동차세 계산' },
+              { href: '/comprehensive-real-estate-tax-calculator', label: '종합부동산세 계산' },
+              { href: '/property-tax-calculator', label: '재산세 계산' },
+              { href: '/guide/car-tax', label: '자동차세 가이드' },
+              { href: '/guide/comprehensive-real-estate-tax', label: '종부세 가이드' },
+            ].map((item) => (
+              <Link key={item.href} href={item.href} className="text-sm text-blue-600 hover:underline">
+                {item.label} →
+              </Link>
+            ))}
+          </div>
+        </section>
 
         {/* 가이드 CTA - 외부 사이트 대신 내부 가이드로 유도 */}
         <section className="rounded-2xl border bg-blue-50/50 border-blue-100 p-6 mb-10">

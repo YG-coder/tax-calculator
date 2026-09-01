@@ -83,6 +83,18 @@ const GUIDES = [
     category: '양도소득세',
   },
   {
+    href: '/guide/car-tax',
+    title: '자동차세 과세 기준과 연납 완전 정리',
+    description: '배기량별 세액, 차령 경감, 지방교육세, 제1·2기분 납기, 1·3·6·9월 연납의 신청 시기별 공제 계산식을 지방세법 조문 기준으로 정리했습니다.',
+    category: '자동차세',
+  },
+  {
+    href: '/guide/comprehensive-real-estate-tax',
+    title: '종합부동산세 계산 방법과 12월 납부기간',
+    description: '공시가격 합계에서 최종 납부액까지, 기본공제·공정시장가액비율·세율·재산세 중복분 공제·세액공제·세부담 상한·농어촌특별세를 순서대로 정리했습니다.',
+    category: '종합부동산세',
+  },
+  {
     href: '/guide/property-tax',
     title: '2026년 재산세 계산 가이드',
     description: '주택 공시가격에 적용되는 공정시장가액비율과 세율, 도시지역분·지방교육세·세부담상한, 7월·9월 납부 방식을 정리했습니다.',

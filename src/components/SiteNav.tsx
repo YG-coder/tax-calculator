@@ -12,6 +12,7 @@ const NAV_ITEMS = [
   { href: '/income-tax-calculator', label: '종합소득세' },
   { href: '/freelancer-tax-calculator', label: '프리랜서 3.3%' },
   { href: '/withholding-calculator', label: '원천징수' },
+  { href: '/tax-calendar', label: '세금 일정' },
   { href: '/guide', label: '가이드' },
 ]
 

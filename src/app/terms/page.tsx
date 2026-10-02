@@ -82,21 +82,13 @@ export default function TermsPage() {
         </section>
 
         <section>
-          <h2 className="text-base font-bold text-slate-800 mb-2">6. 광고 안내</h2>
-          <p>
-            본 사이트는 Google AdSense 등 광고를 포함할 수 있습니다.
-            계산 결과 자체는 광고 여부와 관계없이 동일한 기준으로 제공됩니다.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-base font-bold text-slate-800 mb-2">7. 문의</h2>
+          <h2 className="text-base font-bold text-slate-800 mb-2">6. 문의</h2>
           <p>계산 오류, 개선 요청, 제휴 문의 등은 문의 페이지를 통해 전달할 수 있습니다.</p>
           <p className="font-medium text-slate-800 mt-2">support@taxsim.kr</p>
         </section>
 
         <section>
-          <h2 className="text-base font-bold text-slate-800 mb-2">8. 이용자 유의사항</h2>
+          <h2 className="text-base font-bold text-slate-800 mb-2">7. 이용자 유의사항</h2>
           <p>
             본 사이트의 콘텐츠와 계산 결과는 참고용 자료입니다.
             실제 세금 신고, 계약, 세무 판단 등 중요한 의사결정에는

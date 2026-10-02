@@ -52,16 +52,15 @@ export default function PrivacyPage() {
                         <li>사이트 이용 통계 분석</li>
                         <li>오류 확인 및 기능 개선</li>
                         <li>부정 이용 방지 및 보안 대응</li>
-                        <li>광고 및 콘텐츠 품질 최적화</li>
+                        <li>콘텐츠 품질 최적화</li>
                     </ul>
                 </section>
 
                 <section>
                     <h2 className="text-lg font-bold text-slate-800 mb-2">4. 쿠키 사용 안내</h2>
                     <p>
-                        본 사이트는 <strong>광고 게재를 위해 쿠키를 사용합니다.</strong> 쿠키는 웹사이트가
-                        이용자의 브라우저에 저장하는 작은 텍스트 파일입니다. 본 사이트가 직접 설정하는
-                        쿠키는 없으며, 아래 5항의 광고 서비스가 자체적으로 쿠키를 설정합니다.
+                        쿠키는 웹사이트가 이용자의 브라우저에 저장하는 작은 텍스트 파일입니다.
+                        본 사이트가 직접 설정하는 쿠키는 없습니다.
                     </p>
                     <p>
                         사용자는 브라우저 설정을 통해 쿠키 저장을 거부하거나 삭제할 수 있습니다.
@@ -73,21 +72,6 @@ export default function PrivacyPage() {
                     <h2 className="text-lg font-bold text-slate-800 mb-2">5. 제3자 서비스 이용</h2>
                     <p>본 사이트가 현재 사용하는 제3자 서비스는 다음과 같습니다.</p>
                     <ul className="list-disc pl-5 space-y-2 mt-2">
-                        <li>
-                            <strong>Google AdSense (광고 게재)</strong> — Google 및 그 파트너는 쿠키를 사용해
-                            이용자의 본 사이트 및 다른 사이트 방문 기록을 바탕으로 광고를 게재합니다.
-                            이용자는{' '}
-                            <a href="https://myadcenter.google.com/" target="_blank" rel="noopener noreferrer"
-                               className="text-blue-700 hover:underline">Google 광고 설정</a>
-                            에서 맞춤 광고를 해제할 수 있고,{' '}
-                            <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer"
-                               className="text-blue-700 hover:underline">www.aboutads.info</a>
-                            에서 제3자 업체의 맞춤 광고 쿠키를 일괄 해제할 수 있습니다.
-                            처리 방식은{' '}
-                            <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer"
-                               className="text-blue-700 hover:underline">Google의 파트너 사이트 데이터 이용 정책</a>
-                            을 따릅니다.
-                        </li>
                         <li>
                             <strong>Vercel (호스팅)</strong> — 사이트 전송 과정에서 접속 로그가 기록됩니다.
                         </li>
@@ -148,7 +132,7 @@ export default function PrivacyPage() {
                     <h2 className="text-lg font-bold text-slate-800 mb-2">10. 시행일</h2>
                     <p>
                         본 개인정보처리방침은 2026년 4월 24일부터 적용되며,
-                        2026년 8월 24일에 실제 사용 중인 제3자 서비스 내역을 반영해 개정되었습니다.
+                        2026년 10월 3일에 실제 사용 중인 제3자 서비스 내역을 반영해 개정되었습니다.
                     </p>
                 </section>
             </div>

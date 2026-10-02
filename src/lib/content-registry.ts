@@ -199,7 +199,7 @@ export const STATIC_PAGE_LAST_MODIFIED = {
     '/guide': '2026-09-01',
     '/tax-calendar': '2026-09-01',
     '/about': '2026-07-27',
-    '/privacy': '2026-08-24',
-    '/terms': '2026-07-27',
+    '/privacy': '2026-10-03',
+    '/terms': '2026-10-03',
     '/contact': '2026-04-24',
 } as const;

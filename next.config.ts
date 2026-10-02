@@ -19,12 +19,12 @@ const SITE_ORIGIN = process.env.SITE_URL ?? 'https://taxsim.kr';
 function contentSecurityPolicy(enforce: boolean): string {
     const directives = [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' https://pagead2.googlesyndication.com https://fundingchoicesmessages.google.com https://googleads.g.doubleclick.net https://tpc.googlesyndication.com",
+        "script-src 'self' 'unsafe-inline'",
         "style-src 'self' 'unsafe-inline'",
         "img-src 'self' data: blob: https:",
         "font-src 'self' data:",
-        "connect-src 'self' https://pagead2.googlesyndication.com https://googleads.g.doubleclick.net https://fundingchoicesmessages.google.com",
-        "frame-src 'self' https://googleads.g.doubleclick.net https://tpc.googlesyndication.com https://fundingchoicesmessages.google.com",
+        "connect-src 'self'",
+        "frame-src 'self'",
         "object-src 'none'",
         "base-uri 'self'",
         "form-action 'self'",
@@ -48,7 +48,7 @@ function contentSecurityPolicy(enforce: boolean): string {
  *
  * ⚠ 전환 전 확인할 것: `report-uri` / `report-to` 로 모인 위반 내역을 먼저 확인한다.
  *   배포 플랫폼 로그에서 "[csp]" 로 검색하면 나온다.
- *   AdSense 가 실제로 쓰는 출처 중 정책에 빠진 것이 없는지 며칠 관찰한 뒤 켜는 것이 안전하다.
+ *   사이트가 실제로 쓰는 외부 출처 중 정책에 빠진 것이 없는지 며칠 관찰한 뒤 켜는 것이 안전하다.
  */
 const CSP_ENFORCE = process.env.CSP_ENFORCE === '1';
 

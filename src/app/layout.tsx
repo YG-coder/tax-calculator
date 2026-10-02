@@ -100,13 +100,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <html lang="ko">
         <head>
             <meta name="format-detection" content="telephone=no" />
-
-            {/* AdSense */}
-            <script
-                async
-                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6405509957088169"
-                crossOrigin="anonymous"
-            />
         </head>
 
         <body className="bg-slate-50 text-slate-900 flex flex-col min-h-screen">

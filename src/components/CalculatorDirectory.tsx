@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { AUDIENCE_GROUPS, calculatorHref, type Audience, type Calculator } from '@/lib/calculators'
 
 /**
- * 홈 하단 "모든 계산기" 목록 + 검색.
+ * 홈의 전체 계산기 목록 + 이름 검색·상황별 선택.
  *
  * 클라이언트 컴포넌트지만 Next.js 가 초기 HTML에 전부 렌더링하므로
  * 검색어를 입력하기 전에는 모든 계산기 링크가 서버 렌더링된 HTML에 들어 있다.
@@ -32,9 +32,22 @@ export default function CalculatorDirectory({ calculators }: { calculators: Calc
 
     return (
         <div>
+            <div role="group" aria-label="계산할 상황 선택" className="mb-3 flex flex-wrap gap-2">
+                {[{ label: '전체', query: '' }, ...AUDIENCE_GROUPS.map((group) => ({ label: group.label, query: group.label }))].map((option) => (
+                    <button
+                        key={option.label}
+                        type="button"
+                        aria-pressed={needle === option.query.toLowerCase()}
+                        onClick={() => setQuery(option.query)}
+                        className={`min-h-[40px] rounded-xl border px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${needle === option.query.toLowerCase() ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-700'}`}
+                    >
+                        {option.label}
+                    </button>
+                ))}
+            </div>
             <div className="mb-4">
-                <label htmlFor={inputId} className="sr-only">
-                    계산기 검색
+                <label htmlFor={inputId} className="mb-1.5 block text-sm font-semibold text-slate-700">
+                    계산기 이름 또는 상황으로 검색
                 </label>
                 <input
                     id={inputId}
@@ -54,7 +67,7 @@ export default function CalculatorDirectory({ calculators }: { calculators: Calc
 
             {matches.length === 0 ? (
                 <p className="rounded-xl border border-dashed border-slate-200 px-4 py-8 text-center text-sm text-slate-500">
-                    찾는 계산기가 없습니다. 다른 낱말로 검색하거나 아래 전체 목록을 확인하세요.
+                    찾는 계산기가 없습니다. 다른 낱말로 검색하거나 ‘전체’를 선택하세요.
                 </p>
             ) : (
                 <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">

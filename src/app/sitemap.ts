@@ -34,7 +34,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     }));
 
     const staticRoutes: MetadataRoute.Sitemap = [
-        { url: BASE_URL, lastModified: day(STATIC_PAGE_LAST_MODIFIED['/']), changeFrequency: 'weekly', priority: 1.0 },
+        { url: `${BASE_URL}/`, lastModified: day(STATIC_PAGE_LAST_MODIFIED['/']), changeFrequency: 'weekly', priority: 1.0 },
         { url: `${BASE_URL}/guide`, lastModified: day(STATIC_PAGE_LAST_MODIFIED['/guide']), changeFrequency: 'weekly', priority: 0.8 },
         { url: `${BASE_URL}/tax-calendar`, lastModified: day(STATIC_PAGE_LAST_MODIFIED['/tax-calendar']), changeFrequency: 'monthly', priority: 0.8 },
         { url: `${BASE_URL}/about`, lastModified: day(STATIC_PAGE_LAST_MODIFIED['/about']), changeFrequency: 'yearly', priority: 0.5 },

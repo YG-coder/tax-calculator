@@ -195,7 +195,7 @@ export const GUIDE_LAST_MODIFIED = {
 export type GuideSlug = keyof typeof GUIDE_LAST_MODIFIED;
 
 export const STATIC_PAGE_LAST_MODIFIED = {
-    '/': '2026-09-01',
+    '/': '2026-10-08',
     '/guide': '2026-09-01',
     '/tax-calendar': '2026-09-01',
     '/about': '2026-07-27',

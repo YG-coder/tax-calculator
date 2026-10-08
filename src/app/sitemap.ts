@@ -21,7 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         .filter((c) => c.enabled)
         .map((c) => ({
             url: `${BASE_URL}/${c.slug}`,
-            lastModified: day(CALCULATOR_META[c.slug].lastReviewed),
+            lastModified: day(CALCULATOR_META[c.slug].lastModified ?? CALCULATOR_META[c.slug].lastReviewed),
             changeFrequency: 'monthly' as const,
             priority: 0.9,
         }));

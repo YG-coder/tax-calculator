@@ -4,11 +4,16 @@ import RelatedCalculators from "@/components/RelatedCalculators";
 import SourceNote from "@/components/SourceNote";
 import { buildMetadata } from "@/lib/metadata";
 import { CAR_TAX_YEAR } from "@/lib/tax/rules/car-tax";
+import { CALCULATOR_META } from "@/lib/content-registry";
+
+const PAGE_TITLE = `자동차세 계산기 ${CAR_TAX_YEAR} · 배기량·연납 공제 계산`;
+const PAGE_DESCRIPTION =
+  "배기량과 최초 등록일로 예상 자동차세를 계산하세요. 지방교육세·차령 경감·연납 공제액을 구분하고, 전기차와 영업용 차량도 계산할 수 있습니다.";
+const contentMeta = CALCULATOR_META["car-tax-calculator"];
 
 export const metadata: Metadata = buildMetadata({
-  title: "자동차세 계산기",
-  description:
-    "2026년 지방세법 기준 자동차세 계산기. 배기량·차령 경감·지방교육세·연납 공제를 구분해 계산합니다. 비영업용/영업용 승용차와 전기차, 승합·화물·특수자동차를 지원합니다.",
+  title: PAGE_TITLE,
+  description: PAGE_DESCRIPTION,
   path: "/car-tax-calculator",
 });
 
@@ -19,30 +24,38 @@ const jsonLd = {
   applicationCategory: "FinanceApplication",
   operatingSystem: "All",
   url: "https://taxsim.kr/car-tax-calculator",
-  description:
-    "지방세법 제127조·제128조에 따른 자동차세와 지방교육세, 차령 경감액, 연납 공제액을 계산하는 무료 계산기입니다.",
+  description: PAGE_DESCRIPTION,
+  dateModified: contentMeta.lastModified,
   offers: { "@type": "Offer", price: "0", priceCurrency: "KRW" },
   inLanguage: "ko-KR",
 };
 
 export default function CarTaxCalculatorPage() {
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+    <main className="mx-auto w-full min-w-0 max-w-3xl px-4 py-10 sm:px-6 sm:py-14">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, '\\u003c') }} />
 
       <header className="mb-8">
         <p className="text-xs font-medium text-slate-500">지방세 · {CAR_TAX_YEAR}년 기준</p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">자동차세 계산기</h1>
         <p className="mt-3 text-sm leading-relaxed text-slate-600">
-          「지방세법」 제127조의 표준세율을 적용해 자동차세 본세와 지방교육세, 차령 경감액, 연납 공제액을 나누어
-          계산합니다. 과세기준일은 제1기분 6월 1일, 제2기분 12월 1일이며, 적용 연도는 {CAR_TAX_YEAR}년입니다.
+          내 차의 자동차세가 얼마인지 계산해 보세요. 차량 종류·배기량·최초 등록일을 입력하면 예상 세액과
+          연납 공제액을 확인할 수 있습니다. 전기차와 영업용 차량도 차량 종류와 용도를 선택해 계산하세요.
+        </p>
+        <p className="mt-2 text-xs leading-relaxed text-slate-500">
+          페이지 문구 수정일: <time dateTime={contentMeta.lastModified}>{contentMeta.lastModified}</time>
+          {" · "}계산 기준 점검일: <time dateTime={contentMeta.lastReviewed}>{contentMeta.lastReviewed}</time>
         </p>
       </header>
 
       <CarTaxClient />
 
       <section className="mt-12 space-y-6">
-        <h2 className="text-xl font-bold tracking-tight text-slate-900">계산에 적용한 기준</h2>
+        <h2 className="text-xl font-bold tracking-tight text-slate-900">자동차세는 어떤 기준으로 계산하나요?</h2>
+        <p className="text-sm leading-relaxed text-slate-600">
+          「지방세법」 제127조의 표준세율을 적용해 자동차세 본세와 지방교육세, 차령 경감액, 연납 공제액을 나누어
+          계산합니다. 과세기준일은 제1기분 6월 1일, 제2기분 12월 1일이며, 적용 연도는 {CAR_TAX_YEAR}년입니다.
+        </p>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5">
           <h3 className="text-sm font-semibold text-slate-800">승용자동차 배기량별 cc당 세액</h3>

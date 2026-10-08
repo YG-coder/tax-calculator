@@ -26,6 +26,8 @@ export type SourceLink = { label: string; url: string };
 export type ContentMeta = {
     /** 계산 로직과 표기 기준을 확인한 날짜 (YYYY-MM-DD) */
     lastReviewed: string;
+    /** 설명·제목 등 페이지 내용을 수정한 날짜. 계산 기준 점검일과 별도로 기록한다. */
+    lastModified?: string;
     /** 어떤 기준을 적용했는지 (연도·표 적용기간 등) */
     appliesTo: string;
     /** 근거 법령·자료 직통 링크 */
@@ -144,6 +146,7 @@ export const CALCULATOR_META: Record<CalculatorSlug, ContentMeta> = {
     },
     'car-tax-calculator': {
         lastReviewed: '2026-09-01',
+        lastModified: '2026-10-08',
         appliesTo: '2026년 지방세법 표준세율 기준 · 차령 경감·지방교육세·연납 공제(1·3·6·9월) 반영 · 조례 탄력세율과 지방세특례제한법 감면 미반영',
         sources: [
             { label: '지방세법 제127조(과세표준과 세율)', url: law('지방세법', '제127조') },

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import ResultActions from "@/components/ResultActions";
+import { CAR_TAX_PERIOD_OPTIONS as PERIOD_OPTIONS, carTaxResultTitle } from "@/lib/car-tax-presentation";
 import {
   CAR_TAX_YEAR,
   LAST_VERIFIED_PREPAY_YEAR,
@@ -29,12 +30,6 @@ const VEHICLE_TYPE_OPTIONS: { value: VehicleType; label: string }[] = [
   { value: "van", label: "승합자동차" },
   { value: "truck", label: "화물자동차" },
   { value: "special", label: "특수자동차" },
-];
-
-const PERIOD_OPTIONS: { value: TaxPeriod; label: string }[] = [
-  { value: "year", label: "연간" },
-  { value: "first", label: "제1기분 (1~6월)" },
-  { value: "second", label: "제2기분 (7~12월)" },
 ];
 
 const PREPAY_OPTIONS: PrepayTiming[] = ["none", "jan", "mar", "jun", "sep"];
@@ -429,7 +424,7 @@ export default function CarTaxClient() {
           <div className="space-y-5">
             <div className="rounded-2xl bg-slate-900 p-6 text-center text-white">
               <p className="text-sm text-slate-300">
-                {result.year}년 {PERIOD_OPTIONS.find((o) => o.value === result.period)?.label} 예상 납부액
+                {carTaxResultTitle(result)}
               </p>
               <p className="mt-2 text-4xl font-bold tracking-tight">{won(result.finalPayable)}</p>
               {result.prepay && (

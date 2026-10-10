@@ -1,5 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
+import { carTaxResultTitle } from "../src/lib/car-tax-presentation.ts";
 import {
   ageDiscountPercent,
   ageDiscountRate,
@@ -1037,4 +1038,21 @@ describe("회귀 — 차령 경감 부동소수점", () => {
       assert.equal(r.carTax, tax);
     }
   });
+});
+
+it("결과 제목은 9월 연납의 제2기분 납부 범위를 구분하고 기존 기간 제목을 유지한다", () => {
+  for (const prepay of ["jan", "mar", "jun", "sep"] as const) {
+    const result = ok({ ...base, prepay });
+    assert.equal(result.prepay?.payableScope, prepay === "sep" ? "secondHalf" : "annual");
+    assert.equal(
+      carTaxResultTitle(result),
+      prepay === "sep" ? "2026년 제2기분 연납 예상 납부액" : "2026년 연간 예상 납부액",
+      prepay,
+    );
+  }
+  for (const [period, label] of [
+    ["year", "연간"], ["first", "제1기분 (1~6월)"], ["second", "제2기분 (7~12월)"],
+  ] as const) {
+    assert.equal(carTaxResultTitle(ok({ ...base, period })), `2026년 ${label} 예상 납부액`);
+  }
 });

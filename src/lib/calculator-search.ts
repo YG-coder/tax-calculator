@@ -13,6 +13,7 @@ const SEARCH_ALIASES: Partial<Record<CalculatorSlug, readonly string[]>> = {
   'capital-gains-tax-calculator': ['양도세', '집 매도', '주택 매도'],
   'property-tax-calculator': ['보유세', '주택 재산세'],
   'comprehensive-real-estate-tax-calculator': ['종부세', '보유세', '다주택'],
+  'year-end-tax-calculator': ['연말정산', '환급', '추가납부', '결정세액', '기납부세액'],
   'withholding-calculator': ['간이세액표', '월급', '급여 소득세', '근로소득세', '갑근세'],
   'tax-free-income-calculator': ['식대', '보육수당', '자가운전보조금', '근로소득세'],
   'car-tax-calculator': ['차량', '배기량', '연납'],

@@ -80,6 +80,15 @@ export const CALCULATORS = [
     audiences: ['inheritance'],
   },
   {
+    slug: 'year-end-tax-calculator',
+    title: '연말정산 계산기',
+    description: '연간 급여·공제를 반영해 예상 환급액과 추가 납부액을 계산합니다.',
+    emoji: '🧮',
+    enabled: true,
+    audiences: ['employee'],
+    isNew: true,
+  },
+  {
     slug: 'withholding-calculator',
     title: '원천징수세액 계산기',
     description: '월 급여·부양가족 수 기준 예상 원천징수세액 확인.',

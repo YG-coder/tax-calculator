@@ -21,6 +21,7 @@ const ALL_CALCS: RelatedItem[] = [
   { href: '/comprehensive-real-estate-tax-calculator', label: '종합부동산세 계산기', emoji: '🏢' },
   { href: '/gift-tax-calculator',         label: '증여세 계산기',         emoji: '🎁' },
   { href: '/inheritance-tax-calculator',  label: '상속세 계산기',         emoji: '📋' },
+  { href: '/year-end-tax-calculator',    label: '연말정산 계산기',         emoji: '🧮' },
   { href: '/withholding-calculator',      label: '원천징수세액 계산기',   emoji: '💰' },
   { href: '/tax-free-income-calculator',  label: '근로소득 비과세 계산기', emoji: '🧮' },
   { href: '/car-tax-calculator',          label: '자동차세 계산기',      emoji: '🚗' },

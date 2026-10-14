@@ -209,7 +209,7 @@ describe("상황별 분류와 인기 계산기", () => {
 
   it("요청한 상황별 묶음이 실제로 그렇게 묶여 있다", () => {
     const slugs = (key: Parameters<typeof calculatorsFor>[0]) => calculatorsFor(key).map((c) => c.slug);
-    assert.deepEqual(slugs("employee").sort(), ["tax-free-income-calculator", "withholding-calculator"]);
+    assert.deepEqual(slugs("employee").sort(), ["tax-free-income-calculator", "withholding-calculator", "year-end-tax-calculator"]);
     assert.deepEqual(
       slugs("business").sort(),
       ["freelancer-tax-calculator", "income-tax-calculator", "vat-calculator", "vat-type-compare"],

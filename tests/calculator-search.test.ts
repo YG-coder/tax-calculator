@@ -50,6 +50,14 @@ describe('계산기 검색', () => {
     assert.deepEqual(slugs('자동차세'), ['car-tax-calculator'])
   })
 
+  it('연말정산·환급·기납부세액 검색은 전용 계산기로 연결된다', () => {
+    for (const query of ['연말정산', '연말 정산', '환급', '추가 납부', '결정세액', '기납부세액']) {
+      assert.ok(slugs(query).includes('year-end-tax-calculator'))
+    }
+    assert.deepEqual(slugs('연말정산', 'employee'), ['year-end-tax-calculator'])
+    assert.deepEqual(slugs('연말정산', 'business'), [])
+  })
+
   it('전달받은 목록에 없는 계산기를 검색 결과에 추가하지 않는다', () => {
     assert.deepEqual(filterCalculators(calculatorsFor('car'), '종부세'), [])
     assert.deepEqual(slugs('없는계산기'), [])

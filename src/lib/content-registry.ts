@@ -9,6 +9,7 @@
 //   계산기를 추가하고 여기 항목을 빠뜨리면 타입 검사에서 빌드가 실패한다.
 
 import type { CalculatorSlug } from './calculators';
+import { YEAR_END_2026 } from './tax/config/verified/year-end-2026.ts';
 
 /**
  * 국가법령정보센터 조문 직통 링크.
@@ -124,6 +125,12 @@ export const CALCULATOR_META: Record<CalculatorSlug, ContentMeta> = {
             { label: '민법 제1009조(법정상속분)', url: law('민법', '제1009조') },
         ],
     },
+    'year-end-tax-calculator': {
+        lastReviewed: YEAR_END_2026.reviewedAt,
+        appliesTo: '2026년 귀속 · 근로소득만 있는 국내 거주자 · 2026-10-14 확인 법령·부칙 기준',
+        sources: [...YEAR_END_2026.sources],
+        confirmationGuidance: '실제 연말정산 결과는 홈택스와 회사의 최종 정산 자료에서 확인하세요.',
+    },
     'withholding-calculator': {
         lastReviewed: '2026-08-24',
         appliesTo: '2026년 근로소득 간이세액표 · 2026-03-01 시행',
@@ -184,7 +191,7 @@ export const GUIDE_LAST_MODIFIED = {
     'freelancer-refund': '2026-06-13',
     'business-registration': '2026-06-13',
     'one-house-exemption': '2026-06-13',
-    'withholding-year-end': '2026-06-13',
+    'withholding-year-end': '2026-10-14',
     'gift-split': '2026-06-13',
     'family-loan': '2026-06-13',
     'inheritance-vs-gift': '2026-06-13',
@@ -201,10 +208,10 @@ export const GUIDE_LAST_MODIFIED = {
 export type GuideSlug = keyof typeof GUIDE_LAST_MODIFIED;
 
 export const STATIC_PAGE_LAST_MODIFIED = {
-    '/': '2026-10-08',
+    '/': '2026-10-14',
     '/guide': '2026-09-01',
     '/tax-calendar': '2026-09-01',
-    '/about': '2026-07-27',
+    '/about': '2026-10-14',
     '/privacy': '2026-10-03',
     '/terms': '2026-10-03',
     '/contact': '2026-04-24',

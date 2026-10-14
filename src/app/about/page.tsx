@@ -17,6 +17,7 @@ const CALC_LIST = [
   { href: '/property-tax-calculator',      label: '재산세 계산기',            desc: '주택 공시가격 기준 연간 재산세와 7월·9월 납부액 계산.' },
   { href: '/gift-tax-calculator',          label: '증여세 계산기',            desc: '증여금액·공제 기준 누진세율 적용 예상 증여세 계산.' },
   { href: '/inheritance-tax-calculator',   label: '상속세 계산기',            desc: '상속재산·공제 기준 예상 상속세 간이 계산.' },
+  { href: '/year-end-tax-calculator',     label: '연말정산 계산기',          desc: '2026년 급여·공제·이미 낸 세금으로 예상 환급액과 추가 납부액 계산.' },
   { href: '/withholding-calculator',       label: '원천징수세액 계산기',      desc: '월 급여·부양가족·자녀 수 기준 예상 원천징수세액 계산.' },
   { href: '/tax-free-income-calculator',   label: '근로소득 비과세 계산기',    desc: '식대·자가운전보조금·보육수당 등 비과세 항목 반영 실수령 계산.' },
   { href: '/vat-type-compare',             label: '간이과세 vs 일반과세 비교', desc: '연매출·매입·업종 기준 간이·일반과세 부가세 비교 및 유불리 안내.' },
@@ -37,7 +38,7 @@ export default function AboutPage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">taxsim.kr 소개</h2>
           <p>
             taxsim.kr는 부가세, 종합소득세, 프리랜서 원천징수, 양도소득세, 재산세, 증여세, 상속세,
-            원천징수세액, 근로소득 비과세, 간이·일반과세 비교 등 실생활에서 자주 접하는 세금 계산을 누구나 쉽게 확인할 수 있도록
+            연말정산, 원천징수세액, 근로소득 비과세, 간이·일반과세 비교 등 실생활에서 자주 접하는 세금 계산을 누구나 쉽게 확인할 수 있도록
             돕기 위해 만들어진 무료 온라인 세금 계산 서비스입니다.
             회원가입이나 로그인 없이 누구나 자유롭게 이용할 수 있으며, 입력한 금액 정보는
             서버에 저장되지 않고 사용자의 브라우저에서만 처리됩니다.

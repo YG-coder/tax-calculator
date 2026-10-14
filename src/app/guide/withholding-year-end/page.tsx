@@ -63,7 +63,7 @@ export default function WithholdingYearEndGuidePage() {
             <li><strong>연금저축·IRP 세액공제:</strong> 합산 연 900만 원까지 (공제율 13.2~16.5%)</li>
             <li><strong>의료비·교육비·기부금 세액공제</strong></li>
             <li><strong>월세·주택자금 공제</strong> (요건 충족 시)</li>
-            <li><strong>자녀세액공제</strong> (8세 이상 자녀 수에 따라)</li>
+            <li><strong>자녀세액공제:</strong> 2026년 경과규정에 따라 2016년생 이전인 기본공제 대상 자녀·손자녀에게 적용 (2017년생 제외)</li>
           </ul>
         </section>
 
@@ -119,6 +119,10 @@ export default function WithholdingYearEndGuidePage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 계산기</h2>
           <ul className="space-y-2 text-sm">
             <li>
+              <Link href="/year-end-tax-calculator" className="text-blue-700 hover:underline font-semibold">→ 연말정산 계산기</Link>
+              <span className="text-slate-500"> · 2026년 공제 반영 예상 환급·추가 납부액</span>
+            </li>
+            <li>
               <Link href="/withholding-calculator" className="text-blue-700 hover:underline font-semibold">→ 원천징수세액 계산기</Link>
               <span className="text-slate-500"> · 월 급여·부양가족 기준 예상 원천징수</span>
             </li>
@@ -141,6 +145,7 @@ export default function WithholdingYearEndGuidePage() {
           <p className="font-semibold text-slate-700 mb-1">참고 자료</p>
           <ul className="list-disc pl-5 space-y-0.5">
             <li>소득세법 제134조 (근로소득 원천징수), 제137조 (연말정산)</li>
+            <li><a href="https://www.law.go.kr/LSW/lsRvsDocListP.do?lsId=001565&amp;chrClsCd=010102" className="text-blue-700 hover:underline" target="_blank" rel="noopener noreferrer">소득세법 제21548호 부칙 제2조 (2026년 자녀세액공제 연령)</a></li>
             <li>국세청 「연말정산 안내」, 근로소득 간이세액표, 홈택스</li>
           </ul>
           <p className="mt-3">

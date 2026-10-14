@@ -24,7 +24,9 @@ export default function GiftTaxCalculatorPage() {
 
   const giftNum   = amountValue(giftAmount)
   const deductNum = deductPreset === 'custom' ? amountValue(customDeduct) : amountValue(deductPreset)
-  const hasValue  = giftNum > 0
+  const hasError  = amountError(giftAmount) !== null ||
+    (deductPreset === 'custom' && amountError(customDeduct) !== null)
+  const hasValue  = giftNum > 0 && !hasError
 
   const taxBase  = Math.max(0, giftNum - deductNum)
   const tax      = Math.floor(inheritanceGiftTax(taxBase))            // 산출세액 (증여세 본세)
@@ -134,7 +136,7 @@ export default function GiftTaxCalculatorPage() {
         </div>
       ) : (
         <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 text-sm">
-          증여금액을 입력하면 계산됩니다
+          {hasError ? '입력 오류를 수정하면 계산 결과를 확인할 수 있습니다' : '증여금액을 입력하면 계산됩니다'}
         </div>
       )}
 

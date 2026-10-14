@@ -34,7 +34,10 @@ export default function InheritanceTaxCalculatorPage() {
   const baseDeduct   = deductPreset === 'custom' ? amountValue(customDeduct) : amountValue(deductPreset)
   const spouseDeduct = hasSpouse ? spouseDeduction(taxableEstate, childNum, spouseNum) : 0
   const deductNum    = baseDeduct + spouseDeduct
-  const hasValue     = estateNum > 0
+  const hasError     = [estate, debts].some((value) => amountError(value) !== null) ||
+    (deductPreset === 'custom' && amountError(customDeduct) !== null) ||
+    (hasSpouse && amountError(spouseShare) !== null)
+  const hasValue     = estateNum > 0 && !hasError
 
   const taxBase  = Math.max(0, taxableEstate - deductNum)
   const tax      = calcInheritanceTax(taxBase)
@@ -252,7 +255,7 @@ export default function InheritanceTaxCalculatorPage() {
         </div>
       ) : (
         <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 text-sm">
-          상속재산을 입력하면 계산됩니다
+          {hasError ? '입력 오류를 수정하면 계산 결과를 확인할 수 있습니다' : '상속재산을 입력하면 계산됩니다'}
         </div>
       )}
 

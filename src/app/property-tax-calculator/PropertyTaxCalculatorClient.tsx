@@ -46,8 +46,12 @@ export default function PropertyTaxCalculatorClient() {
     ownership.error ?? (ownershipPct > 0 ? null : '소유지분율은 1% 이상 100% 이하로 입력하세요.')
   const ownershipValid = ownershipError === null
 
+  const hasError = !ownershipValid || amountError(publishedPriceText) !== null ||
+    (useCeiling && (amountError(prevBaseText) !== null ||
+      (applyUrbanArea && amountError(prevUrbanText) !== null)))
+
   const result = useMemo(() => {
-    if (publishedPrice <= 0 || !ownershipValid) return null
+    if (publishedPrice <= 0 || hasError) return null
     return calcPropertyTax({
       publishedPrice,
       isSingleHome,
@@ -58,7 +62,7 @@ export default function PropertyTaxCalculatorClient() {
       prevYearUrbanTax:
         useCeiling && applyUrbanArea && prevUrban > 0 ? prevUrban : null,
     })
-  }, [publishedPrice, isSingleHome, ownershipPct, ownershipValid, applyUrbanArea, useCeiling, prevBase, prevUrban])
+  }, [publishedPrice, isSingleHome, ownershipPct, hasError, applyUrbanArea, useCeiling, prevBase, prevUrban])
 
   const ceilingStatus = result
     ? !result.ceilingChecked
@@ -215,7 +219,7 @@ export default function PropertyTaxCalculatorClient() {
         {/* ── 결과 ── */}
         {!result && (
           <div className="rounded-xl border border-dashed border-slate-300 p-6 text-center text-sm text-slate-500">
-            공시가격을 입력하면 예상 재산세가 계산됩니다.
+            {hasError ? '입력 오류를 수정하면 계산 결과를 확인할 수 있습니다' : '공시가격을 입력하면 예상 재산세가 계산됩니다.'}
           </div>
         )}
 

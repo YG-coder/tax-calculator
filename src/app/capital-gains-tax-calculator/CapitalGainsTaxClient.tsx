@@ -82,6 +82,7 @@ export default function CapitalGainsTaxClient() {
     const [assumeLatestRules, setAssumeLatestRules] = useState(false)
 
     const isHouse = assetType === 'house'
+    const usesResidenceMonths = isHouse && oneHouse
 
     const amountFields = [
         { id: 'transferPrice', label: '양도가액', value: transferPrice, set: setTransferPrice, hint: '실제 매도 금액 (실지거래가액)', required: true },
@@ -97,7 +98,7 @@ export default function CapitalGainsTaxClient() {
         if (Number(raw) > 1200) return '1,200개월(100년) 이하로 입력해 주세요'
         return null
     }
-    const monthsError = residenceMonthsError()
+    const monthsError = usesResidenceMonths ? residenceMonthsError() : null
 
     const ready =
         amountValue(transferPrice) > 0 &&
@@ -118,7 +119,7 @@ export default function CapitalGainsTaxClient() {
             transferDate,
             oneHouseOneHousehold: isHouse && oneHouse,
             adjustedAreaAtAcquisition: isHouse && adjustedAtAcquisition,
-            residenceMonths: residenceMonths.trim() === '' ? 0 : Number(residenceMonths),
+            residenceMonths: usesResidenceMonths && residenceMonths.trim() !== '' ? Number(residenceMonths) : 0,
             housesOwned: isHouse ? housesOwned : 1,
             adjustedAreaAtTransfer: isHouse && adjustedAtTransfer,
             heavyTaxExcluded,
@@ -241,32 +242,34 @@ export default function CapitalGainsTaxClient() {
                             />
                         )}
 
-                        <div>
-                            <label htmlFor="residenceMonths" className="calc-label">보유기간 중 거주기간</label>
-                            <div className="relative">
-                                <input
-                                    type="text"
-                                    inputMode="numeric"
-                                    pattern="[0-9]*"
-                                    id="residenceMonths"
-                                    value={residenceMonths}
-                                    onChange={(e) => setResidenceMonths(e.target.value)}
-                                    aria-invalid={monthsError !== null}
-                                    aria-describedby={monthsError ? 'residenceMonths-error' : 'residenceMonths-hint'}
-                                    placeholder="예: 24"
-                                    className="calc-input pr-14"
-                                />
-                                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">개월</span>
-                            </div>
-                            {monthsError && (
-                                <p id="residenceMonths-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">
-                                    {monthsError}
+                        {usesResidenceMonths && (
+                            <div>
+                                <label htmlFor="residenceMonths" className="calc-label">보유기간 중 거주기간</label>
+                                <div className="relative">
+                                    <input
+                                        type="text"
+                                        inputMode="numeric"
+                                        pattern="[0-9]*"
+                                        id="residenceMonths"
+                                        value={residenceMonths}
+                                        onChange={(e) => setResidenceMonths(e.target.value)}
+                                        aria-invalid={monthsError !== null}
+                                        aria-describedby={monthsError ? 'residenceMonths-error' : 'residenceMonths-hint'}
+                                        placeholder="예: 24"
+                                        className="calc-input pr-14"
+                                    />
+                                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">개월</span>
+                                </div>
+                                {monthsError && (
+                                    <p id="residenceMonths-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">
+                                        {monthsError}
+                                    </p>
+                                )}
+                                <p id="residenceMonths-hint" className="calc-hint">
+                                    거주 2년(24개월) 이상이어야 장기보유특별공제 표 2가 적용됩니다.
                                 </p>
-                            )}
-                            <p id="residenceMonths-hint" className="calc-hint">
-                                거주 2년(24개월) 이상이어야 장기보유특별공제 표 2가 적용됩니다.
-                            </p>
-                        </div>
+                            </div>
+                        )}
 
                         <div>
                             <label htmlFor="housesOwned" className="calc-label">양도일 현재 1세대 보유 주택 수</label>

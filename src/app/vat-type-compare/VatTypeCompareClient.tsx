@@ -51,7 +51,8 @@ export default function VatTypeCompareClient() {
 
   const revNum = amountValue(revenue)
   const purNum = amountValue(purchase)
-  const hasValue = revNum > 0
+  const hasError = [revenue, purchase].some((value) => amountError(value) !== null)
+  const hasValue = revNum > 0 && !hasError
 
   const selectedIndustry = INDUSTRIES.find(i => i.key === industry)!
   const rate = selectedIndustry.rate
@@ -268,7 +269,7 @@ export default function VatTypeCompareClient() {
         </div>
       ) : (
         <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 text-sm">
-          연매출을 입력하면 두 유형을 비교합니다
+          {hasError ? '입력 오류를 수정하면 계산 결과를 확인할 수 있습니다' : '연매출을 입력하면 두 유형을 비교합니다'}
         </div>
       )}
 

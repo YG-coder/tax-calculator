@@ -15,7 +15,8 @@ export default function IncomeTaxClient() {
 
   const incomeNum  = amountValue(income)
   const expenseNum = amountValue(expense)
-  const hasValue   = incomeNum > 0
+  const hasError   = [income, expense].some((value) => amountError(value) !== null)
+  const hasValue   = incomeNum > 0 && !hasError
 
   const taxBase    = Math.max(0, incomeNum - expenseNum)
   const incomeTax  = Math.floor(basicIncomeTax(taxBase))
@@ -119,7 +120,7 @@ export default function IncomeTaxClient() {
         </div>
       ) : (
         <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 text-sm">
-          소득을 입력하면 계산됩니다
+          {hasError ? '입력 오류를 수정하면 계산 결과를 확인할 수 있습니다' : '소득을 입력하면 계산됩니다'}
         </div>
       )}
 

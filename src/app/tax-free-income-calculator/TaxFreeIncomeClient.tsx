@@ -5,13 +5,19 @@ import { useState } from 'react'
 import Link from 'next/link'
 import RelatedCalculators from '@/components/RelatedCalculators'
 import SourceNote from '@/components/SourceNote'
+import { calculateProductionExemption, isProductionEligible } from '@/lib/tax/rules/tax-free-income'
+import {
+  PRODUCTION_RULES_2026,
+  PRODUCTION_RULES_VERIFIED_AT,
+  PRODUCTION_AMENDMENT_URL,
+} from '@/lib/tax/config/verified/production-exemption'
 import { amountError, amountValue, formatAmount } from '@/lib/utils/amount'
 
 function fmt(n: number) { return Math.round(n).toLocaleString('ko-KR') }
 
 /* ────────────────────────────────────────────────────────────
    2026년 근로소득 비과세 한도 (국세청·국가법령정보센터 기준)
-   · 식대                    : 월 20만원 (소득령 §17의2)
+   · 식대                    : 월 20만원 (소득세법 §12 제3호러목)
    · 자가운전보조금          : 월 20만원 (소득령 §12)
    · 출산·보육수당(6세 이하) : 자녀 1인당 월 20만원 (2026 개정, 소득세법 §12)
    · 연구보조비·연구활동비   : 월 20만원 (소득령 §12)
@@ -25,9 +31,6 @@ const CAP = {
   RESEARCH: 200_000,
   OVERSEAS_GENERAL: 1_000_000,
   OVERSEAS_SPECIAL: 5_000_000,
-  PRODUCTION_ANNUAL: 2_400_000,
-  PRODUCTION_FIXED_PAY: 2_600_000,
-  PRODUCTION_PREV_SALARY: 37_000_000,
 } as const
 
 type Row = {
@@ -87,7 +90,7 @@ export default function TaxFreeIncomeCalculatorPage() {
   const productionN = amountValue(production)
   const prodFixedN = amountValue(prodFixedPay)
   const prodPrevN = amountValue(prodPrevSalary)
-  const prodYtdFreeN = amountValue(prodYtdFree)
+  const prodYtdFreeN = prodIsProduction ? amountValue(prodYtdFree) : 0
   const otherN = amountValue(other)
 
   // ── 항목별 비과세 판정 (월 기준)
@@ -96,15 +99,24 @@ export default function TaxFreeIncomeCalculatorPage() {
     overseasType === 'general' ? CAP.OVERSEAS_GENERAL
       : overseasType === 'special' ? CAP.OVERSEAS_SPECIAL
         : 0
-  const prodOk =
-    prodIsProduction &&
-    prodFixedN > 0 && prodFixedN <= CAP.PRODUCTION_FIXED_PAY &&
-    prodPrevN > 0 && prodPrevN <= CAP.PRODUCTION_PREV_SALARY
+  const prodFixedProvided = prodFixedPay.trim() !== '' && amountError(prodFixedPay) === null
+  const prodPrevProvided = prodPrevSalary.trim() !== '' && amountError(prodPrevSalary) === null
+  const prodOk = isProductionEligible({
+    year: PRODUCTION_RULES_2026.taxYear,
+    relevantOccupation: prodIsProduction,
+    fixedMonthlyPay: prodFixedProvided ? prodFixedN : null,
+    previousYearSalary: prodPrevProvided ? prodPrevN : null,
+  })
 
-  // 생산직: 연 240만원은 "연 누적 한도"이며 월 한도가 아님.
-  // 이번 달 비과세 = min(이번 달 지급액, 잔여 연한도)
-  const prodRemainingCap = Math.max(0, CAP.PRODUCTION_ANNUAL - prodYtdFreeN)
-  const prodMonthlyFree = prodOk ? Math.min(productionN, prodRemainingCap) : 0
+  const {
+    remainingAnnualLimit: prodRemainingCap,
+    monthlyExemption: prodMonthlyFree,
+    annualExemption: annualProdFree,
+  } = calculateProductionExemption({
+    monthlyPaid: productionN,
+    eligible: prodOk,
+    usedThisYear: prodYtdFreeN,
+  })
 
   const rows: Row[] = [
     {
@@ -169,15 +181,19 @@ export default function TaxFreeIncomeCalculatorPage() {
       eligible: prodOk,
       note: !prodIsProduction
         ? '생산직 아님 → 과세'
-        : !(prodFixedN > 0 && prodFixedN <= CAP.PRODUCTION_FIXED_PAY)
-          ? '월정액급여 260만원 이하 요건 미충족 → 과세'
-          : !(prodPrevN > 0 && prodPrevN <= CAP.PRODUCTION_PREV_SALARY)
-            ? '직전연도 총급여 3,700만원 이하 요건 미충족 → 과세'
-            : prodRemainingCap === 0
-              ? '올해 연 한도 240만원 소진 → 이번 달 전액 과세'
-              : productionN > prodRemainingCap
-                ? `잔여 연한도 ${fmt(prodRemainingCap)}원까지 비과세, 초과분 ${fmt(productionN - prodRemainingCap)}원 과세`
-                : `연 240만원 한도 내 비과세 (적용 후 잔여 ${fmt(prodRemainingCap - prodMonthlyFree)}원)`,
+        : !prodFixedProvided
+          ? '월정액급여 입력 필요 → 과세 처리'
+          : prodFixedN > PRODUCTION_RULES_2026.fixedMonthlyPayLimit
+            ? '월정액급여 260만원 이하 요건 미충족 → 과세'
+            : !prodPrevProvided
+              ? '직전연도 총급여 입력 필요 → 과세 처리'
+              : prodPrevN > PRODUCTION_RULES_2026.previousYearSalaryLimit
+                ? '직전연도 총급여 3,700만원 이하 요건 미충족 → 과세'
+                : prodRemainingCap === 0
+                  ? '올해 연 한도 240만원 소진 → 이번 달 전액 과세'
+                  : productionN > prodRemainingCap
+                    ? `잔여 연한도 ${fmt(prodRemainingCap)}원까지 비과세, 초과분 ${fmt(productionN - prodRemainingCap)}원 과세`
+                    : `연 240만원 한도 내 비과세 (적용 후 잔여 ${fmt(prodRemainingCap - prodMonthlyFree)}원)`,
     },
     {
       key: 'other',
@@ -197,15 +213,17 @@ export default function TaxFreeIncomeCalculatorPage() {
   const monthlyTaxable = monthlyGross - monthlyFree
 
   const annualGross = monthlyGross * 12
-  // 생산직 초과근로수당은 월×12 단순 환산이 아니라 연 240만원 누적 한도(올해 직전월까지 적용분 + 이번 달)를 적용
-  const annualProdFree = Math.min(CAP.PRODUCTION_ANNUAL, prodYtdFreeN + prodMonthlyFree)
+  // 연간 지급총액과 같은 월×12 가정. 생산직 수당에는 별도로 연간 한도를 적용한다.
   const annualFree = (monthlyFree - prodMonthlyFree) * 12 + annualProdFree
   const annualTaxable = annualGross - annualFree
 
-  const hasValue = monthlyGross > 0
+  const hasError = [base, meal, car, childcare, research, overseas, production, other,
+    ...(prodIsProduction ? [prodFixedPay, prodPrevSalary, prodYtdFree] : []),
+  ].some((value) => amountError(value) !== null)
+  const hasValue = monthlyGross > 0 && !hasError
 
   return (
-    <main className="max-w-3xl mx-auto px-4 py-10">
+    <main className="w-full min-w-0 max-w-3xl mx-auto px-4 py-10">
       <h1 className="text-3xl font-bold mb-2">근로소득 비과세 계산기</h1>
       <p className="text-slate-500 mb-6">
         식대·자가운전보조금·출산·보육수당 등 비과세 급여를 반영해 월·연 과세대상 급여를 계산합니다 · 2026년 기준 · 참고용
@@ -376,17 +394,22 @@ export default function TaxFreeIncomeCalculatorPage() {
           {amountError(production) && (
             <p id="production-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(production)}</p>
           )}
-          <p className="calc-hint">이번 달 지급된 연장·야간·휴일근로수당을 입력하세요 (월 한도가 아니라 연 240만원 누적 한도가 적용됩니다)</p>
+          <p className="calc-hint">기본급을 제외한 이번 달 연장·야간·휴일근로 가산 급여만 입력하세요. 연 240만원 누적 한도를 적용합니다.</p>
+          <div className="mt-2 rounded-xl border border-blue-100 bg-blue-50 p-3 text-xs leading-relaxed text-slate-600">
+            <p>2026년 1월부터 지급받는 급여에는 월정액급여 260만원·직전연도 총급여 3,700만원 기준을 적용합니다.</p>
+            <p className="mt-1">일반 생산직 근로자의 수당을 지원합니다. 광산근로자·일용근로자는 연 240만원 한도 대신 해당 수당 전액에 관한 별도 규정이 적용되므로 이 항목의 지원 범위에서 제외합니다.</p>
+            <p className="mt-1">생산직 기준 확인일: <time dateTime={PRODUCTION_RULES_VERIFIED_AT}>{PRODUCTION_RULES_VERIFIED_AT}</time> · <a href={PRODUCTION_AMENDMENT_URL} className="font-semibold text-blue-700 hover:underline">2026년 개정문·부칙 제3조</a></p>
+          </div>
           <label className="flex items-start gap-2 mt-2 cursor-pointer">
             <input type="checkbox" checked={prodIsProduction} onChange={(e) => setProdIsProduction(e.target.checked)}
               className="mt-0.5 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
-            <span className="text-xs text-slate-500">공장·광산·운전·운송 등 생산 및 그 관련직 근로자입니다</span>
+            <span className="text-xs text-slate-500">공장·운전·운송 등 일반 생산 및 그 관련직 근로자입니다 (광산·일용 제외)</span>
           </label>
           {prodIsProduction && (
             <div className="mt-3 space-y-3 animate-fade-in">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label htmlFor="prod-fixed-pay" className="text-xs font-semibold text-slate-600 mb-1 block">월정액급여</label>
+                  <label htmlFor="prod-fixed-pay" className="text-xs font-semibold text-slate-600 mb-1 block">월정액급여 (초과근로수당 제외)</label>
                   <div className="relative">
                     <input type="text" inputMode="numeric" pattern="[0-9,]*" id="prod-fixed-pay" value={formatAmount(prodFixedPay)}
                       onChange={(e) => setProdFixedPay(e.target.value)}
@@ -398,7 +421,7 @@ export default function TaxFreeIncomeCalculatorPage() {
                   {amountError(prodFixedPay) && (
                     <p id="prod-fixed-pay-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(prodFixedPay)}</p>
                   )}
-                  <p className="calc-hint">260만원 이하 요건</p>
+                  <p className="calc-hint">법령상 제외되는 상여·실비변상·복리후생 급여 및 연장·야간·휴일 가산 급여를 뺀 월정액급여입니다. 해당 월에 260만원을 넘으면 그 달 수당은 전액 과세합니다.</p>
                 </div>
                 <div>
                   <label htmlFor="prod-prev-salary" className="text-xs font-semibold text-slate-600 mb-1 block">직전연도 총급여</label>
@@ -413,7 +436,7 @@ export default function TaxFreeIncomeCalculatorPage() {
                   {amountError(prodPrevSalary) && (
                     <p id="prod-prev-salary-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(prodPrevSalary)}</p>
                   )}
-                  <p className="calc-hint">3,700만원 이하 요건</p>
+                  <p className="calc-hint">직전 과세기간 총급여 3,700만원 이하 요건입니다. 직전연도 총급여가 없으면 0을 입력하세요.</p>
                 </div>
               </div>
               <div>
@@ -499,7 +522,7 @@ export default function TaxFreeIncomeCalculatorPage() {
 
           {/* 연간 요약 */}
           <div className="calc-card p-5">
-            <h3 className="text-sm font-bold text-slate-700 mb-4">연간 요약</h3>
+            <h3 className="text-sm font-bold text-slate-700 mb-4">연간 예상 요약</h3>
             <ul className="space-y-2.5">
               <li className="flex justify-between text-sm"><span className="text-slate-600">연간 지급총액</span><span className="font-semibold text-slate-700 tabular-nums">{fmt(annualGross)} 원</span></li>
               <li className="flex justify-between text-sm"><span className="text-slate-600">연간 비과세 금액</span><span className="font-bold text-blue-600 tabular-nums">{fmt(annualFree)} 원</span></li>
@@ -508,26 +531,26 @@ export default function TaxFreeIncomeCalculatorPage() {
                 <span className="font-bold text-slate-800 tabular-nums">{fmt(annualTaxable)} 원</span>
               </li>
             </ul>
-            {prodMonthlyFree > 0 && (
-              <p className="mt-3 text-xs text-slate-400">
-                ※ 생산직 초과근로수당은 월 단순 환산(×12)이 아니라 <strong>연 240만원 누적 한도</strong>(올해 직전월까지 적용분 + 이번 달)를 반영했습니다.
-              </p>
-            )}
+            <p className="mt-3 text-xs leading-relaxed text-slate-500">
+              이번 달 지급액이 12개월 동안 같고, 월정액급여 등 비과세 요건을 매달 충족한다고 가정한 예상액입니다.
+              생산직 초과근로수당은 월 지급액의 12배에 연 240만원 한도를 적용합니다.
+              올해 누적 비과세액 입력은 이번 달의 잔여 한도 계산에만 사용합니다.
+            </p>
           </div>
 
           {/* 비과세 적용 전후 차이 */}
           <div className="calc-card p-5">
             <h3 className="text-sm font-bold text-slate-700 mb-4">비과세 적용 전후 (연간 과세대상 급여 기준)</h3>
-            <div className="grid grid-cols-3 gap-2 text-center">
-              <div className="rounded-xl bg-slate-50 p-3">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+              <div className="flex items-center justify-between rounded-xl bg-slate-50 p-3 sm:block sm:text-center">
                 <p className="text-xs text-slate-500 mb-1">적용 전</p>
                 <p className="text-sm font-bold text-slate-700 tabular-nums">{fmt(annualGross)}</p>
               </div>
-              <div className="rounded-xl bg-slate-50 p-3">
+              <div className="flex items-center justify-between rounded-xl bg-slate-50 p-3 sm:block sm:text-center">
                 <p className="text-xs text-slate-500 mb-1">적용 후</p>
                 <p className="text-sm font-bold text-slate-700 tabular-nums">{fmt(annualTaxable)}</p>
               </div>
-              <div className="rounded-xl bg-blue-50 p-3">
+              <div className="flex items-center justify-between rounded-xl bg-blue-50 p-3 sm:block sm:text-center">
                 <p className="text-xs text-blue-600 mb-1">과세대상 감소</p>
                 <p className="text-sm font-bold text-blue-700 tabular-nums">−{fmt(annualFree)}</p>
               </div>
@@ -540,7 +563,7 @@ export default function TaxFreeIncomeCalculatorPage() {
         </div>
       ) : (
         <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 text-sm text-center px-4">
-          월 기본급과 비과세 항목을 입력하면 과세대상 급여가 계산됩니다
+          {hasError ? '입력 오류를 수정하면 계산 결과를 확인할 수 있습니다' : '월 기본급과 비과세 항목을 입력하면 과세대상 급여가 계산됩니다'}
         </div>
       )}
 

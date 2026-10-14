@@ -70,11 +70,13 @@ function Result({ result }: { result: YearEndResult }) {
 }
 
 type ChildRow = Omit<Child, 'birthYear'> & { id: number; birthYear: string }
-type EducationRow = { id: number; kind: EducationExpense['kind']; amount: string }
+type EducationRow = { id: number; relationship: EducationExpense['relationship']; kind: EducationExpense['kind']; amount: string }
 export default function YearEndTaxClient() {
   const [money, setMoney] = useState<MoneyState>(emptyMoney)
   const [method, setMethod] = useState<DeductionMethod>('auto')
   const [otherDependents, setOtherDependents] = useState('0')
+  const [selfSenior, setSelfSenior] = useState(false)
+  const [selfDisabled, setSelfDisabled] = useState(false)
   const [seniorOthers, setSeniorOthers] = useState('0')
   const [disabledOthers, setDisabledOthers] = useState('0')
   const [personalExtra, setPersonalExtra] = useState<YearEndInput['personalExtra']>('none')
@@ -91,7 +93,7 @@ export default function YearEndTaxClient() {
   const count = (text: string) => /^\d+$/.test(text) ? Number(text) : NaN
   const input: YearEndInput = {
     year: 2026, annualPay: amount('annualPay'), nonTaxablePay: amount('nonTaxablePay'), prepaidIncomeTax: amount('prepaidIncomeTax'), prepaidLocalTax: money.prepaidLocalTax.replace(/[,\s]/g, '') === '' ? null : amount('prepaidLocalTax'),
-    otherDependents: count(otherDependents), seniorOthers: count(seniorOthers), disabledOthers: count(disabledOthers), personalExtra,
+    otherDependents: count(otherDependents), selfSenior, selfDisabled, seniorOthers: count(seniorOthers), disabledOthers: count(disabledOthers), personalExtra,
     children: children.map(({ birthYear, ...child }) => ({ ...child, birthYear: count(birthYear) })),
     publicPension: amount('publicPension'), healthEmploymentInsurance: itemized ? amount('healthEmploymentInsurance') : 0,
     housingDeduction: itemized ? amount('housingDeduction') : 0, housingSavingsDeduction: amount('housingSavingsDeduction'),
@@ -99,7 +101,7 @@ export default function YearEndTaxClient() {
     pensionSaving: amount('pensionSaving'), retirementSaving: amount('retirementSaving'), isaTransfer: amount('isaTransfer'), isaTarget,
     insurance: itemized ? amount('insurance') : 0, disabilityInsurance: itemized ? amount('disabilityInsurance') : 0,
     medical: { ordinary: itemized ? amount('ordinary') : 0, unlimited: itemized ? amount('unlimited') : 0, premature: itemized ? amount('premature') : 0, infertility: itemized ? amount('infertility') : 0 },
-    education: itemized ? education.map(({ kind, amount: text }) => ({ kind, amount: reading(text).value })) : [],
+    education: itemized ? education.map(({ relationship, kind, amount: text }) => ({ relationship, kind, amount: reading(text).value })) : [],
     donations: { political: amount('political'), hometown: amount('hometown'), special: itemized ? amount('special') : 0, general: itemized ? amount('general') : 0, religious: itemized ? amount('religious') : 0 },
     rentEligible: itemized && rentEligible, rentPaid: itemized && rentEligible ? amount('rentPaid') : 0, marriedThisYear, method,
   }
@@ -108,7 +110,7 @@ export default function YearEndTaxClient() {
   const result = requiredReady && !inputErrors && calculated.ok ? calculated : null
   const field = (key: MoneyKey, label: string, hint?: string, required = false) => <MoneyField id={`ye-${key}`} label={label} value={money[key]} onChange={(value) => setMoney((previous) => ({ ...previous, [key]: value }))} hint={hint} required={required} />
   const updateChild = (id: number, patch: Partial<ChildRow>) => setChildren((rows) => rows.map((row) => row.id === id ? { ...row, ...patch } : row))
-  const reset = () => { setMoney(emptyMoney()); setMethod('auto'); setOtherDependents('0'); setSeniorOthers('0'); setDisabledOthers('0'); setPersonalExtra('none'); setChildren([]); setEducation([]); setRentEligible(false); setMarriedThisYear(false); setIsaTarget('retirement') }
+  const reset = () => { setMoney(emptyMoney()); setMethod('auto'); setOtherDependents('0'); setSelfSenior(false); setSelfDisabled(false); setSeniorOthers('0'); setDisabledOthers('0'); setPersonalExtra('none'); setChildren([]); setEducation([]); setRentEligible(false); setMarriedThisYear(false); setIsaTarget('retirement') }
 
   return <main className="mx-auto w-full min-w-0 max-w-5xl px-4 py-10">
     <div className="mb-7"><span className="inline-block rounded-md bg-blue-50 px-2 py-1 text-xs font-semibold text-blue-700">2026년 귀속 · 근로소득</span><h1 className="mt-3 text-3xl font-extrabold tracking-tight text-slate-900">연말정산 계산기</h1><p className="mt-3 text-sm leading-6 text-slate-600">1년간 받은 급여와 공제, 이미 낸 세금을 입력하면 예상 환급액 또는 추가 납부액을 계산합니다. 근로소득만 있는 국내 거주자를 기준으로 합니다.</p></div>
@@ -127,8 +129,13 @@ export default function YearEndTaxClient() {
         <div className="order-3 min-w-0 space-y-4 lg:col-start-1 lg:row-start-2">
         <h2 className="text-base font-bold text-slate-800">공제 추가 <span className="text-xs font-normal text-slate-500">해당하는 항목을 펼쳐 입력하세요</span></h2>
         <Group title="가족·자녀·추가 인적공제" hint="본인은 자동으로 포함합니다. 다른 가족은 연 소득금액 100만원 이하(근로소득만 있다면 총급여 500만원 이하) 등 기본공제 요건을 충족하고 다른 가족과 중복 공제하지 않는 사람만 입력하세요. 부모 등은 60세 이상, 자녀는 20세 이하가 원칙이며 장애인은 나이 제한이 없습니다.">
+          <div className="space-y-1 rounded-xl bg-slate-50 p-3">
+            <label className="flex min-h-[44px] items-center gap-2 text-sm font-semibold text-slate-700"><input id="ye-selfDisabled" type="checkbox" checked={selfDisabled} onChange={(event) => setSelfDisabled(event.target.checked)} />본인 장애인 추가공제</label>
+            <label className="flex min-h-[44px] items-center gap-2 text-sm font-semibold text-slate-700"><input id="ye-selfSenior" type="checkbox" checked={selfSenior} onChange={(event) => setSelfSenior(event.target.checked)} />본인 70세 이상 추가공제 (1956년생 또는 이전 출생)</label>
+            <p className={noteClass}>본인 장애인 200만원, 70세 이상 100만원을 추가 공제합니다. 두 요건을 모두 충족하면 함께 선택할 수 있습니다. 아래 가족 수에는 본인과 자녀를 제외하세요.</p>
+          </div>
           <CountField id="ye-otherDependents" label="자녀 외 기본공제 대상 가족 수" value={otherDependents} onChange={setOtherDependents} />
-          <div className="grid gap-4 sm:grid-cols-2"><CountField id="ye-seniorOthers" label="70세 이상 수 (본인·자녀 외 가족)" value={seniorOthers} onChange={setSeniorOthers} /><CountField id="ye-disabledOthers" label="장애인 수 (본인·자녀 외 가족)" value={disabledOthers} onChange={setDisabledOthers} /></div>
+          <div className="grid gap-4 sm:grid-cols-2"><CountField id="ye-seniorOthers" label="70세 이상 가족 수 (본인·자녀 제외)" value={seniorOthers} onChange={setSeniorOthers} /><CountField id="ye-disabledOthers" label="장애인 가족 수 (본인·자녀 제외)" value={disabledOthers} onChange={setDisabledOthers} /></div>
           <div><label htmlFor="ye-personalExtra" className="mb-1.5 block text-sm font-semibold text-slate-700">추가 공제 유형</label><select id="ye-personalExtra" value={personalExtra} onChange={(event) => setPersonalExtra(event.target.value as YearEndInput['personalExtra'])} className={fieldClass}><option value="none">해당 없음</option><option value="woman">부녀자 공제 요건 충족</option><option value="singleParent">한부모 공제 요건 충족</option></select><p className={`mt-1 ${noteClass}`}>부녀자: 근로소득금액 3천만원 이하인 기혼 여성 또는 부양가족이 있는 미혼 여성 세대주. 한부모: 배우자가 없고 기본공제 대상 직계비속·입양자가 있는 경우. 두 요건 모두 충족하면 한부모 공제를 선택하세요.</p></div>
           <p className={noteClass}>자녀·손자녀는 아래에 한 명씩 추가하세요. 기본공제와 2026년 카드 한도에 함께 반영합니다. 자녀세액공제는 2016년생 이전 대상자에게 적용하고, 2017년생은 경과규정에 따라 제외합니다.</p>
           {children.map((child, index) => <div key={child.id} className="space-y-3 rounded-xl bg-slate-50 p-3"><div className="flex items-center justify-between"><p className="text-sm font-bold">자녀 {index + 1}</p><button type="button" aria-label={`자녀 ${index + 1} 삭제`} onClick={() => setChildren((rows) => rows.filter((row) => row.id !== child.id))} className="min-h-[44px] px-2 text-xs text-slate-500">삭제</button></div><div className="grid gap-3 sm:grid-cols-2"><div><label htmlFor={`child-year-${child.id}`} className="mb-1 block text-sm font-semibold">출생연도</label><input id={`child-year-${child.id}`} aria-label={`자녀 ${index + 1} 출생연도`} inputMode="numeric" value={child.birthYear} onChange={(event) => updateChild(child.id, { birthYear: event.target.value })} className={fieldClass} /></div><div><label htmlFor={`child-relation-${child.id}`} className="mb-1 block text-sm font-semibold">관계</label><select id={`child-relation-${child.id}`} aria-label={`자녀 ${index + 1} 관계`} value={child.relationship} onChange={(event) => updateChild(child.id, { relationship: event.target.value as Child['relationship'] })} className={fieldClass}><option value="child">자녀·입양자</option><option value="grandchild">손자녀</option></select></div></div><label className="flex min-h-[44px] items-center gap-2 text-sm"><input type="checkbox" checked={child.disabled} onChange={(event) => updateChild(child.id, { disabled: event.target.checked })} />장애인 대상 (자녀 {index + 1})</label>{child.relationship === 'child' && <><label className="flex min-h-[44px] items-center gap-2 text-sm"><input type="checkbox" checked={child.adoptedThisYear} onChange={(event) => updateChild(child.id, { adoptedThisYear: event.target.checked })} />2026년에 입양 (자녀 {index + 1})</label>{(child.birthYear === '2026' || child.adoptedThisYear) && <div><label htmlFor={`child-order-${child.id}`} className="mb-1 block text-sm font-semibold">이번 출산·입양 자녀의 순위</label><select id={`child-order-${child.id}`} aria-label={`자녀 ${index + 1} 출산·입양 순위`} value={child.birthOrder} onChange={(event) => updateChild(child.id, { birthOrder: event.target.value as Child['birthOrder'] })} className={fieldClass}><option value="first">첫째 (30만원)</option><option value="second">둘째 (50만원)</option><option value="third">셋째 이상 (70만원)</option></select></div>}</>}</div>)}
@@ -153,9 +160,32 @@ export default function YearEndTaxClient() {
             {field('insurance', '일반 보장성보험료')}{field('disabilityInsurance', '장애인 전용 보장성보험료')}
             {field('ordinary', '일반 부양가족 의료비', '총급여 3% 문턱과 연 700만원 한도를 적용합니다.')}{field('unlimited', '본인·65세 이상·6세 이하 등 의료비', '본인, 장애인, 65세 이상, 연초 6세 이하, 법정 중증질환자 등의 공제 대상 의료비입니다. 항목별 안경·산후조리원 등의 지출 한도는 먼저 적용하세요.')}{field('premature', '미숙아·선천성이상아 의료비')}{field('infertility', '난임시술비')}
           </Group>
-          <Group title="교육비" hint="대상자 한 명당 한 줄에 입력하면 개인별 연간 한도를 적용합니다. 장학금·지원금을 제외한 공제 대상 교육비만 입력하세요. 학원비·체험학습비 등은 학년·기관·개별 지출 한도를 먼저 확인해야 합니다. 2026년에는 부양가족의 소득 요건 제한이 폐지됐으며, 관계 등 다른 요건은 확인해야 합니다.">
-            {education.map((row, index) => <div key={row.id} className="space-y-3 rounded-xl bg-slate-50 p-3"><div className="flex items-center justify-between"><p className="text-sm font-bold">교육비 대상자 {index + 1}</p><button type="button" aria-label={`교육비 대상자 ${index + 1} 삭제`} onClick={() => setEducation((rows) => rows.filter((item) => item.id !== row.id))} className="min-h-[44px] px-2 text-xs text-slate-500">삭제</button></div><div><label htmlFor={`edu-kind-${row.id}`} className="mb-1 block text-sm font-semibold">교육 대상</label><select id={`edu-kind-${row.id}`} aria-label={`교육비 대상자 ${index + 1} 유형`} value={row.kind} onChange={(event) => setEducation((rows) => rows.map((item) => item.id === row.id ? { ...item, kind: event.target.value as EducationExpense['kind'] } : item))} className={fieldClass}><option value="school">취학 전·초·중·고 (300만원 한도)</option><option value="university">대학생 (900만원 한도)</option><option value="self">본인 (한도 없음)</option><option value="disability">장애인 특수교육 (한도 없음)</option></select></div><MoneyField id={`edu-amount-${row.id}`} label={`대상자 ${index + 1} 교육비`} value={row.amount} onChange={(value) => setEducation((rows) => rows.map((item) => item.id === row.id ? { ...item, amount: value } : item))} /></div>)}
-            <button type="button" disabled={education.length >= 100} onClick={() => setEducation((rows) => [...rows, { id: nextId.current++, kind: 'school', amount: '' }])} className="min-h-[44px] rounded-xl border border-blue-200 px-3 py-2 text-sm font-semibold text-blue-700 disabled:opacity-40">+ 교육비 대상자 추가</button>
+          <Group title="교육비" hint="같은 사람의 교육비는 합산해 한 줄에 입력하세요. 장학금·지원금을 제외한 공제 대상 금액만 입력합니다. 2026년 1월 1일 이후 지출분은 교육비 공제 대상인 배우자·직계비속·형제자매·입양자 등의 나이·소득 제한을 적용하지 않습니다. 관계·기관·지출 종류 등의 요건과 학원비·체험학습비 등 개별 한도는 확인해야 합니다.">
+            {education.map((row, index) => <div key={row.id} className="space-y-3 rounded-xl bg-slate-50 p-3">
+              <div className="flex items-center justify-between"><p className="text-sm font-bold">교육비 대상자 {index + 1}</p><button type="button" aria-label={`교육비 대상자 ${index + 1} 삭제`} onClick={() => setEducation((rows) => rows.filter((item) => item.id !== row.id))} className="min-h-[44px] px-2 text-xs text-slate-500">삭제</button></div>
+              <div>
+                <label htmlFor={`edu-relation-${row.id}`} className="mb-1 block text-sm font-semibold">관계</label>
+                <select id={`edu-relation-${row.id}`} aria-label={`교육비 대상자 ${index + 1} 관계`} value={row.relationship} onChange={(event) => {
+                  const relationship = event.target.value as EducationExpense['relationship']
+                  setEducation((rows) => rows.map((item) => item.id === row.id ? { ...item, relationship, kind: relationship === 'self' ? 'self' : relationship === 'parent' ? 'disability' : item.kind === 'self' ? 'school' : item.kind } : item))
+                }} className={fieldClass}>
+                  <option value="descendant">자녀·손자녀·입양자</option><option value="spouse">배우자</option><option value="sibling">형제자매</option><option value="self">본인</option><option value="parent">부모·조부모 (장애인 특수교육)</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor={`edu-kind-${row.id}`} className="mb-1 block text-sm font-semibold">교육 대상</label>
+                <select id={`edu-kind-${row.id}`} aria-label={`교육비 대상자 ${index + 1} 유형`} value={row.kind} onChange={(event) => setEducation((rows) => rows.map((item) => item.id === row.id ? { ...item, kind: event.target.value as EducationExpense['kind'] } : item))} className={fieldClass}>
+                  {row.relationship !== 'self' && row.relationship !== 'parent' && <><option value="school">취학 전·초·중·고 (300만원 한도)</option><option value="university">대학생 (900만원 한도)</option></>}
+                  {row.relationship === 'self' && <option value="self">본인 (한도 없음)</option>}
+                  <option value="disability">장애인 특수교육 (한도 없음)</option>
+                </select>
+                <p className={`mt-1 ${noteClass}`}>
+                  {row.kind === 'disability' ? '법정 장애인 특수교육만 해당합니다. 부모·조부모도 포함할 수 있습니다. 대상 시설과 발달재활서비스 기관의 18세 미만 요건 등 개별 조건을 확인하세요.' : row.relationship === 'self' ? '본인의 대학원 교육비·적격 학자금 대출 상환액 등은 해당 요건을 충족하면 포함할 수 있습니다.' : '2026년 지출 교육비에는 대상 가족의 나이·소득 제한이 없습니다. 다른 사람과 중복 공제하지 마세요. 가족의 대학원 교육비와 가족이 학자금 대출로 지급한 교육비는 제외합니다.'}
+                </p>
+              </div>
+              <MoneyField id={`edu-amount-${row.id}`} label={`대상자 ${index + 1} 교육비`} value={row.amount} onChange={(value) => setEducation((rows) => rows.map((item) => item.id === row.id ? { ...item, amount: value } : item))} />
+            </div>)}
+            <button type="button" disabled={education.length >= 100} onClick={() => setEducation((rows) => [...rows, { id: nextId.current++, relationship: 'descendant', kind: 'school', amount: '' }])} className="min-h-[44px] rounded-xl border border-blue-200 px-3 py-2 text-sm font-semibold text-blue-700 disabled:opacity-40">+ 교육비 대상자 추가</button>
           </Group>
         </>}
         <Group title="기부금" hint="2026년에 낸 기부금만 입력합니다. 정치자금·고향사랑은 본인 기부액만 해당합니다. 이전 연도 이월 기부금·우리사주조합 기부금·특별재난지역 고향사랑 기부금은 지원 범위 밖입니다.">

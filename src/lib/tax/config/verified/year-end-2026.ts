@@ -39,6 +39,7 @@ export const YEAR_END_2026 = {
     { label: '소득세법 제47조·제50조·제51조·제52조·제55조·제59조', url: 'https://www.law.go.kr/법령/소득세법' },
     { label: '소득세법 제59조의2 및 제21548호 부칙(2026년 자녀 연령)', url: 'https://www.law.go.kr/LSW/lsRvsDocListP.do?lsId=001565&chrClsCd=010102' },
     { label: '소득세법 제59조의3·제59조의4(연금·특별세액공제)', url: 'https://www.law.go.kr/법령/소득세법/제59조의4' },
+    { label: '법률 제21221호 제59조의4 제3항·부칙 제5조(2026년 교육비 대상·적용례)', url: 'https://www.law.go.kr/LSW/lsRvsDocListP.do?chrClsCd=010102&lsId=001565' },
     { label: '조세특례제한법 제126조의2(2026년 카드 한도)', url: 'https://www.law.go.kr/법령/조세특례제한법/제126조의2' },
     { label: '조세특례제한법 제58조·제76조·제87조·제92조·제95조의2·제132조의2(기부·주택·혼인·월세·종합한도)', url: 'https://www.law.go.kr/법령/조세특례제한법' },
     { label: '조세특례제한법 시행령 제121조의2(카드 한도 확대 대상 자녀)', url: 'https://www.law.go.kr/법령/조세특례제한법시행령/제121조의2' },

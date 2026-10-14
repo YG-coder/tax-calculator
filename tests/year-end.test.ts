@@ -161,9 +161,9 @@ describe('카드·의료·교육·연금 공제 문턱과 개인별 한도', () 
     assert.equal(medicalCredit2026(50_000_000, medical({ unlimited: 10_000_000 })).amount, 1_275_000)
   })
   it('교육비 한도는 대상자별로 적용하며 남은 한도를 다른 사람에게 넘기지 않는다', () => {
-    assert.equal(educationCredit2026([{ kind: 'school', amount: 4_000_000 }, { kind: 'school', amount: 1_000_000 }]).amount, 600_000)
-    assert.equal(educationCredit2026([{ kind: 'university', amount: 12_000_000 }]).amount, 1_350_000)
-    assert.equal(educationCredit2026([{ kind: 'self', amount: 12_000_000 }]).amount, 1_800_000)
+    assert.equal(educationCredit2026([{ relationship: 'descendant', kind: 'school', amount: 4_000_000 }, { relationship: 'descendant', kind: 'school', amount: 1_000_000 }]).amount, 600_000)
+    assert.equal(educationCredit2026([{ relationship: 'descendant', kind: 'university', amount: 12_000_000 }]).amount, 1_350_000)
+    assert.equal(educationCredit2026([{ relationship: 'self', kind: 'self', amount: 12_000_000 }]).amount, 1_800_000)
   })
   it('연금저축 600만원·합산 900만원, 총급여 5,500만원 공제율 경계를 적용한다', () => {
     assert.equal(pensionCredit2026(55_000_000, 9_000_000, 0, 0, 'retirement').amount, 900_000)
@@ -220,11 +220,65 @@ describe('잘못된 입력과 지원 연도', () => {
   it('활성 입력만 검사하고 숨겨진 월세·표준 제외 항목 오류는 무시한다', () => {
     assert.equal(calculateYearEndTax(input({ rentEligible: false, rentPaid: NaN })).ok, true)
     assert.equal(calculateYearEndTax(input({ rentEligible: true, rentPaid: NaN })).ok, false)
-    assert.equal(calculateYearEndTax(input({ method: 'standard', healthEmploymentInsurance: NaN, insurance: NaN, medical: medical({ ordinary: NaN }), education: [{ kind: 'school', amount: NaN }], donations: donation({ general: NaN }) })).ok, true)
+    assert.equal(calculateYearEndTax(input({ method: 'standard', healthEmploymentInsurance: NaN, insurance: NaN, medical: medical({ ordinary: NaN }), education: [{ relationship: 'descendant', kind: 'school', amount: NaN }], donations: donation({ general: NaN }) })).ok, true)
     assert.equal(calculateYearEndTax(input({ healthEmploymentInsurance: NaN })).ok, false)
   })
   it('선납 0원도 정상 입력이며 확인하지 않은 과거·미래 연도로 기준을 재사용하지 않는다', () => {
     assert.equal(calculate({ prepaidIncomeTax: 0 }).additionalPayment, 3_726_250)
     for (const year of [2025, 2027]) assert.equal(calculateYearEndTax(input({ year })).ok, false)
+  })
+})
+
+describe('본인과 가족의 추가공제 분리', () => {
+  it('본인 장애인 공제 200만원은 환급액을 1,003,750원으로 만든다', () => {
+    const r = calculate({ selfDisabled: true, prepaidLocalTax: 400_000 })
+    assert.equal(r.familyCount, 1)
+    assert.equal(r.selected.taxBase, 34_250_000)
+    assert.equal(r.selected.grossTax, 3_877_500)
+    assert.equal(r.selected.incomeTax, 3_087_500)
+    assert.equal(r.selected.localTax, 308_750)
+    assert.equal(r.refund, 1_003_750)
+    assert.equal(r.refund - calculate().refund, 330_000)
+  })
+  it('본인 70세 이상 공제와 장애인 공제를 함께 적용할 수 있다', () => {
+    assert.equal(calculate({ selfSenior: true }).refund, 838_750)
+    const r = calculate({ selfSenior: true, selfDisabled: true })
+    assert.equal(r.selected.deductions[1].amount, 3_000_000)
+    assert.equal(r.refund, 1_168_750)
+  })
+  it('본인·다른 가족·자녀의 장애인 공제를 한 번씩만 집계한다', () => {
+    const r = calculate({ selfDisabled: true, otherDependents: 1, disabledOthers: 1, children: [child(2010, { disabled: true })] })
+    assert.equal(r.familyCount, 3)
+    assert.equal(r.selected.deductions[1].amount, 6_000_000)
+    assert.equal(r.selected.deductions[1].note, '경로우대 0명 · 장애인 3명')
+  })
+  it('가족 추가공제 수에는 본인을 다시 포함할 수 없다', () => {
+    assert.equal(calculateYearEndTax(input({ selfDisabled: true, disabledOthers: 1 })).ok, false)
+    assert.equal(calculateYearEndTax(input({ selfSenior: true, seniorOthers: 1 })).ok, false)
+    assert.equal(calculateYearEndTax(input({ otherDependents: 1, disabledOthers: 2 })).ok, false)
+    assert.equal(calculateYearEndTax(input({ selfDisabled: true, otherDependents: 1, disabledOthers: 1 })).ok, true)
+  })
+})
+
+describe('2026년 교육비 관계와 소득요건 면제 범위', () => {
+  it('배우자·형제자매 교육비는 인적공제 가족 수와 독립적으로 계산한다', () => {
+    for (const relationship of ['spouse', 'sibling'] as const) {
+      const r = calculate({ education: [{ relationship, kind: 'university', amount: 9_000_000 }] })
+      assert.equal(r.familyCount, 1)
+      assert.equal(r.selected.credits.find((line) => line.label === '교육비 세액공제')!.amount, 1_350_000)
+      assert.equal(r.selected.incomeTax, 2_167_500)
+    }
+  })
+  it('직계존속 일반교육비는 제외하고 장애인 특수교육만 허용한다', () => {
+    assert.equal(calculateYearEndTax(input({ education: [{ relationship: 'parent', kind: 'university', amount: 9_000_000 }] })).ok, false)
+    assert.equal(credit({ education: [{ relationship: 'parent', kind: 'disability', amount: 12_000_000 }] }, '교육비 세액공제'), 1_800_000)
+  })
+  it('본인 한도 없는 유형은 가족의 대학 교육비에 사용할 수 없다', () => {
+    assert.equal(calculateYearEndTax(input({ education: [{ relationship: 'spouse', kind: 'self', amount: 12_000_000 }] })).ok, false)
+    assert.equal(credit({ education: [{ relationship: 'self', kind: 'self', amount: 12_000_000 }] }, '교육비 세액공제'), 1_800_000)
+  })
+  it('표준 방식에서는 제외된 관계 오류도 결과를 막지 않는다', () => {
+    assert.equal(calculateYearEndTax(input({ method: 'standard', education: [{ relationship: 'parent', kind: 'university', amount: NaN }] })).ok, true)
+    assert.equal(calculateYearEndTax(input({ education: [{ relationship: 'invalid', kind: 'school', amount: 1_000_000 }] } as unknown as Partial<YearEndInput>)).ok, false)
   })
 })

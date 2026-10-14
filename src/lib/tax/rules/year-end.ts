@@ -10,7 +10,8 @@ export type Child = {
   adoptedThisYear: boolean
   birthOrder: 'first' | 'second' | 'third'
 }
-export type EducationExpense = { kind: keyof typeof R.educationLimits; amount: number }
+export type EducationRelationship = 'self' | 'descendant' | 'spouse' | 'sibling' | 'parent'
+export type EducationExpense = { relationship: EducationRelationship; kind: keyof typeof R.educationLimits; amount: number }
 export type YearEndInput = {
   year: number
   annualPay: number
@@ -18,6 +19,8 @@ export type YearEndInput = {
   prepaidIncomeTax: number
   prepaidLocalTax: number | null
   otherDependents: number
+  selfSenior: boolean
+  selfDisabled: boolean
   seniorOthers: number
   disabledOthers: number
   personalExtra: 'none' | 'woman' | 'singleParent'
@@ -43,7 +46,7 @@ export type YearEndInput = {
 }
 export const EMPTY_YEAR_END_INPUT: YearEndInput = {
   year: 2026, annualPay: 0, nonTaxablePay: 0, prepaidIncomeTax: 0, prepaidLocalTax: null,
-  otherDependents: 0, seniorOthers: 0, disabledOthers: 0, personalExtra: 'none', children: [],
+  otherDependents: 0, selfSenior: false, selfDisabled: false, seniorOthers: 0, disabledOthers: 0, personalExtra: 'none', children: [],
   publicPension: 0, healthEmploymentInsurance: 0, housingDeduction: 0, housingSavingsDeduction: 0,
   card: { credit: 0, debitCash: 0, market: 0, transit: 0, cultureCredit: 0, cultureDebit: 0 },
   pensionSaving: 0, retirementSaving: 0, isaTransfer: 0, isaTarget: 'retirement', insurance: 0, disabilityInsurance: 0,
@@ -146,6 +149,7 @@ function validate(input: YearEndInput): string[] {
   if (!['pension', 'retirement'].includes(input.isaTarget)) errors.push('ISA 전환 계좌를 확인하세요.')
   if (!['auto', 'itemized', 'standard'].includes(input.method)) errors.push('공제 방식을 확인하세요.')
   if (!['none', 'woman', 'singleParent'].includes(input.personalExtra)) errors.push('추가 인적공제 유형을 확인하세요.')
+  if (typeof input.selfSenior !== 'boolean' || typeof input.selfDisabled !== 'boolean') errors.push('본인 추가공제 여부를 확인하세요.')
   const itemized = input.method !== 'standard'
   const money = [input.annualPay, input.nonTaxablePay, input.prepaidIncomeTax, input.prepaidLocalTax ?? 0,
     input.publicPension, input.housingSavingsDeduction, ...Object.values(input.card), input.pensionSaving, input.retirementSaving,
@@ -163,8 +167,8 @@ function validate(input: YearEndInput): string[] {
     if (!Number.isSafeInteger(count) || count < 0 || count > 100) errors.push('가족 수는 0명부터 100명 사이 정수로 입력하세요.')
   }
   if (input.children.length > 100 || input.education.length > 100) errors.push('대상자는 100명 이하로 입력하세요.')
-  if (input.seniorOthers > input.otherDependents + 1 || input.disabledOthers > input.otherDependents + 1) {
-    errors.push('추가공제 대상 수가 본인과 그 밖의 부양가족 수를 넘습니다.')
+  if (input.seniorOthers > input.otherDependents || input.disabledOthers > input.otherDependents) {
+    errors.push('추가공제 가족 수가 자녀 외 기본공제 대상 가족 수를 넘습니다. 본인은 별도 항목으로 선택하세요.')
   }
   if (input.personalExtra === 'singleParent' && input.children.length === 0) errors.push('한부모 공제에는 기본공제 대상 직계비속·입양자가 필요합니다.')
   input.children.forEach((child, index) => {
@@ -172,7 +176,15 @@ function validate(input: YearEndInput): string[] {
     if (!child.disabled && R.year - child.birthYear > 20) errors.push(`자녀 ${index + 1}은 20세를 초과해 기본공제 나이 요건을 충족하지 않습니다. 장애인 예외 여부를 확인하세요.`)
     if (!['child', 'grandchild'].includes(child.relationship) || !['first', 'second', 'third'].includes(child.birthOrder)) errors.push('자녀 관계와 출산·입양 순위를 확인하세요.')
   })
-  if (itemized && input.education.some((row) => !Object.hasOwn(R.educationLimits, row.kind))) errors.push('교육비 대상 유형을 확인하세요.')
+  if (itemized) input.education.forEach((row, index) => {
+    if (!Object.hasOwn(R.educationLimits, row.kind) || !['self', 'descendant', 'spouse', 'sibling', 'parent'].includes(row.relationship)) {
+      errors.push(`교육비 대상자 ${index + 1}의 관계와 유형을 확인하세요.`)
+    } else if ((row.kind === 'self' && row.relationship !== 'self') ||
+      (row.relationship === 'self' && row.kind !== 'self' && row.kind !== 'disability') ||
+      (row.relationship === 'parent' && row.kind !== 'disability')) {
+      errors.push(`교육비 대상자 ${index + 1}: 본인 일반교육비는 본인 유형, 부모·조부모 교육비는 장애인 특수교육 유형으로 입력하세요.`)
+    }
+  })
   return Array.from(new Set(errors))
 }
 
@@ -183,8 +195,8 @@ export function calculateYearEndTax(input: YearEndInput) {
   const wageDeduction = Math.floor(wageIncomeDeduction(salary))
   const wageIncome = Math.max(0, salary - wageDeduction)
   const familyCount = 1 + input.otherDependents + input.children.length
-  const seniorCount = input.seniorOthers + input.children.filter((child) => R.year - child.birthYear >= 70).length
-  const disabledCount = input.disabledOthers + input.children.filter((child) => child.disabled).length
+  const seniorCount = Number(input.selfSenior) + input.seniorOthers + input.children.filter((child) => R.year - child.birthYear >= 70).length
+  const disabledCount = Number(input.selfDisabled) + input.disabledOthers + input.children.filter((child) => child.disabled).length
   const extra = input.personalExtra === 'singleParent' ? R.singleParentDeduction
     : input.personalExtra === 'woman' && wageIncome <= R.womanIncomeLimit ? R.womanDeduction : 0
   const basic = familyCount * R.basicDeduction
@@ -206,7 +218,7 @@ export function calculateYearEndTax(input: YearEndInput) {
     const combinedLimited = Math.min(R.comprehensiveDeductionLimit, housing + input.housingSavingsDeduction + card.amount)
     const deductions: TaxLine[] = [
       { label: '기본공제', amount: basic, note: `본인 포함 ${familyCount}명` },
-      { label: '추가 인적공제', amount: additional },
+      { label: '추가 인적공제', amount: additional, note: `경로우대 ${seniorCount}명 · 장애인 ${disabledCount}명${extra ? ' · 부녀자 또는 한부모 공제 포함' : ''}` },
       { label: '공적연금보험료 공제', amount: input.publicPension },
       { label: '건강·고용·장기요양보험료 공제', amount: detailed ? input.healthEmploymentInsurance : 0 },
       { label: '주택자금·청약·신용카드 소득공제', amount: combinedLimited, note: `카드 ${card.amount.toLocaleString('ko-KR')}원 · 청약 ${input.housingSavingsDeduction.toLocaleString('ko-KR')}원 · 주택자금 ${housing.toLocaleString('ko-KR')}원, 종합한도 적용` },

@@ -1,14 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/freelancer-tax/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '프리랜서 종합소득세 신고 완벽 가이드 (2026)',
   description:
     '프리랜서 3.3% 원천징수부터 5월 종합소득세 신고까지 단계별로 정리한 무료 가이드. 환급받는 법, 경비 처리, 자주 하는 실수, 신고 유형 선택 기준을 다룹니다.',
   alternates: { canonical: '/guide/freelancer-tax' },
-}
+}, "/guide/freelancer-tax")
 
 export default function FreelancerTaxGuidePage() {
   return (

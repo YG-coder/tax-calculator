@@ -1,14 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/inheritance-renounce/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '상속 포기·한정승인, 3개월 안에 결정하기 (2026)',
   description:
     '빚이 더 많은 상속을 마주했을 때 선택지인 상속포기와 한정승인을 정리. 3개월 기한, 후순위 상속인 함정, 단순승인 간주, 특별한정승인까지 사례로 설명합니다.',
   alternates: { canonical: '/guide/inheritance-renounce' },
-}
+}, "/guide/inheritance-renounce")
 
 export default function InheritanceRenounceGuidePage() {
   return (

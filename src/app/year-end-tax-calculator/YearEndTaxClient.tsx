@@ -1,11 +1,12 @@
 'use client'
 
+import { SITE } from "@/lib/site";
 import { useRef, useState, type ReactNode } from 'react'
 import Link from 'next/link'
 import RelatedCalculators from '@/components/RelatedCalculators'
 import SourceNote from '@/components/SourceNote'
 import ResultActions from '@/components/ResultActions'
-import { readAmount, formatAmount } from '@/lib/utils/amount'
+import { requiredAmountError, readAmount, formatAmount } from '@/lib/utils/amount'
 import { YEAR_END_2026 } from '@/lib/tax/config/verified/year-end-2026'
 import { calculateYearEndTax, type Child, type DeductionMethod, type EducationExpense, type TaxLine, type YearEndInput, type YearEndResult } from '@/lib/tax/rules/year-end'
 
@@ -46,6 +47,7 @@ function Result({ result }: { result: YearEndResult }) {
   const status = result.refund > 0 ? '예상 환급액' : result.additionalPayment > 0 ? '예상 추가 납부액' : '환급·추가 납부 없음'
   const difference = (amount: number) => amount < 0 ? `${fmt(-amount)} 환급` : amount > 0 ? `${fmt(amount)} 추가 납부` : '정산액 0원'
   return <div data-testid="year-end-result" className="space-y-5">
+    <p className="text-xs text-slate-500">입력하지 않은 공제 항목은 적용하지 않은 예상치입니다.</p>
     <div role="status" aria-live="polite" aria-atomic="true" className={`rounded-2xl p-5 ${result.additionalPayment > 0 ? 'bg-amber-50' : 'bg-blue-50'}`}>
       <p className="text-sm font-semibold text-slate-700">{status}</p>
       <p data-testid="settlement-amount" className="mt-2 break-words text-3xl font-extrabold tracking-tight text-slate-900">{fmt(result.refund || result.additionalPayment)}</p>
@@ -65,7 +67,7 @@ function Result({ result }: { result: YearEndResult }) {
       <div className="border-t pt-3"><p className="mb-3 text-sm font-bold text-slate-800">세액공제 항목</p><Lines lines={selected.credits} /></div>
       <p className={noteClass}>항목별 금액은 한도 적용 후 산정액입니다. 소득공제 합계는 근로소득금액, 세액공제 합계는 산출세액까지 적용하므로 항목 합계와 실제 적용 합계가 다를 수 있습니다. 최종 세액은 10원 미만을 버려 추정합니다.</p>
     </div></details>
-    <ResultActions title="2026년 귀속 연말정산 예상 결과" lines={[{ label: status, value: fmt(result.refund || result.additionalPayment) }, { label: '예상 결정세액 (소득세)', value: fmt(selected.incomeTax) }, { label: '예상 지방소득세', value: fmt(selected.localTax) }, { label: '이미 낸 소득세', value: fmt(result.prepaidIncomeTax) }, { label: '이미 낸 지방소득세', value: fmt(result.prepaidLocalTax), note: result.localTaxAssumed ? '소득세의 10%로 추정' : undefined }, { label: '적용 공제 방식', value: selected.method === 'standard' ? '표준세액공제' : '개별 공제' }]} footer={['2026-10-14 확인 법령 기준 · 근로소득만 있는 거주자 예상치', '최종 정산은 홈택스와 회사의 연말정산 자료로 확인하세요.', 'https://taxsim.kr/year-end-tax-calculator']} />
+    <ResultActions title="2026년 귀속 연말정산 예상 결과" lines={[{ label: status, value: fmt(result.refund || result.additionalPayment) }, { label: '예상 결정세액 (소득세)', value: fmt(selected.incomeTax) }, { label: '예상 지방소득세', value: fmt(selected.localTax) }, { label: '이미 낸 소득세', value: fmt(result.prepaidIncomeTax) }, { label: '이미 낸 지방소득세', value: fmt(result.prepaidLocalTax), note: result.localTaxAssumed ? '소득세의 10%로 추정' : undefined }, { label: '적용 공제 방식', value: selected.method === 'standard' ? '표준세액공제' : '개별 공제' }]} footer={['2026-10-14 확인 법령 기준 · 근로소득만 있는 거주자 예상치', '최종 정산은 홈택스와 회사의 연말정산 자료로 확인하세요.', `${SITE.url}/year-end-tax-calculator`]} />
   </div>
 }
 
@@ -88,11 +90,11 @@ export default function YearEndTaxClient() {
   const nextId = useRef(1)
   const itemized = method !== 'standard'
   const activeKeys = [...commonKeys, ...(itemized ? specialKeys : []), ...(itemized && rentEligible ? ['rentPaid' as const] : [])]
-  const inputErrors = activeKeys.some((key) => reading(money[key]).error) || (itemized && education.some((row) => reading(row.amount).error))
+  const inputErrors = activeKeys.some((key) => reading(money[key]).error) || (itemized && education.some((row) => requiredAmountError(row.amount) !== null))
   const amount = (key: MoneyKey) => reading(money[key]).value
   const count = (text: string) => /^\d+$/.test(text) ? Number(text) : NaN
   const input: YearEndInput = {
-    year: 2026, annualPay: amount('annualPay'), nonTaxablePay: amount('nonTaxablePay'), prepaidIncomeTax: amount('prepaidIncomeTax'), prepaidLocalTax: money.prepaidLocalTax.replace(/[,\s]/g, '') === '' ? null : amount('prepaidLocalTax'),
+    year: 2026, annualPay: amount('annualPay'), nonTaxablePay: amount('nonTaxablePay'), prepaidIncomeTax: amount('prepaidIncomeTax'), prepaidLocalTax: amount('prepaidLocalTax'),
     otherDependents: count(otherDependents), selfSenior, selfDisabled, seniorOthers: count(seniorOthers), disabledOthers: count(disabledOthers), personalExtra,
     children: children.map(({ birthYear, ...child }) => ({ ...child, birthYear: count(birthYear) })),
     publicPension: amount('publicPension'), healthEmploymentInsurance: itemized ? amount('healthEmploymentInsurance') : 0,
@@ -106,7 +108,7 @@ export default function YearEndTaxClient() {
     rentEligible: itemized && rentEligible, rentPaid: itemized && rentEligible ? amount('rentPaid') : 0, marriedThisYear, method,
   }
   const calculated = calculateYearEndTax(input)
-  const requiredReady = money.annualPay.replace(/[,\s]/g, '') !== '' && money.prepaidIncomeTax.replace(/[,\s]/g, '') !== ''
+  const requiredReady = ['annualPay', 'nonTaxablePay', 'prepaidIncomeTax', 'prepaidLocalTax'].every(key => requiredAmountError(money[key as MoneyKey]) === null)
   const result = requiredReady && !inputErrors && calculated.ok ? calculated : null
   const field = (key: MoneyKey, label: string, hint?: string, required = false) => <MoneyField id={`ye-${key}`} label={label} value={money[key]} onChange={(value) => setMoney((previous) => ({ ...previous, [key]: value }))} hint={hint} required={required} />
   const updateChild = (id: number, patch: Partial<ChildRow>) => setChildren((rows) => rows.map((row) => row.id === id ? { ...row, ...patch } : row))
@@ -119,9 +121,9 @@ export default function YearEndTaxClient() {
         <div className="order-1 min-w-0 space-y-4 lg:col-start-1 lg:row-start-1">
         <div className="calc-card space-y-4 p-5"><div className="flex items-center justify-between gap-2"><h2 className="text-base font-bold text-slate-800">급여와 이미 낸 세금</h2><button type="button" onClick={reset} className="min-h-[44px] text-xs font-semibold text-slate-500 hover:text-blue-700">전체 초기화</button></div>
           {field('annualPay', '연간 지급총액', '비과세와 상여를 포함한 1년치 지급액입니다. 이직했다면 종전·현재 회사 금액을 합칩니다.', true)}
-          {field('nonTaxablePay', '연간 비과세 급여', '비과세 요건을 충족하는 금액만 입력합니다. 지급총액에서 빼서 총급여를 구합니다.')}
+          {field('nonTaxablePay', '연간 비과세 급여', '비과세 요건을 충족하는 금액만 입력합니다. 없으면 0을 직접 입력하세요.', true)}
           {field('prepaidIncomeTax', '이미 낸 소득세', '급여에서 원천징수한 1년치 소득세 합계입니다. 낸 세금이 없으면 0을 입력하세요.', true)}
-          {field('prepaidLocalTax', '이미 낸 지방소득세', '비워 두면 이미 낸 소득세의 10%로 추정합니다. 실제로 낸 금액을 알면 직접 입력하세요.')}
+          {field('prepaidLocalTax', '이미 낸 지방소득세', '실제 납부한 연간 지방소득세를 입력하세요. 납부액이 없으면 0을 직접 입력하세요.', true)}
           <p className={noteClass}>연중 예상이라면 남은 기간의 급여·선납세액·공제도 함께 추정해 입력하세요. 모든 금액은 연간 합계입니다.</p>
         </div>
         <div className="rounded-2xl border border-slate-200 p-5"><h2 className="text-sm font-bold text-slate-800">공제 적용 방식</h2><div className="mt-3 flex flex-wrap gap-2">{([['auto', '유리한 방식 자동 선택'], ['itemized', '개별 공제'], ['standard', '표준세액공제']] as const).map(([value, label]) => <button key={value} type="button" aria-pressed={method === value} onClick={() => setMethod(value)} className={`min-h-[44px] rounded-xl border px-3 py-2 text-xs font-semibold ${method === value ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-200 text-slate-600'}`}>{label}</button>)}</div><p className={`mt-3 ${noteClass}`}>보험료·의료비·교육비·일반 기부금·월세와 특별소득공제를 개별 적용하거나, 이 항목들을 대신하는 표준세액공제 13만원을 적용합니다. 인적공제·카드·연금계좌 등은 두 방식 모두 반영합니다.</p></div>
@@ -198,7 +200,7 @@ export default function YearEndTaxClient() {
         </Group>
         </div>
       </section>
-      <aside aria-label="연말정산 결과" className="order-2 min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2"><div className="calc-card p-5 lg:sticky lg:top-6"><h2 className="mb-4 text-base font-bold text-slate-800">예상 정산 결과</h2>{result ? <Result result={result} /> : <div className="rounded-2xl bg-slate-50 p-5"><p className="text-sm font-semibold text-slate-700">{inputErrors ? '입력 오류를 수정해 주세요.' : !requiredReady ? '급여와 이미 낸 소득세를 입력해 주세요.' : '입력 조건을 확인해 주세요.'}</p>{requiredReady && !calculated.ok && <ul role="alert" className="mt-3 list-disc space-y-1 pl-4 text-xs leading-5 text-red-600">{calculated.errors.map((error) => <li key={error}>{error}</li>)}</ul>}<p className={`mt-3 ${noteClass}`}>필수 입력이 갖춰지면 즉시 계산합니다. 이미 낸 소득세가 없으면 0을 입력하세요. 공제는 해당하는 항목만 추가하면 됩니다.</p></div>}</div></aside>
+      <aside aria-label="연말정산 결과" className="order-2 min-w-0 lg:col-start-2 lg:row-start-1 lg:row-span-2"><div className="calc-card p-5 lg:sticky lg:top-6"><h2 className="mb-4 text-base font-bold text-slate-800">예상 정산 결과</h2>{result ? <Result result={result} /> : <div className="rounded-2xl bg-slate-50 p-5"><p className="text-sm font-semibold text-slate-700">{inputErrors ? '입력 오류를 수정해 주세요.' : !requiredReady ? '급여·비과세 급여·이미 낸 소득세와 지방소득세를 입력해 주세요.' : '입력 조건을 확인해 주세요.'}</p>{requiredReady && !calculated.ok && <ul role="alert" className="mt-3 list-disc space-y-1 pl-4 text-xs leading-5 text-red-600">{calculated.errors.map((error) => <li key={error}>{error}</li>)}</ul>}<p className={`mt-3 ${noteClass}`}>필수 입력이 갖춰지면 즉시 계산합니다. 이미 낸 소득세가 없으면 0을 입력하세요. 공제는 해당하는 항목만 추가하면 됩니다. 선택하지 않은 공제 항목은 적용하지 않습니다.</p></div>}</div></aside>
     </div>
     <section className="mt-8 rounded-2xl border border-slate-200 bg-slate-50 p-5 text-sm leading-6 text-slate-600"><h2 className="mb-2 font-bold text-slate-800">이 결과는 어떻게 계산하나요?</h2><p>지급총액에서 비과세 급여와 근로소득공제·소득공제를 빼 과세표준을 구합니다. 누진세율로 산출한 세금에서 세액공제를 빼 최종 세금을 예상한 뒤, 이미 낸 세금과 비교합니다. 선납액이 더 크면 환급, 부족하면 추가 납부입니다.</p><p className="mt-2">2026년 귀속 기준은 2026년 10월 14일까지 확인한 법령과 적용례를 반영했습니다. 외국인 단일세율·중소기업 취업자 감면·해외납부세액·투자조합 공제 등 별도 특례와 다른 종류의 소득은 포함하지 않습니다. 지방소득세는 예상 소득세의 10%로 계산합니다.</p><p className="mt-2">공제 대상 여부와 개별 지출 한도는 홈택스 간소화 자료·영수증에서 확인한 금액을 사용하세요. 입력값은 브라우저에서만 계산하며 저장하지 않습니다.</p><Link href="/guide/withholding-year-end" className="mt-3 inline-block font-semibold text-blue-700 hover:underline">원천징수와 연말정산이 이어지는 원리 →</Link></section>
     <div className="mt-6"><SourceNote calculator="year-end-tax-calculator" /></div>

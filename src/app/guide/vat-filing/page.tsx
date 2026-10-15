@@ -1,14 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/vat-filing/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '부가세 신고 체크리스트 (개인사업자, 2026)',
   description:
     '2026년 제1기 부가가치세 확정신고(7월 27일까지) 대상·기간·준비서류·신고절차와 간이과세자 예외, 자주 하는 실수, 가산세 위험까지 정리한 체크리스트.',
   alternates: { canonical: '/guide/vat-filing' },
-}
+}, "/guide/vat-filing")
 
 export default function VatFilingGuidePage() {
   return (

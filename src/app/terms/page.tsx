@@ -1,11 +1,12 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/terms/page.tsx
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '이용안내',
   description:
     'taxsim.kr의 이용안내입니다. 서비스 목적, 계산 결과의 한계, 법적 책임 제한, 외부 링크 안내를 확인할 수 있습니다.',
-}
+}, "/terms")
 
 export default function TermsPage() {
   return (

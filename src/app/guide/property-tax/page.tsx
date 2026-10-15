@@ -1,14 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/property-tax/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '2026년 재산세 계산 방법과 7월·9월 납부기간',
   description:
     '주택 공시가격에서 시작하는 2026년 재산세 계산 구조를 공정시장가액비율, 1세대 1주택 특례세율, 도시지역분, 지방교육세, 세부담상한 순으로 정리하고 7월·9월 납부기간과 20만 원 일괄부과 기준까지 사례로 설명합니다.',
   alternates: { canonical: '/guide/property-tax' },
-}
+}, "/guide/property-tax")
 
 export default function PropertyTaxGuidePage() {
   return (

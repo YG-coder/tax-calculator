@@ -1,14 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/income-tax-may/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '5월 종합소득세 신고 가이드 (2026)',
   description:
     '5월 종합소득세 신고의 전체 흐름을 정리한 무료 가이드. 신고 대상 확인, 모두채움 신고서, 분납 신청, 자주 하는 실수, 세무사 활용까지 한 번에.',
   alternates: { canonical: '/guide/income-tax-may' },
-}
+}, "/guide/income-tax-may")
 
 export default function IncomeTaxMayGuidePage() {
   return (

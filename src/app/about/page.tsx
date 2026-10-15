@@ -1,13 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
+import { withParticle } from "@/lib/korean";
 // src/app/about/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '사이트 소개',
   description:
     'taxsim.kr는 여러 세금 계산기와 세금 가이드를 무료로 제공하는 온라인 세금 계산 서비스입니다. 운영자 소개, 정보 출처, 업데이트 정책을 안내합니다.',
   alternates: { canonical: '/about' },
-}
+}, "/about")
 
 const CALC_LIST = [
   { href: '/vat-calculator',               label: '부가세 계산기',          desc: '공급가액·부가세·합계 자동 계산. 포함/별도 선택 지원.' },
@@ -63,8 +65,8 @@ export default function AboutPage() {
             일반 사용자의 관점에서 정리하고, 국세청 공개 자료와 관련 법령 기준을 참고하여
             계산기 구조와 안내 문구를 구성했습니다. 동일한 운영자가 만든
             {' '}<Link href="https://연봉계산기.kr" target="_blank" rel="noopener noreferrer"
-                       className="text-blue-600 hover:underline">연봉계산기.kr</Link>{' '}
-            과 함께 한국 세금·급여 계산 도구 라인업을 구성하고 있습니다.
+                       className="text-blue-600 hover:underline">연봉계산기.kr</Link>{withParticle(' ', "과/와")}
+             함께 한국 세금·급여 계산 도구 라인업을 구성하고 있습니다.
           </p>
         </section>
 

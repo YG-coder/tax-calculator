@@ -1,14 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/car-tax/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
     title: '자동차세 과세 기준과 연납 완전 정리',
     description:
         '배기량별 cc당 세액, 차령 3년부터 시작되는 경감, 지방교육세 30%, 제1기분·제2기분 납기, 그리고 1·3·6·9월 연납 신청 시기별 공제 계산식을 지방세법 조문 기준으로 정리했습니다.',
     alternates: { canonical: '/guide/car-tax' },
-}
+}, "/guide/car-tax")
 
 const law = (name: string, article: string) =>
     `https://www.law.go.kr/${['법령', name, article].map(encodeURIComponent).join('/')}`

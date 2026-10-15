@@ -1,15 +1,16 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 import { GUIDES, guideHref } from '@/lib/guides'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '세금 가이드 | 종합소득세·부가세·양도·상속·증여 신고법',
   description:
     '프리랜서·사업자 세금 신고법부터 양도세 필요경비·장기보유특별공제, 상속·증여 절세, 근로소득 비과세까지 한국 세금에 참고할 수 있는 무료 가이드를 제공합니다.',
   alternates: { canonical: '/guide' },
-}
+}, "/guide")
 
 
 export default function GuideIndexPage() {

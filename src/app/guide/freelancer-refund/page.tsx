@@ -1,14 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/freelancer-refund/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '프리랜서 3.3%, 환급받는 사람 vs 추가납부하는 사람 (2026)',
   description:
     '프리랜서 3.3% 원천징수가 환급으로 돌아오는 사람과 오히려 추가 납부가 생기는 사람의 차이를 수입 구간·경비별로 정리. 환급을 늘리는 방법까지 사례로 설명합니다.',
   alternates: { canonical: '/guide/freelancer-refund' },
-}
+}, "/guide/freelancer-refund")
 
 export default function FreelancerRefundGuidePage() {
   return (

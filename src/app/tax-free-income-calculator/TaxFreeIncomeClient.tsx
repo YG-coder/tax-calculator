@@ -11,7 +11,7 @@ import {
   PRODUCTION_RULES_VERIFIED_AT,
   PRODUCTION_AMENDMENT_URL,
 } from '@/lib/tax/config/verified/production-exemption'
-import { amountError, amountValue, formatAmount } from '@/lib/utils/amount'
+import { requiredAmountError, amountError, amountValue, formatAmount } from '@/lib/utils/amount'
 
 function fmt(n: number) { return Math.round(n).toLocaleString('ko-KR') }
 
@@ -217,7 +217,7 @@ export default function TaxFreeIncomeCalculatorPage() {
   const annualFree = (monthlyFree - prodMonthlyFree) * 12 + annualProdFree
   const annualTaxable = annualGross - annualFree
 
-  const hasError = [base, meal, car, childcare, research, overseas, production, other,
+  const hasError = (prodIsProduction && [prodFixedPay, prodPrevSalary, prodYtdFree].some(value => requiredAmountError(value) !== null)) || [base, meal, car, childcare, research, overseas, production, other,
     ...(prodIsProduction ? [prodFixedPay, prodPrevSalary, prodYtdFree] : []),
   ].some((value) => amountError(value) !== null)
   const hasValue = monthlyGross > 0 && !hasError

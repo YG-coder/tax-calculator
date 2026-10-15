@@ -8,6 +8,7 @@ type BuildMetadataParams = {
     keywords?: string[];
     /** OG 이미지 경로 (기본: /og-image.png). 페이지별 OG 이미지가 있으면 지정. */
     ogImage?: string;
+    type?: "website" | "article";
 };
 
 export function buildMetadata({
@@ -16,6 +17,7 @@ export function buildMetadata({
                                   path = '',
                                   keywords = [],
                                   ogImage,
+                                  type = "website",
                               }: BuildMetadataParams): Metadata {
     const normalizedPath = path
         ? path.startsWith('/')
@@ -62,7 +64,7 @@ export function buildMetadata({
             url,
             siteName: SITE.name,
             locale: 'ko_KR',
-            type: 'website',
+            type,
             images: [
                 {
                     url: ogImageUrl,
@@ -84,7 +86,29 @@ export function buildMetadata({
         // 네이버 검색 미리보기를 위한 추가 메타
         other: {
             'og:locale': 'ko_KR',
-            'og:type': 'website',
+            'og:type': type,
         },
     };
+}
+
+/** 페이지별 제목·설명을 유지하며 검색·공유 주소와 이미지를 반드시 제공한다. */
+export function withPageMetadata(meta: Metadata, path: string): Metadata {
+ const url = new URL(path, SITE.url).href;
+ const image = `${SITE.url}/og-image.png`;
+ return {
+  ...meta,
+  metadataBase: new URL(SITE.url),
+  alternates: { ...meta.alternates, canonical: url },
+  openGraph: {
+   title: typeof meta.title === 'string' ? meta.title : SITE.name,
+   description: meta.description ?? SITE.description,
+   type: 'website', locale: 'ko_KR', siteName: SITE.name,
+   ...meta.openGraph, url, images: meta.openGraph?.images ?? [{url:image,width:1200,height:630,alt:SITE.name}],
+  },
+  twitter: {
+   title: typeof meta.title === 'string' ? meta.title : SITE.name,
+   description: meta.description ?? SITE.description,
+   ...meta.twitter, card:'summary_large_image', images: meta.twitter?.images ?? [image],
+  },
+ };
 }

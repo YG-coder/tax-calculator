@@ -1,6 +1,6 @@
-// src/app/capital-gains-tax-calculator/CapitalGainsTaxClient.tsx
 'use client'
 
+// src/app/capital-gains-tax-calculator/CapitalGainsTaxClient.tsx
 import { useState } from 'react'
 import Link from 'next/link'
 import RelatedCalculators from '@/components/RelatedCalculators'
@@ -17,7 +17,7 @@ import {
     type CgAssetType,
     type HouseCount,
 } from '@/lib/tax/rules/capital-gains'
-import { amountError, amountValue, formatAmount } from '@/lib/utils/amount'
+import { requiredAmountError, amountError, amountValue, formatAmount } from '@/lib/utils/amount'
 
 const won = (n: number) => `${Math.round(n).toLocaleString('ko-KR')}원`
 
@@ -87,13 +87,13 @@ export default function CapitalGainsTaxClient() {
     const amountFields = [
         { id: 'transferPrice', label: '양도가액', value: transferPrice, set: setTransferPrice, hint: '실제 매도 금액 (실지거래가액)', required: true },
         { id: 'acquisitionPrice', label: '취득가액', value: acquisitionPrice, set: setAcquisitionPrice, hint: '실제 매입 금액 (실지거래가액)', required: true },
-        { id: 'expenses', label: '필요경비', value: expenses, set: setExpenses, hint: '취득세·중개수수료·자본적 지출 등 (선택)', required: false },
-        { id: 'basicDeductionUsed', label: '올해 이미 사용한 기본공제', value: basicDeductionUsed, set: setBasicDeductionUsed, hint: '같은 과세기간에 다른 양도로 이미 공제받은 금액 (선택)', required: false },
+        { id: 'expenses', label: '필요경비', value: expenses, set: setExpenses, hint: '취득세·중개수수료·자본적 지출 등 (없으면 0 입력)', required: true },
+        { id: 'basicDeductionUsed', label: '올해 이미 사용한 기본공제', value: basicDeductionUsed, set: setBasicDeductionUsed, hint: '같은 과세기간에 다른 양도로 이미 공제받은 금액 (없으면 0 입력)', required: true },
     ]
 
     function residenceMonthsError(): string | null {
         const raw = residenceMonths.trim()
-        if (raw === '') return null
+        if (raw === '') return '거주 개월 수를 입력해 주세요. 거주하지 않았다면 0을 입력하세요'
         if (!/^\d+$/.test(raw)) return '개월 수를 숫자로 입력해 주세요'
         if (Number(raw) > 1200) return '1,200개월(100년) 이하로 입력해 주세요'
         return null
@@ -105,7 +105,7 @@ export default function CapitalGainsTaxClient() {
         acquisitionPrice.trim() !== '' &&
         acquisitionDate !== '' &&
         transferDate !== '' &&
-        amountFields.every((f) => amountError(f.value) === null) &&
+        amountFields.every((f) => requiredAmountError(f.value) === null) &&
         monthsError === null
 
     function buildResult(): CapitalGainsResult | null {

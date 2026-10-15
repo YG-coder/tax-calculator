@@ -1,3 +1,4 @@
+import { withParticle } from "../../korean.ts";
 import { YEAR_END_2026 as R } from '../config/verified/year-end-2026.ts'
 import { basicIncomeTax } from './rates.ts'
 import { wageIncomeDeduction, earnedIncomeTaxCredit } from './withholding.ts'
@@ -173,7 +174,7 @@ function validate(input: YearEndInput): string[] {
   if (input.personalExtra === 'singleParent' && input.children.length === 0) errors.push('한부모 공제에는 기본공제 대상 직계비속·입양자가 필요합니다.')
   input.children.forEach((child, index) => {
     if (!Number.isInteger(child.birthYear) || child.birthYear < 1900 || child.birthYear > R.year) errors.push(`자녀 ${index + 1}의 출생연도를 확인하세요.`)
-    if (!child.disabled && R.year - child.birthYear > 20) errors.push(`자녀 ${index + 1}은 20세를 초과해 기본공제 나이 요건을 충족하지 않습니다. 장애인 예외 여부를 확인하세요.`)
+    if (!child.disabled && R.year - child.birthYear > 20) errors.push(`자녀 ${withParticle(index + 1, "은/는")} 20세를 초과해 기본공제 나이 요건을 충족하지 않습니다. 장애인 예외 여부를 확인하세요.`)
     if (!['child', 'grandchild'].includes(child.relationship) || !['first', 'second', 'third'].includes(child.birthOrder)) errors.push('자녀 관계와 출산·입양 순위를 확인하세요.')
   })
   if (itemized) input.education.forEach((row, index) => {

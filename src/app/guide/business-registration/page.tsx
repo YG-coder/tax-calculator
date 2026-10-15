@@ -1,14 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/business-registration/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '사업자등록 처음 하는 법 — 절차·서류·과세유형 (2026)',
   description:
     '처음 사업자등록을 하는 사람을 위한 단계별 가이드. 신청 기한(20일), 필요 서류, 간이·일반·면세 과세유형 선택, 업종코드, 등록 후 세금 의무까지 정리했습니다.',
   alternates: { canonical: '/guide/business-registration' },
-}
+}, "/guide/business-registration")
 
 export default function BusinessRegistrationGuidePage() {
   return (

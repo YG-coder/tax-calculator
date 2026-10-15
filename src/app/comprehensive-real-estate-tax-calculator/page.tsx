@@ -1,3 +1,4 @@
+import { SITE } from "@/lib/site";
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import ComprehensiveRealEstateTaxClient from './ComprehensiveRealEstateTaxClient'
@@ -20,7 +21,7 @@ const jsonLd = {
     name: title,
     applicationCategory: 'FinanceApplication',
     operatingSystem: 'All',
-    url: 'https://taxsim.kr/comprehensive-real-estate-tax-calculator',
+    url: `${SITE.url}/comprehensive-real-estate-tax-calculator`,
     description:
         '종합부동산세법 제8조·제9조·제10조에 따른 개인 주택분 종합부동산세와 농어촌특별세를 단계별로 계산하는 무료 계산기입니다.',
     offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },

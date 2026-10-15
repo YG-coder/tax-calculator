@@ -1,3 +1,4 @@
+import { withPageMetadata } from "@/lib/metadata";
 /* src/app/page.tsx — 세금계산기 홈 (대시보드형) */
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -28,7 +29,7 @@ const HOME_MODIFIED_AT = STATIC_PAGE_LAST_MODIFIED['/']
  */
 export const revalidate = 3600
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   // 루트 layout의 제목 template으로 사이트명이 한 번 더 붙지 않도록 한다.
   title: { absolute: HOME_TITLE },
   description: HOME_DESCRIPTION,
@@ -48,7 +49,7 @@ export const metadata: Metadata = {
     description: HOME_DESCRIPTION,
     images: ['/og-image.png'],
   },
-}
+}, "/")
 
 const websiteJsonLd = {
   '@context': 'https://schema.org',

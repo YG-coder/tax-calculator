@@ -1,3 +1,4 @@
+import { SITE } from "@/lib/site";
 import type { Metadata } from "next";
 import CarTaxClient from "./CarTaxClient";
 import RelatedCalculators from "@/components/RelatedCalculators";
@@ -23,7 +24,7 @@ const jsonLd = {
   name: "자동차세 계산기",
   applicationCategory: "FinanceApplication",
   operatingSystem: "All",
-  url: "https://taxsim.kr/car-tax-calculator",
+  url: `${SITE.url}/car-tax-calculator`,
   description: PAGE_DESCRIPTION,
   dateModified: contentMeta.lastModified,
   offers: { "@type": "Offer", price: "0", priceCurrency: "KRW" },

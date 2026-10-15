@@ -1,3 +1,4 @@
+import { withParticle } from "../../korean.ts";
 /**
  * 양도소득세 계산 로직 — UI와 분리된 순수 함수 모듈
  *
@@ -358,9 +359,9 @@ export function calculateCapitalGains(input: CapitalGainsInput): CapitalGainsRes
     ["필요경비", input.expenses ?? 0],
     ["이미 사용한 기본공제", input.basicDeductionUsed ?? 0],
   ] as [string, number][]) {
-    if (typeof value !== "number" || !Number.isFinite(value)) errors.push(`${label}은(는) 숫자여야 합니다.`);
-    else if (value < 0) errors.push(`${label}은(는) 0 이상이어야 합니다.`);
-    else if (!Number.isSafeInteger(value)) errors.push(`${label}은(는) 정수여야 합니다.`);
+    if (typeof value !== "number" || !Number.isFinite(value)) errors.push(`${withParticle(label, "은/는")} 숫자여야 합니다.`);
+    else if (value < 0) errors.push(`${withParticle(label, "은/는")} 0 이상이어야 합니다.`);
+    else if (!Number.isSafeInteger(value)) errors.push(`${withParticle(label, "은/는")} 정수여야 합니다.`);
   }
   if (input.transferPrice <= 0) errors.push("양도가액을 입력해 주세요.");
 
@@ -449,7 +450,7 @@ export function calculateCapitalGains(input: CapitalGainsInput): CapitalGainsRes
     } else if (eligible && isHighPrice) {
       taxableRatio = (input.transferPrice - rules.highPriceThreshold) / input.transferPrice;
       reasons.push(
-        `양도가액이 ${won(rules.highPriceThreshold)}을 초과하는 고가주택이므로 초과분만 과세합니다. (영 제160조)`,
+        `양도가액이 ${withParticle(won(rules.highPriceThreshold), "을/를")} 초과하는 고가주택이므로 초과분만 과세합니다. (영 제160조)`,
       );
     }
 

@@ -1,14 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/gift-split/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '증여세 절세, 10년 단위 분할 증여 완벽 정리 (2026)',
   description:
     '증여재산공제가 10년마다 갱신되는 원리를 활용한 분할 증여 전략을 정리. 공제 한도, 동일인 합산, 혼인·출산 증여공제 특례까지 사례로 설명합니다.',
   alternates: { canonical: '/guide/gift-split' },
-}
+}, "/guide/gift-split")
 
 export default function GiftSplitGuidePage() {
   return (

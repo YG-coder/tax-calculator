@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next';
+import { SITE } from './src/lib/site';
 
 /**
  * CSP 정책 본문.
@@ -14,7 +15,7 @@ const CSP_REPORT_PATH = '/api/csp-report';
  * Reporting API(`report-to`)는 절대 URL을 요구한다.
  * 배포 도메인이 바뀌면 `SITE_URL` 환경변수로 덮어쓴다.
  */
-const SITE_ORIGIN = process.env.SITE_URL ?? 'https://taxsim.kr';
+const SITE_ORIGIN = new URL(process.env.SITE_URL ?? SITE.url).origin;
 
 function contentSecurityPolicy(enforce: boolean): string {
     const directives = [

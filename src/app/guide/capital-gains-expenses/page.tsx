@@ -1,14 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/capital-gains-expenses/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '양도세 필요경비, 인정되는 것과 안 되는 것 (2026)',
   description:
     '양도소득세 계산 시 필요경비로 인정되는 자본적 지출과 인정되지 않는 수익적 지출을 국세청 기준으로 구분. 증빙 요건과 실제 사례, FAQ까지 정리했습니다.',
   alternates: { canonical: '/guide/capital-gains-expenses' },
-}
+}, "/guide/capital-gains-expenses")
 
 export default function CapitalGainsExpensesGuidePage() {
   return (

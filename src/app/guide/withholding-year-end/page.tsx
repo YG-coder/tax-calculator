@@ -1,14 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/withholding-year-end/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '원천징수와 연말정산은 어떻게 연결되나 (2026)',
   description:
     '매월 떼는 원천징수와 다음 해 연말정산이 어떻게 이어지는지 정리. 13월의 월급(환급)이 생기는 원리, 추가 납부가 나오는 이유, 공제 챙기는 법을 사례로 설명합니다.',
   alternates: { canonical: '/guide/withholding-year-end' },
-}
+}, "/guide/withholding-year-end")
 
 export default function WithholdingYearEndGuidePage() {
   return (

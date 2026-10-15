@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readAmount, formatAmount, readPercent } from '../src/lib/utils/amount.ts';
+import { readAmount, requiredAmountError, formatAmount, readPercent } from '../src/lib/utils/amount.ts';
 
 test('정상 입력', () => {
     assert.equal(readAmount('3500000').value, 3_500_000);
@@ -40,4 +40,11 @@ test('비율 입력', () => {
     assert.equal(readPercent('50.5').value, 50.5);
     assert.equal(readPercent('101').value, 0);
     assert.equal(readPercent('-1').value, 0);
+});
+
+test('기존 누적액은 빈칸과 명시적인 0을 구분한다',()=>{
+ for(const blank of ['', '   ']) assert.notEqual(requiredAmountError(blank),null);
+ assert.equal(requiredAmountError('0'),null);
+ assert.notEqual(requiredAmountError('-1'),null);
+ assert.equal(requiredAmountError('1,000'),null);
 });

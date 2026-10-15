@@ -1,14 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/simplified-vs-general-vat/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '간이과세자 vs 일반과세자 차이와 전환 기준 (2026)',
   description:
     '간이과세자와 일반과세자의 매출 기준, 세율, 세금계산서 발급, 신고 횟수 차이를 한눈에 정리. 1억 400만원 기준, 전환 시점, 어느 쪽이 유리한지 사례로 설명합니다.',
   alternates: { canonical: '/guide/simplified-vs-general-vat' },
-}
+}, "/guide/simplified-vs-general-vat")
 
 export default function SimplifiedVsGeneralVatGuidePage() {
   return (

@@ -1,3 +1,4 @@
+import { SITE } from "@/lib/site";
 /* src/app/layout.tsx */
 import type { Metadata, Viewport } from 'next'
 import Link from 'next/link'
@@ -5,7 +6,7 @@ import SiteNav from '@/components/SiteNav'
 import './globals.css'
 
 export const metadata: Metadata = {
-    metadataBase: new URL('https://taxsim.kr'),
+    metadataBase: new URL(SITE.url),
 
     title: {
         default: '세금 계산기 | 부가세·소득세·양도세·재산세·증여세·상속세',
@@ -52,7 +53,7 @@ export const metadata: Metadata = {
     openGraph: {
         type: 'website',
         locale: 'ko_KR',
-        url: 'https://taxsim.kr',
+        url: SITE.url,
         siteName: '세금계산기',
         title: '세금 계산기 | 부가세·소득세·양도세·재산세·증여세·상속세',
         description:

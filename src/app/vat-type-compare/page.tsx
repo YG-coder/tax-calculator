@@ -1,3 +1,4 @@
+import { SITE } from "@/lib/site";
 import { buildMetadata } from '@/lib/metadata'
 import VatTypeCompareClient from './VatTypeCompareClient'
 
@@ -5,7 +6,7 @@ const title = '간이과세 vs 일반과세 비교'
 const description =
     '예상 연매출·매입·업종을 입력하면 간이과세자와 일반과세자의 예상 부가세를 비교해 어느 쪽이 유리한지 알려주는 선택 도우미입니다.'
 const path = '/vat-type-compare'
-const url = `https://taxsim.kr${path}`
+const url = `${SITE.url}${path}`
 
 export const metadata = buildMetadata({
     title,

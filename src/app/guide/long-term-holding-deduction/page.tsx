@@ -1,14 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/long-term-holding-deduction/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '장기보유특별공제 계산 방법 (표1·표2, 2026)',
   description:
     '양도소득세 장기보유특별공제의 표1(일반, 최대 30%)과 표2(1세대 1주택, 보유+거주 최대 80%) 공제율과 계산 방법을 국세청 기준으로 정리. 사례와 FAQ 포함.',
   alternates: { canonical: '/guide/long-term-holding-deduction' },
-}
+}, "/guide/long-term-holding-deduction")
 
 export default function LongTermHoldingDeductionGuidePage() {
   return (

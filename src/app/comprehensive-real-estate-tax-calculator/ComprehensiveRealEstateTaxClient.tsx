@@ -1,6 +1,7 @@
-// src/app/comprehensive-real-estate-tax-calculator/ComprehensiveRealEstateTaxClient.tsx
 'use client'
 
+import { withParticle } from "@/lib/korean";
+// src/app/comprehensive-real-estate-tax-calculator/ComprehensiveRealEstateTaxClient.tsx
 import { useState } from 'react'
 import RelatedCalculators from '@/components/RelatedCalculators'
 import ResultActions from '@/components/ResultActions'
@@ -24,8 +25,8 @@ const selectClass =
 function intError(text: string, max: number, label: string): string | null {
     const raw = text.trim()
     if (raw === '') return null
-    if (!/^\d+$/.test(raw)) return `${label}을(를) 숫자로 입력해 주세요`
-    if (Number(raw) > max) return `${label}은(는) ${max} 이하로 입력해 주세요`
+    if (!/^\d+$/.test(raw)) return `${withParticle(label, "을/를")} 숫자로 입력해 주세요`
+    if (Number(raw) > max) return `${withParticle(label, "은/는")} ${max} 이하로 입력해 주세요`
     return null
 }
 

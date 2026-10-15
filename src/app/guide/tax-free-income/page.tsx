@@ -1,3 +1,5 @@
+import { buildMetadata } from '@/lib/metadata'
+import { SITE } from "@/lib/site";
 // src/app/guide/tax-free-income/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -7,34 +9,12 @@ const title = '근로소득 비과세 판정 방법｜항목별 적용 조건과
 const description =
   '내 급여의 비과세 여부를 어떻게 판정하는지 2026년 국세청 기준으로 정리했습니다. 비과세·소득공제·세액공제·감면의 차이, 식대·차량보조금·보육수당 등 항목별 적용 조건, 자주 틀리는 사례와 FAQ까지 확인하세요.'
 const path = '/guide/tax-free-income'
-const url = `https://taxsim.kr${path}`
+const url = `${SITE.url}${path}`
 
-export const metadata: Metadata = {
-  title,
-  description,
-  alternates: { canonical: path },
-  keywords: [
-    '근로소득 비과세 판정',
-    '비과세 적용 조건',
-    '식대 비과세 조건',
-    '자가운전보조금 요건',
-    '출산보육수당 비과세',
-    '비과세 소득공제 차이',
-  ],
-  openGraph: {
-    title: `${title} | 세금계산기`,
-    description,
-    url,
-    siteName: '세금계산기',
-    locale: 'ko_KR',
-    type: 'article',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: `${title} | 세금계산기`,
-    description,
-  },
-}
+export const metadata: Metadata = buildMetadata({
+  title, description, path, type: 'article',
+  keywords: ['근로소득 비과세 판정', '비과세 적용 조건', '식대 비과세 조건', '자가운전보조금 요건', '출산보육수당 비과세', '비과세 소득공제 차이'],
+})
 
 const FAQ = [
   {
@@ -77,8 +57,8 @@ const breadcrumbJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: '세금계산기', item: 'https://taxsim.kr' },
-    { '@type': 'ListItem', position: 2, name: '세금 가이드', item: 'https://taxsim.kr/guide' },
+    { '@type': 'ListItem', position: 1, name: '세금계산기', item: SITE.url },
+    { '@type': 'ListItem', position: 2, name: '세금 가이드', item: `${SITE.url}/guide` },
     { '@type': 'ListItem', position: 3, name: '근로소득 비과세 판정 방법', item: url },
   ],
 }
@@ -94,7 +74,7 @@ const articleJsonLd = {
   publisher: {
     '@type': 'Organization',
     name: 'Incomelab',
-    logo: { '@type': 'ImageObject', url: 'https://taxsim.kr/og-image.png' },
+    logo: { '@type': 'ImageObject', url: `${SITE.url}/og-image.png` },
   },
 }
 

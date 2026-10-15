@@ -1,14 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/one-house-exemption/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '1세대 1주택 양도세 비과세 요건 총정리 (12억 기준, 2026)',
   description:
     '1세대 1주택 양도소득세 비과세의 핵심 요건을 정리. 2년 보유·거주 요건, 양도가액 12억 기준, 고가주택 과세, 일시적 2주택 특례까지 사례로 설명합니다.',
   alternates: { canonical: '/guide/one-house-exemption' },
-}
+}, "/guide/one-house-exemption")
 
 export default function OneHouseExemptionGuidePage() {
   return (

@@ -1,3 +1,4 @@
+import { withParticle } from "../../korean.ts";
 /**
  * 자동차세(소유분) 계산 로직 — UI와 분리된 순수 함수 모듈
  *
@@ -573,7 +574,7 @@ function computeBaseTax(input: CarTaxInput, errors: string[]): BaseTaxResult | n
       const annual = VAN_TAX[cls][usage];
       if (annual === null) {
         errors.push(
-          `${VAN_CLASS_LABELS[cls]}는 「지방세법」 제127조 제1항 제4호에 ${usage === "business" ? "영업용" : "비영업용"} 세율이 규정되어 있지 않습니다. 관할 지자체에 확인해 주세요.`,
+          `${withParticle(VAN_CLASS_LABELS[cls], "은/는")} 「지방세법」 제127조 제1항 제4호에 ${usage === "business" ? "영업용" : "비영업용"} 세율이 규정되어 있지 않습니다. 관할 지자체에 확인해 주세요.`,
         );
         return null;
       }

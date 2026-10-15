@@ -1,14 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/comprehensive-real-estate-tax/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
     title: '종합부동산세 계산 방법과 12월 납부기간',
     description:
         '공시가격 합계에서 시작하는 종합부동산세 계산 구조를 기본공제 9억·12억, 공정시장가액비율 60%, 구간별 세율, 재산세 중복분 공제, 고령자·장기보유 세액공제, 세부담 상한, 농어촌특별세 순서로 정리했습니다.',
     alternates: { canonical: '/guide/comprehensive-real-estate-tax' },
-}
+}, "/guide/comprehensive-real-estate-tax")
 
 const law = (name: string, article: string) =>
     `https://www.law.go.kr/${['법령', name, article].map(encodeURIComponent).join('/')}`

@@ -1,5 +1,7 @@
+import config from './site.config.json';
 export const SITE = {
-    url: 'https://taxsim.kr',
+    url: config.url,
+    displayUrl: config.displayUrl,
     name: '세금계산기',          // ← 변경
     title: '세금계산기',
     operatorName: 'Incomelab',

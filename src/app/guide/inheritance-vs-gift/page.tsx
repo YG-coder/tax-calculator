@@ -1,14 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/inheritance-vs-gift/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '상속세 vs 증여세, 뭐가 더 유리할까 (2026)',
   description:
     '세율은 같은데 결과는 다른 상속세와 증여세. 공제·과세방식·사전증여 합산의 차이와 어떤 상황에서 미리 증여하는 게 유리한지 사례로 정리했습니다.',
   alternates: { canonical: '/guide/inheritance-vs-gift' },
-}
+}, "/guide/inheritance-vs-gift")
 
 export default function InheritanceVsGiftGuidePage() {
   return (

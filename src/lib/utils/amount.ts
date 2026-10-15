@@ -79,3 +79,9 @@ export function readPercent(text: string | null | undefined): AmountReading {
     }
     return { value, error: null };
 }
+
+/** 누적액·기존액 입력에는 빈칸을 유효한 0으로 취급하지 않는다. */
+export function requiredAmountError(text: string | null | undefined): string | null {
+ if ((text ?? '').replace(/[,\s]/g, '') === '') return '금액을 입력해 주세요. 없으면 0을 직접 입력하세요';
+ return amountError(text);
+}

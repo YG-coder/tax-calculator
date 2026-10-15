@@ -1,3 +1,4 @@
+import { SITE } from "@/lib/site";
 // src/app/tax-calendar/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
@@ -21,7 +22,7 @@ const jsonLd = {
     '@type': 'WebPage',
     name: title,
     description,
-    url: 'https://taxsim.kr/tax-calendar',
+    url: `${SITE.url}/tax-calendar`,
     inLanguage: 'ko-KR',
 }
 

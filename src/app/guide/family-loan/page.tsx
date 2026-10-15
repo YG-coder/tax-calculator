@@ -1,14 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/family-loan/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '부모 자식 간 차용증 쓰는 법 — 증여 추정 피하기 (2026)',
   description:
     '가족 간 금전거래가 증여로 추정되지 않으려면 차용증을 어떻게 써야 할까요? 적정이자율 4.6%, 연 이자 차액 1천만원 기준, 차용증 필수 항목과 증빙을 정리했습니다.',
   alternates: { canonical: '/guide/family-loan' },
-}
+}, "/guide/family-loan")
 
 export default function FamilyLoanGuidePage() {
   return (

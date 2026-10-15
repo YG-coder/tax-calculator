@@ -1,0 +1,11 @@
+{
+  "name": "세금계산기",
+  "url": "https://taxsim.kr",
+  "displayUrl": "https://taxsim.kr",
+  "forbiddenHosts": [
+    "세금계산기.kr",
+    "fincalc.kr"
+  ],
+  "externalJsonLdOrigins": [],
+  "imageOrigins": []
+}

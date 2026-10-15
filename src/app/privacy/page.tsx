@@ -1,11 +1,12 @@
+import { withPageMetadata } from "@/lib/metadata";
 /** @path src/app/privacy/page.tsx */
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
     title: "개인정보처리방침",
     description:
         "taxsim.kr의 개인정보처리방침 안내 페이지입니다. 수집 정보, 이용 목적, 보관 기간, 문의 방법을 확인할 수 있습니다.",
-};
+}, "/privacy");
 
 export default function PrivacyPage() {
     return (

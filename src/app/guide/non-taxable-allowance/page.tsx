@@ -1,14 +1,15 @@
+import { withPageMetadata } from "@/lib/metadata";
 // src/app/guide/non-taxable-allowance/page.tsx
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import GuideReviewDate from '@/components/GuideReviewDate'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withPageMetadata({
   title: '비과세 수당 종류와 한도 — 식대·자가운전 등 (2026)',
   description:
     '근로소득 중 세금이 붙지 않는 비과세 수당의 종류와 한도를 국세청 기준으로 정리. 식대 월 20만원, 자가운전보조금, 출산·보육수당, 야간근로수당 등을 사례·FAQ와 함께 설명합니다.',
   alternates: { canonical: '/guide/non-taxable-allowance' },
-}
+}, "/guide/non-taxable-allowance")
 
 export default function NonTaxableAllowanceGuidePage() {
   return (

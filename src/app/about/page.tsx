@@ -11,6 +11,9 @@ export const metadata: Metadata = withPageMetadata({
   alternates: { canonical: '/about' },
 }, "/about")
 
+const SALARY_SITE_NAME = '연봉계산기.kr'
+const SALARY_SITE_URL = new URL(`https://${SALARY_SITE_NAME}`).href
+
 const CALC_LIST = [
   { href: '/vat-calculator',               label: '부가세 계산기',          desc: '공급가액·부가세·합계 자동 계산. 포함/별도 선택 지원.' },
   { href: '/income-tax-calculator',        label: '종합소득세 계산기',        desc: '연 소득 기준 예상 소득세·지방소득세 간이 계산.' },
@@ -64,8 +67,8 @@ export default function AboutPage() {
             운영자는 한국 직장인, 프리랜서, 개인사업자가 자주 확인하는 세금·급여 계산 항목을
             일반 사용자의 관점에서 정리하고, 국세청 공개 자료와 관련 법령 기준을 참고하여
             계산기 구조와 안내 문구를 구성했습니다. 동일한 운영자가 만든
-            {' '}<Link href="https://연봉계산기.kr" target="_blank" rel="noopener noreferrer"
-                       className="text-blue-600 hover:underline">연봉계산기.kr</Link>{withParticle(' ', "과/와")}
+            {' '}<Link href={SALARY_SITE_URL} target="_blank" rel="noopener noreferrer"
+                       className="text-blue-600 hover:underline">{withParticle(SALARY_SITE_NAME, "과/와")}</Link>
              함께 한국 세금·급여 계산 도구 라인업을 구성하고 있습니다.
           </p>
         </section>

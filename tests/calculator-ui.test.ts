@@ -35,3 +35,12 @@ test('연말정산 방식은 선택한 버튼만 눌림 상태를 제공한다',
  assert.equal(buttons()[2].props['aria-pressed'],true);
  assert.equal(buttons()[0].props['aria-pressed'],false);
 });
+
+test('소개 페이지는 한글 주소를 표시하고 ASCII 링크와 올바른 조사를 렌더한다',()=>{
+ const {default:Page}=load('src/app/about/page.tsx');
+ const html=uiHarness(Page).html();
+ assert.match(html, /href="https:\/\/xn--989a00a093a5qd6pi\.kr\/"/);
+ assert.match(html, />연봉계산기\.kr과<\/a>/);
+ assert.doesNotMatch(html, /href="https:\/\/연봉계산기/);
+ inspectCopy(html,'소개 페이지');
+});

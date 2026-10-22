@@ -1,13 +1,20 @@
 // src/app/vat-calculator/VatCalculatorClient.tsx
 'use client'
 
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import RelatedCalculators from '@/components/RelatedCalculators'
 import SourceNote from '@/components/SourceNote'
 import { splitVat } from '@/lib/tax/rules/vat'
 import { amountError, amountValue, formatAmount } from '@/lib/utils/amount'
 
 function fmt(n: number) { return n.toLocaleString('ko-KR') }
+
+/** 큰 금액이 좁은 화면에서 넘치지 않도록 쉼표(자릿수 묶음) 뒤에만 줄바꿈 기회를 둔다. 표시 글자는 fmt와 같다. */
+function fmtWrap(n: number) {
+  return fmt(n).split(',').map((group, i) => (
+    <Fragment key={i}>{i > 0 && <>,<wbr /></>}{group}</Fragment>
+  ))
+}
 
 export default function VatCalculatorClient() {
   const [amount, setAmount] = useState('')
@@ -78,7 +85,7 @@ export default function VatCalculatorClient() {
         <div className="mt-6 space-y-4 animate-slide-up" aria-live="polite">
           <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
             <p className="text-blue-100 text-xs font-semibold uppercase tracking-widest mb-1">총 금액</p>
-            <p className="text-4xl font-black tabular-nums">{fmt(total)}<span className="text-2xl font-bold ml-1">원</span></p>
+            <p className="text-4xl font-black tabular-nums">{fmtWrap(total)}<span className="text-2xl font-bold ml-1">원</span></p>
           </div>
 
           <div className="calc-card p-5">

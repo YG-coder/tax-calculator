@@ -62,7 +62,7 @@ export default function VatCalculatorClient() {
               placeholder="예: 1,100,000"
               className="calc-input pr-8"
             />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
           </div>
           {amountError(amount) && (
             <p id="amount-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(amount)}</p>
@@ -77,7 +77,7 @@ export default function VatCalculatorClient() {
       {hasValue ? (
         <div className="mt-6 space-y-4 animate-slide-up" aria-live="polite">
           <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
-            <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">총 금액</p>
+            <p className="text-blue-100 text-xs font-semibold uppercase tracking-widest mb-1">총 금액</p>
             <p className="text-4xl font-black tabular-nums">{fmt(total)}<span className="text-2xl font-bold ml-1">원</span></p>
           </div>
 
@@ -99,12 +99,12 @@ export default function VatCalculatorClient() {
             </ul>
           </div>
 
-          <p className="text-xs text-slate-400 text-center">
+          <p className="text-xs text-slate-500 text-center">
             일반과세자 기준 10% 세율 적용. 간이과세자·면세사업자는 실제와 다를 수 있습니다.
           </p>
         </div>
       ) : (
-        <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 text-sm">
+        <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-500 text-sm">
           금액을 입력하면 자동 계산됩니다
         </div>
       )}
@@ -147,14 +147,19 @@ export default function VatCalculatorClient() {
           <div className="rounded-xl bg-slate-50 border border-slate-100 p-4 space-y-2">
             <p className="font-semibold text-slate-700">「부가세 포함」 → 역산</p>
             <ul className="list-disc pl-5 space-y-1 text-slate-600">
-              <li>공급가액 = 총금액 ÷ 1.1</li>
+              <li>공급가액 = 총금액 × 100/110 (원 미만 절사)</li>
               <li>부가세 = 총금액 − 공급가액</li>
             </ul>
             <p className="font-semibold text-slate-700 mt-3">「부가세 별도」 → 가산</p>
             <ul className="list-disc pl-5 space-y-1 text-slate-600">
-              <li>부가세 = 공급가액 × 10%</li>
+              <li>부가세 = 공급가액 × 10% (원 미만 절사)</li>
               <li>합계 = 공급가액 + 부가세</li>
             </ul>
+            <p className="mt-3 text-sm text-slate-600">
+              부가세 포함 금액이 110으로 나누어떨어지지 않으면 공급가액의 원 미만을 버리고 나머지를 부가세로 두므로
+              공급가액 + 부가세는 항상 입력한 총금액과 같습니다. 예: 10,001원 → 공급가액 9,091원 · 부가세 910원.
+              이 계산기는 1.1로 나누는 소수 연산 대신 정수 비율(110분의 100, 부가가치세법 제29조 제7항)을 그대로 적용합니다.
+            </p>
           </div>
         </div>
 
@@ -164,7 +169,7 @@ export default function VatCalculatorClient() {
           <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4 mb-3">
             <p className="font-semibold text-slate-800 mb-2">예시 1. VAT 포함 110만 원으로 세금계산서를 발행하는 경우</p>
             <ul className="space-y-1 text-slate-600">
-              <li>공급가액 = 1,100,000 ÷ 1.1 = <strong>1,000,000원</strong></li>
+              <li>공급가액 = 1,100,000 × 100/110 = <strong>1,000,000원</strong></li>
               <li>부가세 = 1,100,000 − 1,000,000 = <strong>100,000원</strong></li>
               <li>세금계산서 기재: 공급가액 1,000,000원 / 세액 100,000원 / 합계 1,100,000원</li>
             </ul>
@@ -182,7 +187,7 @@ export default function VatCalculatorClient() {
           <div className="rounded-xl border border-blue-100 bg-blue-50/40 p-4">
             <p className="font-semibold text-slate-800 mb-2">예시 3. 카페에서 받은 영수증 33,000원 (VAT 포함)</p>
             <ul className="space-y-1 text-slate-600">
-              <li>공급가액 = 33,000 ÷ 1.1 = <strong>30,000원</strong></li>
+              <li>공급가액 = 33,000 × 100/110 = <strong>30,000원</strong></li>
               <li>부가세 = <strong>3,000원</strong></li>
               <li>법인카드 사용분이라면 매입세액 공제 검토 가능</li>
             </ul>

@@ -13,7 +13,7 @@
 //      - 15 소매·음식점·재생용재료 / 20 제조·농림어업·소화물운송 / 25 숙박
 //      - 30 건설·운수창고·정보통신·그밖의서비스 / 40 금융·전문·부동산임대 등
 //   4. 간이과세 매입공제율 (현재 매입 공급대가 0.5%, §63③)
-//   5. 간이과세 배제 기준 (업종·지역 고시, 2026 배제지역 확대)
+//   5. 간이과세 배제 기준 (2026-07-01 시행 고시의 업종·지역·예외·적용순위)
 // 출처: 국가법령정보센터 부가가치세법, 국세청 홈택스·배제기준 고시
 // ─────────────────────────────────────────────────────────────
 
@@ -21,6 +21,7 @@ import { useState } from 'react'
 import RelatedCalculators from '@/components/RelatedCalculators'
 import SourceNote from '@/components/SourceNote'
 import { amountError, amountValue, formatAmount } from '@/lib/utils/amount'
+import { vatOnInclusiveAmount } from '@/lib/tax/rules/vat'
 
 function fmt(n: number) { return n.toLocaleString('ko-KR') }
 
@@ -58,11 +59,13 @@ export default function VatTypeCompareClient() {
   const rate = selectedIndustry.rate
   const industryThreshold = selectedIndustry.threshold
 
-  // --- 일반과세자 부가세 (매출세액 - 매입세액) ---
-  // 입력 매출/매입은 공급대가(부가세 포함)로 간주 → 1.1로 나눠 공급가액 환산
+  // --- 일반과세자 부가세 (매출세액 - 매입세액, §37②) ---
+  // 입력 매출/매입은 공급대가(부가세 포함)로 간주 → 과세표준 = 공급대가 × 100/110 (§29⑦, 원 미만 절사 §47②),
+  // 세액 = 과세표준 × 10% (§30·§37①). 세액 원 미만 절사는 기존 계산 정책이며 현행 직접 근거는 미확인. 매출·매입에 같은 규칙을 적용한다(`vatOnInclusiveAmount`).
+  // ⚠ 종전 `Math.floor((금액 / 1.1) * 0.1)` 은 소수 나눗셈 오차로 일부 11의 배수(55,000,000원 등)에서 1원 적게 나왔다 — 정수 산술로 교체.
   // 음수면 환급 예상 (0으로 자르지 않음 — 환급도 일반과세의 실제 결과)
-  const generalSalesVat    = Math.floor((revNum / 1.1) * 0.1)
-  const generalPurchaseVat = Math.floor((purNum / 1.1) * 0.1)
+  const generalSalesVat    = vatOnInclusiveAmount(revNum).vat
+  const generalPurchaseVat = vatOnInclusiveAmount(purNum).vat
   const generalNetVat = generalSalesVat - generalPurchaseVat   // 음수 = 환급
   const generalIsRefund = generalNetVat < 0
   // 비교용 부담값: 환급은 음수 부담으로 취급 (일반과세 장점 반영)
@@ -125,7 +128,7 @@ export default function VatTypeCompareClient() {
               aria-invalid={amountError(revenue) !== null}
               aria-describedby={amountError(revenue) ? 'revenue-error' : undefined}
               placeholder="예: 60,000,000" className="calc-input pr-8" />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
           </div>
           {amountError(revenue) && (
             <p id="revenue-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(revenue)}</p>
@@ -141,7 +144,7 @@ export default function VatTypeCompareClient() {
               aria-invalid={amountError(purchase) !== null}
               aria-describedby={amountError(purchase) ? 'purchase-error' : undefined}
               placeholder="예: 20,000,000" className="calc-input pr-8" />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
           </div>
           {amountError(purchase) && (
             <p id="purchase-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(purchase)}</p>
@@ -162,14 +165,14 @@ export default function VatTypeCompareClient() {
                     : 'bg-white border-slate-200 text-slate-600 hover:border-blue-300'
                 }`}>
                 {label}
-                <span className={`block text-[11px] mt-0.5 ${industry === key ? 'text-blue-200' : 'text-slate-400'}`}>
+                <span className={`block text-[11px] mt-0.5 ${industry === key ? 'text-white' : 'text-slate-500'}`}>
                   부가가치율 {rate * 100}%{threshold === 48_000_000 && ' · 기준 4,800만원'}
                 </span>
               </button>
             ))}
           </div>
           <p className="calc-hint">간이과세 부가세는 업종별 부가가치율로 계산됩니다. 부동산임대업은 기준금액이 4,800만원입니다.</p>
-          <p className="text-[11px] text-slate-400 mt-1">※ 과세유흥장소는 간이과세 적용·세액 계산 기준이 일반 업종과 달라 본 계산기에서 지원하지 않습니다. 관할 세무서 또는 세무전문가에게 확인하세요.</p>
+          <p className="text-[11px] text-slate-500 mt-1">※ 과세유흥장소는 간이과세 적용·세액 계산 기준이 일반 업종과 달라 본 계산기에서 지원하지 않습니다. 관할 세무서 또는 세무전문가에게 확인하세요.</p>
         </div>
 
         <div>
@@ -208,7 +211,7 @@ export default function VatTypeCompareClient() {
             <div className={`calc-card p-5 ${advice.lean === 'simplified' ? 'ring-2 ring-blue-500' : ''}`}>
               <p className="text-xs font-semibold uppercase tracking-widest text-blue-600 mb-1">간이과세자라면</p>
               <p className="text-2xl font-black tabular-nums text-slate-900">{fmt(simplifiedVat)}<span className="text-base font-bold ml-1">원</span></p>
-              <p className="text-xs text-slate-400 mb-3">예상 부가세 {simplifiedExempt && '(납부면제 가능)'}</p>
+              <p className="text-xs text-slate-500 mb-3">예상 부가세 {simplifiedExempt && '(납부면제 가능)'}</p>
               <ul className="text-xs text-slate-600 space-y-1">
                 <li>· 산출세액 {fmt(simplifiedGross)}원 (공급대가×{rate * 100}%×10%)</li>
                 <li>· 매입공제 {fmt(simplifiedCredit)}원 (매입×0.5%)</li>
@@ -223,7 +226,7 @@ export default function VatTypeCompareClient() {
               <p className={`text-2xl font-black tabular-nums ${generalIsRefund ? 'text-emerald-600' : 'text-slate-900'}`}>
                 {fmt(Math.abs(generalNetVat))}<span className="text-base font-bold ml-1">원</span>
               </p>
-              <p className="text-xs text-slate-400 mb-3">{generalIsRefund ? '예상 부가세 (환급)' : '예상 부가세 (납부)'}</p>
+              <p className="text-xs text-slate-500 mb-3">{generalIsRefund ? '예상 부가세 (환급)' : '예상 부가세 (납부)'}</p>
               <ul className="text-xs text-slate-600 space-y-1">
                 <li>· 매출세액 {fmt(generalSalesVat)}원</li>
                 <li>· 매입세액 {fmt(generalPurchaseVat)}원 공제</li>
@@ -235,7 +238,7 @@ export default function VatTypeCompareClient() {
 
           {/* 조건부 해석 */}
           <div className="rounded-2xl p-5 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
-            <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">이 조건에서는</p>
+            <p className="text-blue-100 text-xs font-semibold uppercase tracking-widest mb-1">이 조건에서는</p>
             <p className="text-lg font-bold mb-1">
               {advice.lean === 'simplified' ? '간이과세가 유리할 가능성이 높습니다' :
                advice.lean === 'general' ? '일반과세가 유리할 가능성이 높습니다' :
@@ -252,7 +255,7 @@ export default function VatTypeCompareClient() {
               <li>· 연매출 <strong>4,800만원 미만</strong> → 간이과세 납부면제 가능</li>
               <li>· 그 외에는 <strong>두 유형의 실제 예상 세액을 비교</strong>해 낮은 쪽을 안내</li>
             </ul>
-            <p className="text-[11px] text-slate-400 mt-2">임의 기준 없이 실제 계산 결과로 비교합니다. 확정 판정이 아닙니다.</p>
+            <p className="text-[11px] text-slate-500 mt-2">임의 기준 없이 실제 계산 결과로 비교합니다. 확정 판정이 아닙니다.</p>
           </div>
 
           {/* B2B/B2C 정성 안내 (세액과 별개) */}
@@ -268,7 +271,7 @@ export default function VatTypeCompareClient() {
           </div>
         </div>
       ) : (
-        <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 text-sm">
+        <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-500 text-sm">
           {hasError ? '입력 오류를 수정하면 계산 결과를 확인할 수 있습니다' : '연매출을 입력하면 두 유형을 비교합니다'}
         </div>
       )}
@@ -302,14 +305,14 @@ export default function VatTypeCompareClient() {
           </ul>
           <p className="mt-2 text-xs text-slate-500">
             단, 매출 기준을 충족해도 <strong>업종·사업장 소재지(간이과세 배제지역) 등</strong>에 따라 간이과세가
-            배제될 수 있습니다. 2026년부터는 특정 배제지역 사업자는 매출과 무관하게 일반과세자로 전환됩니다.
+            배제될 수 있습니다. 지역기준에도 적용 예외와 적용순서가 있으므로 소재지만으로 일반과세 전환을 단정할 수 없습니다.
             최종 적용 여부는 관할 세무서 또는 국세청 기준을 확인하세요.
           </p>
         </div>
 
         <div>
           <h2 className="text-lg font-bold text-slate-800 mb-3">업종별 부가가치율 (2021.7.1. 이후)</h2>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto" tabIndex={0}>
             <table className="w-full text-xs border-collapse min-w-[320px]">
               <thead><tr className="bg-slate-50">
                 <th className="px-3 py-2 text-left font-semibold text-slate-600">업종</th>
@@ -374,10 +377,15 @@ export default function VatTypeCompareClient() {
               </p>
             </div>
             <div className="rounded-xl border border-slate-100 p-4">
-              <p className="font-semibold text-slate-800 mb-1">Q. 2026년에 무엇이 바뀌었나요?</p>
+              <p className="font-semibold text-slate-800 mb-1">Q. 2026년 간이과세 배제기준은 어떻게 확인하나요?</p>
               <p>
-                2026년부터 국세청 고시에 따라 특정 간이과세 배제지역에 등록된 사업자는 매출액과 관계없이 일반과세자로
-                전환됩니다. 매출 기준(1억 400만원)은 그대로지만 사업장 소재지가 새 변수가 되었습니다.
+                2026년 2기부터는{" "}
+                <a href="https://www.law.go.kr/LSW/admRulLsInfoP.do?admRulSeq=2100000281834" target="_blank" rel="noopener noreferrer" className="underline">
+                  국세청고시 제2026-19호
+                </a>
+                를 확인하세요. 매출 기준 외에 업종·규모·소재지 기준을 적용하며, 제5조의 지역 예외,
+                제6조의 적용순위와 제7조의 관할세무서장 확인에 따른 예외도 함께 봐야 합니다.
+                이 계산기는 주소·업종별 배제 여부를 자동 판정하지 않습니다.
               </p>
             </div>
           </div>
@@ -386,7 +394,7 @@ export default function VatTypeCompareClient() {
         <div className="rounded-xl border border-amber-100 bg-amber-50 p-4 text-xs text-slate-600">
           <p className="font-semibold text-slate-800 mb-1">⚠️ 참고용 안내</p>
           <p>
-            본 도구는 입력값 기준으로 간이과세·일반과세의 예상 부가세를 단순 비교하는 참고용 도구입니다.
+            본 도구는 입력값 기준으로 간이과세·일반과세의 예상 부가세를 단순 비교하는 참고용 도구입니다. 결과는 원 단위 추정 참고값이며, 신고서·납부서의 확정 금액이 아닙니다. 세액의 원 미만은 이 계산기의 절사 방식으로 처리하고, 최종 납부·환급 단계의 10원 미만 끝수 처리는 반영하지 않습니다. 실제 금액은 신고서와 납부·환급 안내에서 확인하세요.
             간이과세 적용 여부는 연매출 외에도 업종, 사업장 소재지(간이과세 배제지역 여부), 관계 법령 등에 따라
             달라질 수 있습니다. 신용카드매출 세액공제·의제매입세액 등도 반영되지 않습니다.
             최종 적용 여부와 세액은 관할 세무서 또는 국세청 홈택스를 통해 확인하시기 바랍니다.
@@ -397,12 +405,12 @@ export default function VatTypeCompareClient() {
           <p className="font-semibold text-slate-800 mb-2">관련 가이드</p>
           <ul className="space-y-1.5">
             <li>
-              <a href="/guide/simplified-vs-general-vat" className="text-blue-700 hover:underline font-semibold">→ 간이과세 vs 일반과세 완벽 정리</a>
-              <span className="text-slate-500"> · 제도 차이와 선택 기준을 더 자세히</span>
+              <a href="/guide/simplified-vs-general-vat" className="text-blue-700 underline font-semibold">→ 간이과세 vs 일반과세 완벽 정리</a>
+              <span className="text-slate-600"> · 제도 차이와 선택 기준을 더 자세히</span>
             </li>
             <li>
-              <a href="/guide/vat-filing" className="text-blue-700 hover:underline font-semibold">→ 부가세 신고 방법</a>
-              <span className="text-slate-500"> · 신고 시기와 절차 안내</span>
+              <a href="/guide/vat-filing" className="text-blue-700 underline font-semibold">→ 부가세 신고 방법</a>
+              <span className="text-slate-600"> · 신고 시기와 절차 안내</span>
             </li>
           </ul>
         </div>

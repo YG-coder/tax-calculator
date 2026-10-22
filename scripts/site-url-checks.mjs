@@ -12,18 +12,25 @@ export function xmlText(text) {
   const chars = { amp: '&', quot: '"', apos: "'", lt: '<', gt: '>' };
   return text.replace(/&(#x[0-9a-f]+|#\d+|amp|quot|apos|lt|gt);/gi, (_, key) => key[0] === '#' ? String.fromCodePoint(key[1].toLowerCase() === 'x' ? parseInt(key.slice(2), 16) : Number(key.slice(1))) : chars[key.toLowerCase()]);
 }
+/** 한 페이지에 한 번만 나와야 하는 OG 속성. */
+const SINGLE_OG_KEYS = ['og:type', 'og:locale', 'og:title', 'og:description', 'og:site_name', 'og:url'];
 function attr(tag, name) { const value = tag.match(new RegExp(`\\b${name}\\s*=\\s*(['"])(.*?)\\1`, 'i'))?.[2]; return value === undefined ? undefined : xmlText(value); }
 export function inspectHtml(html, config, expected) {
-  const canonical = [], og = [], images = [], twitter = [], cards = [];
+  const canonical = [], og = [], images = [], twitter = [], cards = [], single = {};
   for (const [tag] of html.matchAll(/<link\b[^>]*>/gi)) if (attr(tag, 'rel')?.split(/\s+/).includes('canonical')) canonical.push(attr(tag, 'href'));
   for (const [tag] of html.matchAll(/<meta\b[^>]*>/gi)) {
     const key = attr(tag, 'property') ?? attr(tag, 'name'), value = attr(tag, 'content');
+    if (SINGLE_OG_KEYS.includes(key)) (single[key] ??= []).push(value);
     if (key === 'og:url') og.push(value);
     if (key === 'og:image') images.push(value);
     if (key === 'twitter:image') twitter.push(value);
     if (key === 'twitter:card') cards.push(value);
     if (['og:image:url', 'og:image:secure_url'].includes(key)) siteUrl(value, config, key, config.imageOrigins ?? []);
   }
+  // 단일 값 OG 태그는 페이지마다 정확히 한 번만 나와야 한다 (openGraph + metadata.other 중복 출력 방지).
+  for (const key of ['og:type', 'og:locale']) assert.equal(single[key]?.length ?? 0, 1, `${expected}: ${key} count ${single[key]?.length ?? 0}`);
+  for (const key of SINGLE_OG_KEYS) assert((single[key]?.length ?? 0) <= 1, `${expected}: ${key} duplicated`);
+  assert(['website', 'article'].includes(single['og:type'][0]), `${expected}: og:type ${single['og:type'][0]}`);
   assert.equal(canonical.length, 1, `${expected}: canonical count`);
   assert.equal(siteUrl(canonical[0], config, 'canonical').href, new URL(expected).href, `${expected}: canonical path`);
   assert.equal(og.length, 1, `${expected}: og:url count`); assert.equal(siteUrl(og[0], config, 'og:url').href, new URL(expected).href, `${expected}: og:url path`);
@@ -38,7 +45,7 @@ export function inspectHtml(html, config, expected) {
     else if (value && typeof value === 'object') Object.entries(value).forEach(([field, item]) => visit(item, field));
   }
   for (const [tag, , body] of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) if (attr(tag, 'type') === 'application/ld+json') { visit(JSON.parse(body)); jsonLdCount++; }
-  return { canonical, og, images, twitter, cards, jsonLdCount };
+  return { canonical, og, images, twitter, cards, jsonLdCount, type: single['og:type'][0] };
 }
 export function inspectRobots(text, config) {
   const values = (key) => [...text.matchAll(new RegExp(`^${key}: (.+)$`, 'gmi'))].map(m => m[1].trim());

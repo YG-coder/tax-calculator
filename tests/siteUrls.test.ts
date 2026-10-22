@@ -3,7 +3,7 @@ import { test as check } from "node:test";
 import { inspectHtml, inspectRobots, siteUrl } from "../scripts/site-url-checks.mjs";
 const config = { url: 'https://xn--989a00a691bv6b3zl.kr', displayUrl: 'https://주식계산기.kr', forbiddenHosts: ['fincalc.kr'], externalJsonLdOrigins: ['https://www.nts.go.kr'] };
 const page = `${config.url}/example`;
-const fixture = () => `<link rel="canonical" href="https://주식계산기.kr/example"><meta property="og:url" content="${page}"><meta property="og:image" content="${config.url}/og-image.png"><meta name="twitter:image" content="https://주식계산기.kr/og-image.png"><meta name="twitter:card" content="summary_large_image"><script type="application/ld+json">${JSON.stringify({'@context':'https://schema.org', url:page, publisher:{url:'https://www.nts.go.kr'}})}</script>`;
+const fixture = () => `<link rel="canonical" href="https://주식계산기.kr/example"><meta property="og:url" content="${page}"><meta property="og:image" content="${config.url}/og-image.png"><meta name="twitter:image" content="https://주식계산기.kr/og-image.png"><meta name="twitter:card" content="summary_large_image"><meta property="og:type" content="website"><meta property="og:locale" content="ko_KR"><script type="application/ld+json">${JSON.stringify({'@context':'https://schema.org', url:page, publisher:{url:'https://www.nts.go.kr'}})}</script>`;
 check('Unicode/Punycode and allowed external authority', () => { assert.equal(inspectHtml(fixture(), config, page).images.length, 1); });
 check('missing images and small cards fail', () => {
  for (const [pattern, replacement] of [[/<meta property="og:image"[^>]*>/, ''], [/<meta name="twitter:image"[^>]*>/, ''], [/summary_large_image/, 'summary']] as const) assert.throws(() => inspectHtml(fixture().replace(pattern, replacement), config, page));
@@ -27,4 +27,16 @@ check('IDN host and Korean path normalize independently without double encoding'
  assert.equal(actual.pathname, '/%EA%B3%84%EC%82%B0');
  assert.equal(siteUrl(actual.href, config).href, expected);
  inspectHtml(fixture().replace(/\/example/g, '/계산'), config, expected);
+});
+
+check('og:type and og:locale must appear exactly once (openGraph + metadata.other used to emit both twice)', () => {
+ inspectHtml(fixture().replace('content="website"', 'content="article"'), config, page);
+ for (const html of [
+  fixture().replace('<meta property="og:type" content="website">', ''),
+  fixture().replace('<meta property="og:locale" content="ko_KR">', ''),
+  fixture() + '<meta property="og:type" content="website">',
+  fixture() + '<meta property="og:locale" content="ko_KR">',
+  fixture() + '<meta property="og:title" content="dup">' + '<meta property="og:title" content="dup">',
+  fixture().replace('content="website"', 'content="profile"'),
+ ]) assert.throws(() => inspectHtml(html, config, page));
 });

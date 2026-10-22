@@ -82,12 +82,8 @@ export function buildMetadata({
             description,
             images: [ogImageUrl],
         },
-
-        // 네이버 검색 미리보기를 위한 추가 메타
-        other: {
-            'og:locale': 'ko_KR',
-            'og:type': type,
-        },
+        // og:locale·og:type 은 위 openGraph 가 이미 출력한다. 예전에는 `other` 로도 한 번 더 넣어
+        // 같은 태그가 두 번 나왔으므로 제거했다. 빌드 검사(scripts/site-url-checks.mjs)가 1회 출력을 강제한다.
     };
 }
 

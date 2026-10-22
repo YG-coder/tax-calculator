@@ -135,8 +135,8 @@ export default function FamilyLoanGuidePage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 계산기</h2>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/gift-tax-calculator" className="text-blue-700 hover:underline font-semibold">→ 증여세 계산기</Link>
-              <span className="text-slate-500"> · 증여로 잡힐 경우 예상 세액 확인</span>
+              <Link href="/gift-tax-calculator" className="text-blue-700 underline font-semibold">→ 증여세 계산기</Link>
+              <span className="text-slate-600"> · 증여로 잡힐 경우 예상 세액 확인</span>
             </li>
           </ul>
         </section>
@@ -144,8 +144,8 @@ export default function FamilyLoanGuidePage() {
         <section className="rounded-xl border border-slate-100 bg-slate-50 p-5">
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 가이드</h2>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/guide/gift-split" className="text-blue-700 hover:underline font-semibold">→ 증여세 절세, 10년 단위 분할 증여</Link></li>
-            <li><Link href="/guide/inheritance-vs-gift" className="text-blue-700 hover:underline font-semibold">→ 상속세 vs 증여세, 뭐가 더 유리할까</Link></li>
+            <li><Link href="/guide/gift-split" className="text-blue-700 underline font-semibold">→ 증여세 절세, 10년 단위 분할 증여</Link></li>
+            <li><Link href="/guide/inheritance-vs-gift" className="text-blue-700 underline font-semibold">→ 상속세 vs 증여세, 뭐가 더 유리할까</Link></li>
           </ul>
         </section>
 

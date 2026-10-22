@@ -433,7 +433,7 @@ export default function CarTaxClient() {
                     연납 공제 {won(result.prepay.totalDeduction)} 반영 (공제 전{" "}
                     {won(result.prepay.payableBeforeDeduction)})
                   </p>
-                  <p className="mt-1 text-xs text-slate-400">
+                  <p className="mt-1 text-xs text-slate-500">
                     {result.prepay.payableScope === "secondHalf"
                       ? "제2기분(7~12월분)만 미리 납부하는 금액입니다"
                       : "연세액 전액을 미리 납부하는 금액입니다"}

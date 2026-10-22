@@ -60,7 +60,7 @@ export default function CarTaxCalculatorPage() {
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5">
           <h3 className="text-sm font-semibold text-slate-800">승용자동차 배기량별 cc당 세액</h3>
-          <div className="mt-3 overflow-x-auto">
+          <div className="mt-3 overflow-x-auto" tabIndex={0}>
             <table className="w-full text-sm">
               <thead className="bg-slate-50 text-xs text-slate-600">
                 <tr>
@@ -135,7 +135,7 @@ export default function CarTaxCalculatorPage() {
             연납 공제액은 고정 할인율이 아니라 「지방세법」 제128조 제3항의 계산식으로 산출합니다. 신청 시기마다
             계산식이 다릅니다. 이자율 5%는 「지방세법 시행령」 제125조 제6항에 따른 값입니다.
           </p>
-          <div className="mt-3 overflow-x-auto">
+          <div className="mt-3 overflow-x-auto" tabIndex={0}>
             <table className="w-full min-w-[520px] border-collapse text-xs">
               <thead>
                 <tr className="bg-slate-50">

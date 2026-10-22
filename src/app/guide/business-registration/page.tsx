@@ -152,12 +152,12 @@ export default function BusinessRegistrationGuidePage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 계산기</h2>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/vat-calculator" className="text-blue-700 hover:underline font-semibold">→ 부가세 계산기</Link>
-              <span className="text-slate-500"> · 공급가액·부가세 계산</span>
+              <Link href="/vat-calculator" className="text-blue-700 underline font-semibold">→ 부가세 계산기</Link>
+              <span className="text-slate-600"> · 공급가액·부가세 계산</span>
             </li>
             <li>
-              <Link href="/income-tax-calculator" className="text-blue-700 hover:underline font-semibold">→ 종합소득세 계산기</Link>
-              <span className="text-slate-500"> · 사업소득 예상 세액</span>
+              <Link href="/income-tax-calculator" className="text-blue-700 underline font-semibold">→ 종합소득세 계산기</Link>
+              <span className="text-slate-600"> · 사업소득 예상 세액</span>
             </li>
           </ul>
         </section>
@@ -165,8 +165,8 @@ export default function BusinessRegistrationGuidePage() {
         <section className="rounded-xl border border-slate-100 bg-slate-50 p-5">
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 가이드</h2>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/guide/simplified-vs-general-vat" className="text-blue-700 hover:underline font-semibold">→ 간이과세자 vs 일반과세자 차이와 전환</Link></li>
-            <li><Link href="/guide/vat-filing" className="text-blue-700 hover:underline font-semibold">→ 부가세 신고 체크리스트 (개인사업자)</Link></li>
+            <li><Link href="/guide/simplified-vs-general-vat" className="text-blue-700 underline font-semibold">→ 간이과세자 vs 일반과세자 차이와 전환</Link></li>
+            <li><Link href="/guide/vat-filing" className="text-blue-700 underline font-semibold">→ 부가세 신고 체크리스트 (개인사업자)</Link></li>
           </ul>
         </section>
 

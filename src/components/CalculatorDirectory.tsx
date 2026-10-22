@@ -43,7 +43,7 @@ export default function CalculatorDirectory({ calculators }: { calculators: Calc
                         className={`inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${audience === option.key ? 'border-blue-600 bg-blue-600 text-white' : 'border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-700'}`}
                     >
                         {option.label}
-                        <span aria-hidden="true" className="text-xs opacity-75">{option.count}</span>
+                        <span aria-hidden="true" className="text-xs">{option.count}</span>
                     </button>
                 ))}
             </div>

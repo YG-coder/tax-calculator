@@ -32,7 +32,7 @@ export default function FreelancerTaxClient() {
               aria-invalid={amountError(amount) !== null}
               aria-describedby={amountError(amount) ? 'amount-error' : undefined}
               placeholder="예: 1,000,000" className="calc-input pr-8" />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
           </div>
           {amountError(amount) && (
             <p id="amount-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(amount)}</p>
@@ -44,7 +44,7 @@ export default function FreelancerTaxClient() {
       {hasValue ? (
         <div className="mt-6 space-y-4 animate-slide-up" aria-live="polite">
           <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
-            <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">실수령액</p>
+            <p className="text-blue-100 text-xs font-semibold uppercase tracking-widest mb-1">실수령액</p>
             <p className="text-4xl font-black tabular-nums">{fmt(net)}<span className="text-2xl font-bold ml-1">원</span></p>
             <p className="mt-2 text-sm text-blue-100">원천징수 {fmt(totalTax)}원 공제 후</p>
           </div>
@@ -63,12 +63,12 @@ export default function FreelancerTaxClient() {
             </ul>
           </div>
 
-          <p className="text-xs text-slate-400 text-center">
+          <p className="text-xs text-slate-500 text-center">
             3.3%는 선납 원천징수입니다. 종합소득세 신고 시 실제 세액에 따라 환급 또는 추가 납부가 발생할 수 있습니다.
           </p>
         </div>
       ) : (
-        <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 text-sm">
+        <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-500 text-sm">
           금액을 입력하면 계산됩니다
         </div>
       )}
@@ -141,7 +141,7 @@ export default function FreelancerTaxClient() {
               <li>월 실수령 = 3,000,000 − 99,000 = <strong>2,901,000원</strong></li>
               <li>연 수입 = <strong>3,600만 원</strong></li>
               <li>연 원천징수 누적 = <strong>1,188,000원</strong></li>
-              <li className="text-xs text-slate-500 mt-1">→ 5월 종소세 신고 시 경비 처리에 따라 환급 가능</li>
+              <li className="text-xs text-slate-600 mt-1">→ 5월 종소세 신고 시 경비 처리에 따라 환급 가능</li>
             </ul>
           </div>
 

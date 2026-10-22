@@ -141,12 +141,12 @@ export default function GiftSplitGuidePage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 계산기</h2>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/gift-tax-calculator" className="text-blue-700 hover:underline font-semibold">→ 증여세 계산기</Link>
-              <span className="text-slate-500"> · 증여금액·공제 기준 예상 세액</span>
+              <Link href="/gift-tax-calculator" className="text-blue-700 underline font-semibold">→ 증여세 계산기</Link>
+              <span className="text-slate-600"> · 증여금액·공제 기준 예상 세액</span>
             </li>
             <li>
-              <Link href="/inheritance-tax-calculator" className="text-blue-700 hover:underline font-semibold">→ 상속세 계산기</Link>
-              <span className="text-slate-500"> · 상속재산 기준 예상 세액</span>
+              <Link href="/inheritance-tax-calculator" className="text-blue-700 underline font-semibold">→ 상속세 계산기</Link>
+              <span className="text-slate-600"> · 상속재산 기준 예상 세액</span>
             </li>
           </ul>
         </section>
@@ -154,8 +154,8 @@ export default function GiftSplitGuidePage() {
         <section className="rounded-xl border border-slate-100 bg-slate-50 p-5">
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 가이드</h2>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/guide/inheritance-vs-gift" className="text-blue-700 hover:underline font-semibold">→ 상속세 vs 증여세, 뭐가 더 유리할까</Link></li>
-            <li><Link href="/guide/family-loan" className="text-blue-700 hover:underline font-semibold">→ 부모 자식 간 차용증 쓰는 법</Link></li>
+            <li><Link href="/guide/inheritance-vs-gift" className="text-blue-700 underline font-semibold">→ 상속세 vs 증여세, 뭐가 더 유리할까</Link></li>
+            <li><Link href="/guide/family-loan" className="text-blue-700 underline font-semibold">→ 부모 자식 간 차용증 쓰는 법</Link></li>
           </ul>
         </section>
 

@@ -117,13 +117,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     정확한 신고는 국세청 또는 전문가를 통해 확인하세요.
                 </p>
                 <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1">
-                    <Link href="/about" className="hover:text-blue-600 hover:underline">사이트 소개</Link>
-                    <Link href="/guide" className="hover:text-blue-600 hover:underline">가이드</Link>
-                    <Link href="/contact" className="hover:text-blue-600 hover:underline">문의</Link>
-                    <Link href="/privacy" className="hover:text-blue-600 hover:underline">개인정보처리방침</Link>
-                    <Link href="/terms" className="hover:text-blue-600 hover:underline">이용약관</Link>
+                    <Link href="/about" className="hover:text-blue-600 underline">사이트 소개</Link>
+                    <Link href="/guide" className="hover:text-blue-600 underline">가이드</Link>
+                    <Link href="/contact" className="hover:text-blue-600 underline">문의</Link>
+                    <Link href="/privacy" className="hover:text-blue-600 underline">개인정보처리방침</Link>
+                    <Link href="/terms" className="hover:text-blue-600 underline">이용약관</Link>
                 </div>
-                <p className="mt-3 text-slate-400">
+                <p className="mt-3 text-slate-500">
                     © {new Date().getFullYear()} taxsim.kr · Incomelab
                 </p>
             </div>

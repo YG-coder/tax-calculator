@@ -61,7 +61,7 @@ export default function WithholdingCalculatorPage() {
               aria-invalid={amountError(salary) !== null}
               aria-describedby={amountError(salary) ? 'salary-error' : undefined}
               placeholder="예: 3,500,000" className="calc-input pr-8" />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
           </div>
           {amountError(salary) && (
             <p id="salary-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(salary)}</p>
@@ -100,7 +100,7 @@ export default function WithholdingCalculatorPage() {
       {hasValue ? (
         <div className="mt-6 space-y-4 animate-slide-up" aria-live="polite">
           <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
-            <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">예상 실수령액 (세금만 차감)</p>
+            <p className="text-blue-100 text-xs font-semibold uppercase tracking-widest mb-1">예상 실수령액 (세금만 차감)</p>
             <p className="text-4xl font-black tabular-nums">{fmt(finalNet)}<span className="text-2xl font-bold ml-1">원</span></p>
             <div className="mt-3 pt-3 border-t border-white/20 flex flex-wrap gap-x-4 gap-y-1 text-sm text-blue-100">
               <span>월 세전 {fmt(salaryNum)}원</span>
@@ -121,14 +121,14 @@ export default function WithholdingCalculatorPage() {
                 <span className="font-bold text-blue-600 tabular-nums">{fmt(finalTotal)} 원</span>
               </li>
             </ul>
-            <p className="mt-3 text-xs text-slate-400">
+            <p className="mt-3 text-xs text-slate-500">
               ※ 위 실수령액은 소득세·지방소득세만 차감한 값입니다. 실제 급여에서는 국민연금·건강보험·
               장기요양·고용보험(4대보험)이 추가로 공제됩니다.
             </p>
           </div>
         </div>
       ) : (
-        <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 text-sm">
+        <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-500 text-sm">
           월 급여를 입력하면 예상 원천징수세액이 표시됩니다
         </div>
       )}

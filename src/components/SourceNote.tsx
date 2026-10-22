@@ -29,14 +29,14 @@ export default function SourceNote({ calculator }: { calculator: CalculatorSlug 
                             href={s.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-700 hover:underline"
+                            className="text-blue-700 underline"
                         >
                             {s.label}
                         </a>
                     </li>
                 ))}
             </ul>
-            <p className="mt-2 text-slate-400">
+            <p className="mt-2 text-slate-500">
                 계산 결과는 참고용이며 세무 자문이 아닙니다.{' '}
                 {meta.confirmationGuidance ?? '실제 신고 세액은 국세청 홈택스 또는 세무 전문가를 통해 확인하세요.'}
             </p>

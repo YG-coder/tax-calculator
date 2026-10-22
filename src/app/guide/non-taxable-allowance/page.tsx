@@ -47,7 +47,7 @@ export default function NonTaxableAllowanceGuidePage() {
 
         <section>
           <h2 className="text-lg font-bold text-slate-800 mb-2">대표 비과세 항목과 한도</h2>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto" tabIndex={0}>
             <table className="w-full text-xs border-collapse min-w-[360px]">
               <thead><tr className="bg-slate-50">
                 <th className="px-3 py-2 text-left font-semibold text-slate-600">항목</th>
@@ -134,12 +134,12 @@ export default function NonTaxableAllowanceGuidePage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 계산기</h2>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/withholding-calculator" className="text-blue-700 hover:underline font-semibold">→ 원천징수세액 계산기</Link>
-              <span className="text-slate-500"> · 월 급여 기준 예상 원천징수 확인</span>
+              <Link href="/withholding-calculator" className="text-blue-700 underline font-semibold">→ 원천징수세액 계산기</Link>
+              <span className="text-slate-600"> · 월 급여 기준 예상 원천징수 확인</span>
             </li>
             <li>
-              <Link href="/income-tax-calculator" className="text-blue-700 hover:underline font-semibold">→ 종합소득세 계산기</Link>
-              <span className="text-slate-500"> · 합산 소득 예상 세액</span>
+              <Link href="/income-tax-calculator" className="text-blue-700 underline font-semibold">→ 종합소득세 계산기</Link>
+              <span className="text-slate-600"> · 합산 소득 예상 세액</span>
             </li>
           </ul>
         </section>
@@ -147,8 +147,8 @@ export default function NonTaxableAllowanceGuidePage() {
         <section className="rounded-xl border border-slate-100 bg-slate-50 p-5">
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 가이드</h2>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/guide/withholding-year-end" className="text-blue-700 hover:underline font-semibold">→ 원천징수와 연말정산은 어떻게 연결되나</Link></li>
-            <li><Link href="/guide/income-tax-may" className="text-blue-700 hover:underline font-semibold">→ 5월 종합소득세 신고 가이드</Link></li>
+            <li><Link href="/guide/withholding-year-end" className="text-blue-700 underline font-semibold">→ 원천징수와 연말정산은 어떻게 연결되나</Link></li>
+            <li><Link href="/guide/income-tax-may" className="text-blue-700 underline font-semibold">→ 5월 종합소득세 신고 가이드</Link></li>
           </ul>
         </section>
 

@@ -38,7 +38,7 @@ export default function CretGuidePage() {
                         과세기준일인 <strong>6월 1일</strong> 현재 주택을 소유한 사람 중, 공시가격 합계가 공제금액을
                         넘는 사람이 냅니다. 재산세는 주택을 가진 모두가 내지만 종합부동산세는 일정 금액을 넘는 사람만
                         냅니다. 납부기간은 <strong>12월 1일부터 12월 15일까지</strong>입니다. (
-                        <a href={law('종합부동산세법', '제16조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href={law('종합부동산세법', '제16조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             종합부동산세법 제16조 제1항
                         </a>
                         )
@@ -56,11 +56,11 @@ export default function CretGuidePage() {
                     <p>
                         공시가격 합계에서 공제금액을 뺀 뒤 공정시장가액비율 60%를 곱하면 과세표준입니다. 공제금액은
                         1세대 1주택자 <strong>12억원</strong>, 그 밖의 개인 <strong>9억원</strong>입니다. (
-                        <a href={law('종합부동산세법', '제8조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href={law('종합부동산세법', '제8조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             종합부동산세법 제8조 제1항
                         </a>
                         ,{' '}
-                        <a href={law('종합부동산세법 시행령', '제2조의4')} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href={law('종합부동산세법 시행령', '제2조의4')} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             시행령 제2조의4 제1항
                         </a>
                         )
@@ -76,12 +76,12 @@ export default function CretGuidePage() {
                     <p>
                         과세표준 12억원까지는 주택 수와 관계없이 같은 세율이지만, 그 위부터는 3주택 이상 보유자에게 더
                         높은 세율이 적용됩니다. (
-                        <a href={law('종합부동산세법', '제9조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href={law('종합부동산세법', '제9조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             종합부동산세법 제9조 제1항
                         </a>
                         )
                     </p>
-                    <div className="mt-3 overflow-x-auto">
+                    <div className="mt-3 overflow-x-auto" tabIndex={0}>
                         <table className="w-full min-w-[400px] border-collapse text-xs">
                             <thead>
                                 <tr className="bg-slate-50">
@@ -116,11 +116,11 @@ export default function CretGuidePage() {
                     <p>
                         같은 주택에 7월·9월 재산세와 12월 종합부동산세가 모두 부과되므로 겹치는 부분을 빼 줍니다.
                         종부세 과세표준에 해당하는 만큼의 재산세를 계산해 공제하는 방식입니다. (
-                        <a href={law('종합부동산세법', '제9조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href={law('종합부동산세법', '제9조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             법 제9조 제3항
                         </a>
                         ,{' '}
-                        <a href={law('종합부동산세법 시행령', '제4조의3')} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href={law('종합부동산세법 시행령', '제4조의3')} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             시행령 제4조의3
                         </a>
                         )
@@ -132,7 +132,7 @@ export default function CretGuidePage() {
                     <p>
                         1세대 1주택자는 나이와 보유기간에 따라 세액을 공제받습니다. 두 공제는 중복 적용되지만 합계
                         <strong> 80%가 한도</strong>입니다. (
-                        <a href={law('종합부동산세법', '제9조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href={law('종합부동산세법', '제9조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             법 제9조 제5항~제9항
                         </a>
                         )
@@ -165,11 +165,11 @@ export default function CretGuidePage() {
                     <p>
                         해당 연도의 재산세와 종합부동산세 합계가 직전년도 합계의 <strong>150%</strong>를 넘으면 그 초과분은
                         없는 것으로 봅니다. (
-                        <a href={law('종합부동산세법', '제10조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href={law('종합부동산세법', '제10조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             법 제10조
                         </a>
                         ) 마지막으로 종합부동산세액의 <strong>20%</strong>가 농어촌특별세로 함께 부과됩니다. (
-                        <a href={law('농어촌특별세법', '제5조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href={law('농어촌특별세법', '제5조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             농어촌특별세법 제5조 제1항 제8호
                         </a>
                         )
@@ -186,7 +186,7 @@ export default function CretGuidePage() {
                         「종합부동산세법」 제10조의2의 <strong>공동명의 1주택자 특례</strong>를 신청하면 한 사람이 주택
                         전체에 대해 1세대 1주택자로 계산됩니다. 공제는 12억원으로 줄지만 세액공제를 최대 80%까지 받을 수
                         있습니다. 신청기간은 <strong>9월 16일부터 9월 30일까지</strong>입니다. (
-                        <a href={law('종합부동산세법', '제10조의2')} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href={law('종합부동산세법', '제10조의2')} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             법 제10조의2
                         </a>
                         )
@@ -207,7 +207,7 @@ export default function CretGuidePage() {
                         합산배제 임대주택·사원용 주택 등의 보유현황 신고, 공동명의 1주택자 특례, 일시적 2주택·상속주택·
                         지방 저가주택의 1세대 1주택자 판정 특례는 모두 <strong>9월 16일부터 9월 30일까지</strong>
                         신청해야 합니다. 이 기간을 놓치면 12월 고지에 반영되지 않습니다. (
-                        <a href={law('종합부동산세법', '제8조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href={law('종합부동산세법', '제8조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             법 제8조 제3항·제5항
                         </a>
                         )
@@ -239,16 +239,16 @@ export default function CretGuidePage() {
                 <section className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
                     <h2 className="mb-2 text-base font-bold text-slate-800">계산해 보기</h2>
                     <div className="flex flex-col gap-2 text-sm">
-                        <Link href="/comprehensive-real-estate-tax-calculator" className="font-semibold text-blue-700 hover:underline">
+                        <Link href="/comprehensive-real-estate-tax-calculator" className="font-semibold text-blue-700 underline">
                             종합부동산세 계산기 — 공동명의 특례 비교까지 →
                         </Link>
-                        <Link href="/property-tax-calculator" className="font-semibold text-blue-700 hover:underline">
+                        <Link href="/property-tax-calculator" className="font-semibold text-blue-700 underline">
                             재산세 계산기 →
                         </Link>
-                        <Link href="/guide/property-tax" className="font-semibold text-blue-700 hover:underline">
+                        <Link href="/guide/property-tax" className="font-semibold text-blue-700 underline">
                             재산세 계산 방법과 7월·9월 납부기간 →
                         </Link>
-                        <Link href="/tax-calendar" className="font-semibold text-blue-700 hover:underline">
+                        <Link href="/tax-calendar" className="font-semibold text-blue-700 underline">
                             세금 납부 일정 달력 →
                         </Link>
                     </div>

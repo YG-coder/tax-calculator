@@ -54,7 +54,7 @@ export default function ContactPage() {
                 </div>
 
                 {/* 중요: 애드센스 신뢰 문구 */}
-                <div className="text-xs text-slate-400 leading-relaxed border-t pt-4">
+                <div className="text-xs text-slate-500 leading-relaxed border-t pt-4">
                     본 사이트는 세금 계산 정보를 제공하는 참고용 서비스이며,
                     법적 책임을 지지 않습니다.<br />
                     정확한 세금은 국세청 또는 세무 전문가를 통해 확인하시기 바랍니다.

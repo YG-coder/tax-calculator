@@ -167,7 +167,7 @@ export default function ComprehensiveRealEstateTaxClient() {
                             placeholder="예: 1,500,000,000"
                             className="calc-input pr-8"
                         />
-                        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">원</span>
+                        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">원</span>
                     </div>
                     {amountError(publishedPrice) && (
                         <p id="publishedPrice-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">
@@ -208,7 +208,7 @@ export default function ComprehensiveRealEstateTaxClient() {
                                     aria-describedby={ownershipError ? 'ownershipPercent-error' : undefined}
                                     className="calc-input pr-8"
                                 />
-                                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">%</span>
+                                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">%</span>
                             </div>
                             {ownershipError && (
                                 <p id="ownershipPercent-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">
@@ -273,7 +273,7 @@ export default function ComprehensiveRealEstateTaxClient() {
                                 placeholder="예: 65"
                                 className="calc-input pr-8"
                             />
-                            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">세</span>
+                            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">세</span>
                         </div>
                         {ageError && (
                             <p id="age-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{ageError}</p>
@@ -295,7 +295,7 @@ export default function ComprehensiveRealEstateTaxClient() {
                                 placeholder="예: 12"
                                 className="calc-input pr-8"
                             />
-                            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">년</span>
+                            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">년</span>
                         </div>
                         {holdingError && (
                             <p id="holdingYears-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{holdingError}</p>
@@ -340,7 +340,7 @@ export default function ComprehensiveRealEstateTaxClient() {
                                         placeholder="예: 1,200,000"
                                         className="calc-input pr-8"
                                     />
-                                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">원</span>
+                                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">원</span>
                                 </div>
                                 {amountError(value) && (
                                     <p id={`${id}-error`} role="alert" className="mt-1 text-xs font-semibold text-red-600">
@@ -355,7 +355,7 @@ export default function ComprehensiveRealEstateTaxClient() {
             </div>
 
             {result === null ? (
-                <div className="mt-6 flex h-36 items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 text-sm text-slate-400">
+                <div className="mt-6 flex h-36 items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 text-sm text-slate-500">
                     주택 공시가격 합계를 입력하면 계산됩니다
                 </div>
             ) : !result.ok ? (

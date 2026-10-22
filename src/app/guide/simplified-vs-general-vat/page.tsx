@@ -47,7 +47,7 @@ export default function SimplifiedVsGeneralVatGuidePage() {
 
         <section>
           <h2 className="text-lg font-bold text-slate-800 mb-2">핵심 차이 비교표</h2>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto" tabIndex={0}>
             <table className="w-full text-xs border-collapse min-w-[420px]">
               <thead><tr className="bg-slate-50">
                 <th className="px-3 py-2 text-left font-semibold text-slate-600">구분</th>
@@ -188,16 +188,16 @@ export default function SimplifiedVsGeneralVatGuidePage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 계산기</h2>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/vat-type-compare" className="text-blue-700 hover:underline font-semibold">→ 간이과세 vs 일반과세 비교</Link>
-              <span className="text-slate-500"> · 내 조건에서 어느 유형이 유리한지 비교</span>
+              <Link href="/vat-type-compare" className="text-blue-700 underline font-semibold">→ 간이과세 vs 일반과세 비교</Link>
+              <span className="text-slate-600"> · 내 조건에서 어느 유형이 유리한지 비교</span>
             </li>
             <li>
-              <Link href="/vat-calculator" className="text-blue-700 hover:underline font-semibold">→ 부가세 계산기</Link>
-              <span className="text-slate-500"> · 공급가액·부가세·총금액을 즉시 계산</span>
+              <Link href="/vat-calculator" className="text-blue-700 underline font-semibold">→ 부가세 계산기</Link>
+              <span className="text-slate-600"> · 공급가액·부가세·총금액을 즉시 계산</span>
             </li>
             <li>
-              <Link href="/income-tax-calculator" className="text-blue-700 hover:underline font-semibold">→ 종합소득세 계산기</Link>
-              <span className="text-slate-500"> · 사업소득 예상 세액 확인</span>
+              <Link href="/income-tax-calculator" className="text-blue-700 underline font-semibold">→ 종합소득세 계산기</Link>
+              <span className="text-slate-600"> · 사업소득 예상 세액 확인</span>
             </li>
           </ul>
         </section>
@@ -205,8 +205,8 @@ export default function SimplifiedVsGeneralVatGuidePage() {
         <section className="rounded-xl border border-slate-100 bg-slate-50 p-5">
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 가이드</h2>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/guide/business-registration" className="text-blue-700 hover:underline font-semibold">→ 사업자등록 처음 하는 법</Link></li>
-            <li><Link href="/guide/vat-filing" className="text-blue-700 hover:underline font-semibold">→ 부가세 신고 체크리스트 (개인사업자)</Link></li>
+            <li><Link href="/guide/business-registration" className="text-blue-700 underline font-semibold">→ 사업자등록 처음 하는 법</Link></li>
+            <li><Link href="/guide/vat-filing" className="text-blue-700 underline font-semibold">→ 부가세 신고 체크리스트 (개인사업자)</Link></li>
           </ul>
         </section>
 

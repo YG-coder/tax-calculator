@@ -46,7 +46,7 @@ export default function InheritanceVsGiftGuidePage() {
 
         <section>
           <h2 className="text-lg font-bold text-slate-800 mb-2">한눈에 비교</h2>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto" tabIndex={0}>
             <table className="w-full text-xs border-collapse min-w-[420px]">
               <thead><tr className="bg-slate-50">
                 <th className="px-3 py-2 text-left font-semibold text-slate-600">구분</th>
@@ -142,12 +142,12 @@ export default function InheritanceVsGiftGuidePage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 계산기</h2>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/inheritance-tax-calculator" className="text-blue-700 hover:underline font-semibold">→ 상속세 계산기</Link>
-              <span className="text-slate-500"> · 상속재산·공제 기준 예상 세액</span>
+              <Link href="/inheritance-tax-calculator" className="text-blue-700 underline font-semibold">→ 상속세 계산기</Link>
+              <span className="text-slate-600"> · 상속재산·공제 기준 예상 세액</span>
             </li>
             <li>
-              <Link href="/gift-tax-calculator" className="text-blue-700 hover:underline font-semibold">→ 증여세 계산기</Link>
-              <span className="text-slate-500"> · 증여금액·공제 기준 예상 세액</span>
+              <Link href="/gift-tax-calculator" className="text-blue-700 underline font-semibold">→ 증여세 계산기</Link>
+              <span className="text-slate-600"> · 증여금액·공제 기준 예상 세액</span>
             </li>
           </ul>
         </section>
@@ -155,8 +155,8 @@ export default function InheritanceVsGiftGuidePage() {
         <section className="rounded-xl border border-slate-100 bg-slate-50 p-5">
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 가이드</h2>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/guide/gift-split" className="text-blue-700 hover:underline font-semibold">→ 증여세 절세, 10년 단위 분할 증여</Link></li>
-            <li><Link href="/guide/inheritance-renounce" className="text-blue-700 hover:underline font-semibold">→ 상속 포기·한정승인, 3개월 안에 결정하기</Link></li>
+            <li><Link href="/guide/gift-split" className="text-blue-700 underline font-semibold">→ 증여세 절세, 10년 단위 분할 증여</Link></li>
+            <li><Link href="/guide/inheritance-renounce" className="text-blue-700 underline font-semibold">→ 상속 포기·한정승인, 3개월 안에 결정하기</Link></li>
           </ul>
         </section>
 

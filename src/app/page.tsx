@@ -226,7 +226,7 @@ export default function HomePage() {
             {CALCULATOR_META[featured.slug].sources.slice(0, 2).map((source, index) => (
               <span key={source.url}>
                 {index > 0 && ' · '}
-                <a href={source.url} className="text-blue-700 hover:underline">{source.label}</a>
+                <a href={source.url} className="text-blue-700 underline">{source.label}</a>
               </span>
             ))}
           </p>
@@ -247,7 +247,7 @@ export default function HomePage() {
                 ? `다음 신고·납부 일정은 무엇인가요? · ${MONTH_LABELS[highlight.month]}`
                 : `${MONTH_LABELS[highlight.month]}에 신고·납부할 세금은 무엇인가요?`}
             </h2>
-            <Link href="/tax-calendar" className="inline-flex min-h-[32px] items-center text-sm font-semibold text-blue-700 hover:underline">
+            <Link href="/tax-calendar" className="inline-flex min-h-[32px] items-center text-sm font-semibold text-blue-700 underline">
               전체 일정 보기 →
             </Link>
           </div>
@@ -270,19 +270,19 @@ export default function HomePage() {
                 <h3 className="text-base font-bold text-slate-800">{item.title}</h3>
                 <p className="mt-1 text-sm leading-relaxed text-slate-600">{item.summary}</p>
                 <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1.5 text-sm">
-                  <a href={item.basisUrl} className="inline-flex min-h-[32px] items-center text-xs text-blue-700 hover:underline">
+                  <a href={item.basisUrl} className="inline-flex min-h-[32px] items-center text-xs text-blue-700 underline">
                     근거: {item.basis}
                   </a>
                   {item.calculator && (
                     <Link
                       href={calculatorHref(item.calculator)}
-                      className="inline-flex min-h-[32px] items-center font-semibold text-blue-700 hover:underline"
+                      className="inline-flex min-h-[32px] items-center font-semibold text-blue-700 underline"
                     >
                       {calculatorBySlug(item.calculator).title} →
                     </Link>
                   )}
                   {item.guide && guideBySlug(item.guide) && (
-                    <Link href={guideHref(item.guide)} className="inline-flex min-h-[32px] items-center font-semibold text-blue-700 hover:underline">
+                    <Link href={guideHref(item.guide)} className="inline-flex min-h-[32px] items-center font-semibold text-blue-700 underline">
                       {guideBySlug(item.guide)!.title} →
                     </Link>
                   )}
@@ -298,11 +298,11 @@ export default function HomePage() {
           </p>
           <p className="mt-2.5 text-xs leading-relaxed text-slate-500">
             기한 마지막 날이 토요일·일요일·공휴일이면 그 다음 날이 기한이 됩니다(
-            <a href="https://www.law.go.kr/법령/국세기본법/제5조" className="text-blue-700 hover:underline">국세기본법 제5조</a>,{' '}
-            <a href="https://www.law.go.kr/법령/지방세기본법/제24조" className="text-blue-700 hover:underline">지방세기본법 제24조</a>
+            <a href="https://www.law.go.kr/법령/국세기본법/제5조" className="text-blue-700 underline">국세기본법 제5조</a>,{' '}
+            <a href="https://www.law.go.kr/법령/지방세기본법/제24조" className="text-blue-700 underline">지방세기본법 제24조</a>
             ). 실제 기한은 고지서나{' '}
-            <a href="https://www.hometax.go.kr/" className="text-blue-700 hover:underline">국세청 홈택스</a>·
-            <a href="https://www.wetax.go.kr/" className="text-blue-700 hover:underline">위택스</a>에서 확인하세요.
+            <a href="https://www.hometax.go.kr/" className="text-blue-700 underline">국세청 홈택스</a>·
+            <a href="https://www.wetax.go.kr/" className="text-blue-700 underline">위택스</a>에서 확인하세요.
           </p>
         </section>
 
@@ -310,7 +310,7 @@ export default function HomePage() {
         <section className="mb-10">
           <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
             <h2 className="text-lg font-bold text-slate-900">세금 계산 방법은 어디서 알아볼 수 있나요?</h2>
-            <Link href="/guide" className="inline-flex min-h-[32px] items-center text-sm font-semibold text-blue-700 hover:underline">
+            <Link href="/guide" className="inline-flex min-h-[32px] items-center text-sm font-semibold text-blue-700 underline">
               가이드 전체 보기 →
             </Link>
           </div>
@@ -357,7 +357,7 @@ export default function HomePage() {
               각 계산기의 근거 자료와 반영 범위를 확인하세요. 법령 원문은 국가법령정보센터에서,
               신고·납부 안내는 홈택스와 위택스에서 확인할 수 있습니다.
             </p>
-            <a href="#calculation-sources" className="mt-2 inline-flex min-h-[40px] items-center text-sm font-semibold text-blue-700 hover:underline">
+            <a href="#calculation-sources" className="mt-2 inline-flex min-h-[40px] items-center text-sm font-semibold text-blue-700 underline">
               계산기별 기준과 공식 출처 보기 →
             </a>
           </div>
@@ -370,7 +370,7 @@ export default function HomePage() {
             아래는 계산기별로 기록된 최근 점검일과 대표 근거 조문입니다. 전체 적용 기준과 제외 조건은
             해당 계산기의 근거 자료를 확인하세요. 홈 안내 수정일과 계산 기준 점검일은 서로 다릅니다.
           </p>
-          <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white">
+          <div className="overflow-x-auto rounded-2xl border border-slate-200 bg-white" tabIndex={0}>
             <table className="w-full min-w-[560px] text-left text-sm">
               <caption className="sr-only">계산기별 최근 점검일과 대표 공식 출처</caption>
               <thead className="bg-slate-50 text-xs text-slate-600">
@@ -387,13 +387,13 @@ export default function HomePage() {
                   return (
                     <tr key={calc.slug}>
                       <th scope="row" className="px-4 py-3 font-medium text-slate-800">
-                        <Link href={calculatorHref(calc.slug)} className="hover:text-blue-700 hover:underline">{calc.title}</Link>
+                        <Link href={calculatorHref(calc.slug)} className="hover:text-blue-700 underline">{calc.title}</Link>
                       </th>
                       <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500">
                         <time dateTime={meta.lastReviewed}>{meta.lastReviewed}</time>
                       </td>
                       <td className="px-4 py-3 text-xs">
-                        <a href={source.url} className="text-blue-700 hover:underline">{source.label}</a>
+                        <a href={source.url} className="text-blue-700 underline">{source.label}</a>
                       </td>
                     </tr>
                   )

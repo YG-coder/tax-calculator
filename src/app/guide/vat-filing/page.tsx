@@ -33,7 +33,7 @@ export default function VatFilingGuidePage() {
         <section className="rounded-xl border border-blue-200 bg-blue-50 p-5">
           <h2 className="text-base font-bold text-slate-800 mb-2">📌 2026년 제1기 부가가치세 확정신고</h2>
           <ul className="space-y-1 text-sm text-slate-700">
-            <li>· <strong>신고·납부기한:</strong> 2026년 7월 27일(월) <span className="text-xs text-slate-500">— 25일이 토요일이라 다음 영업일로 연장</span></li>
+            <li>· <strong>신고·납부기한:</strong> 2026년 7월 27일(월) <span className="text-xs text-slate-600">— 25일이 토요일이라 다음 영업일로 연장</span></li>
             <li>· <strong>과세기간:</strong> 2026년 1월 1일 ~ 6월 30일</li>
             <li>· <strong>대상:</strong> 개인 일반과세자, 법인사업자 (간이과세자는 원칙적으로 제외 — 아래 예외 확인)</li>
           </ul>
@@ -76,7 +76,7 @@ export default function VatFilingGuidePage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 bg-white">
-                <tr><td className="px-4 py-2">일반 1기 확정</td><td className="px-4 py-2">7/1 ~ 7/27 <span className="text-xs text-slate-400">(2026)</span></td><td className="px-4 py-2">1/1 ~ 6/30</td></tr>
+                <tr><td className="px-4 py-2">일반 1기 확정</td><td className="px-4 py-2">7/1 ~ 7/27 <span className="text-xs text-slate-500">(2026)</span></td><td className="px-4 py-2">1/1 ~ 6/30</td></tr>
                 <tr><td className="px-4 py-2">일반 2기 확정</td><td className="px-4 py-2">1/1 ~ 1/25</td><td className="px-4 py-2">7/1 ~ 12/31</td></tr>
                 <tr><td className="px-4 py-2">간이과세자</td><td className="px-4 py-2">1/1 ~ 1/25</td><td className="px-4 py-2">전년 1/1 ~ 12/31</td></tr>
                 <tr><td className="px-4 py-2">법인 분기별</td><td className="px-4 py-2">분기 종료 후 25일</td><td className="px-4 py-2">해당 분기</td></tr>
@@ -188,22 +188,22 @@ export default function VatFilingGuidePage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 계산기</h2>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/vat-calculator" className="text-blue-700 hover:underline font-semibold">
+              <Link href="/vat-calculator" className="text-blue-700 underline font-semibold">
                 → 부가세 계산기
               </Link>
-              <span className="text-slate-500"> · 공급가액·부가세·합계 자동 계산</span>
+              <span className="text-slate-600"> · 공급가액·부가세·합계 자동 계산</span>
             </li>
             <li>
-              <Link href="/vat-type-compare" className="text-blue-700 hover:underline font-semibold">
+              <Link href="/vat-type-compare" className="text-blue-700 underline font-semibold">
                 → 간이과세 vs 일반과세 비교
               </Link>
-              <span className="text-slate-500"> · 내 조건에서 어느 유형이 유리한지 비교</span>
+              <span className="text-slate-600"> · 내 조건에서 어느 유형이 유리한지 비교</span>
             </li>
             <li>
-              <Link href="/income-tax-calculator" className="text-blue-700 hover:underline font-semibold">
+              <Link href="/income-tax-calculator" className="text-blue-700 underline font-semibold">
                 → 종합소득세 계산기
               </Link>
-              <span className="text-slate-500"> · 사업소득에 대한 종합소득세 미리 확인</span>
+              <span className="text-slate-600"> · 사업소득에 대한 종합소득세 미리 확인</span>
             </li>
           </ul>
         </section>

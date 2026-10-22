@@ -95,7 +95,7 @@ export default function PropertyTaxGuidePage() {
         <section>
           <h2 className="text-lg font-bold text-slate-800 mb-2">세율과 1세대 1주택 특례세율</h2>
           <p>주택분 재산세 표준세율은 과세표준 구간별 누진 구조입니다.</p>
-          <div className="rounded-xl border border-slate-100 p-4 mt-3 overflow-x-auto">
+          <div className="rounded-xl border border-slate-100 p-4 mt-3 overflow-x-auto" tabIndex={0}>
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-slate-500 border-b border-slate-100">
@@ -201,12 +201,12 @@ export default function PropertyTaxGuidePage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 계산기</h2>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/property-tax-calculator" className="text-blue-700 hover:underline font-semibold">→ 재산세 계산기</Link>
-              <span className="text-slate-500"> · 공시가격으로 7월·9월 납부액 계산</span>
+              <Link href="/property-tax-calculator" className="text-blue-700 underline font-semibold">→ 재산세 계산기</Link>
+              <span className="text-slate-600"> · 공시가격으로 7월·9월 납부액 계산</span>
             </li>
             <li>
-              <Link href="/capital-gains-tax-calculator" className="text-blue-700 hover:underline font-semibold">→ 양도소득세 계산기</Link>
-              <span className="text-slate-500"> · 주택 양도 시 예상 세액 계산</span>
+              <Link href="/capital-gains-tax-calculator" className="text-blue-700 underline font-semibold">→ 양도소득세 계산기</Link>
+              <span className="text-slate-600"> · 주택 양도 시 예상 세액 계산</span>
             </li>
           </ul>
         </section>
@@ -214,7 +214,7 @@ export default function PropertyTaxGuidePage() {
         <section className="rounded-xl border border-slate-100 bg-slate-50 p-5">
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 가이드</h2>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/guide/one-house-exemption" className="text-blue-700 hover:underline font-semibold">→ 1세대 1주택 양도세 비과세 요건 총정리</Link></li>
+            <li><Link href="/guide/one-house-exemption" className="text-blue-700 underline font-semibold">→ 1세대 1주택 양도세 비과세 요건 총정리</Link></li>
           </ul>
         </section>
 

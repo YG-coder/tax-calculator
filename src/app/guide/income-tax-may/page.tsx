@@ -228,22 +228,22 @@ export default function IncomeTaxMayGuidePage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 계산기</h2>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/income-tax-calculator" className="text-blue-700 hover:underline font-semibold">
+              <Link href="/income-tax-calculator" className="text-blue-700 underline font-semibold">
                 → 종합소득세 계산기
               </Link>
-              <span className="text-slate-500"> · 연 소득과 경비로 예상 세액 확인</span>
+              <span className="text-slate-600"> · 연 소득과 경비로 예상 세액 확인</span>
             </li>
             <li>
-              <Link href="/freelancer-tax-calculator" className="text-blue-700 hover:underline font-semibold">
+              <Link href="/freelancer-tax-calculator" className="text-blue-700 underline font-semibold">
                 → 프리랜서 3.3% 계산기
               </Link>
-              <span className="text-slate-500"> · 1년치 원천징수액 가늠</span>
+              <span className="text-slate-600"> · 1년치 원천징수액 가늠</span>
             </li>
             <li>
-              <Link href="/withholding-calculator" className="text-blue-700 hover:underline font-semibold">
+              <Link href="/withholding-calculator" className="text-blue-700 underline font-semibold">
                 → 원천징수세액 계산기
               </Link>
-              <span className="text-slate-500"> · 월 급여 기준 원천징수 확인</span>
+              <span className="text-slate-600"> · 월 급여 기준 원천징수 확인</span>
             </li>
           </ul>
         </section>

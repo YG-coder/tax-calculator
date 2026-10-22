@@ -172,7 +172,7 @@ export default function SiteNav() {
               <Link
                 href={NAV_ITEMS[0].href}
                 onClick={closeAll}
-                className="mt-3 block border-t border-slate-100 pt-3 text-sm font-semibold text-blue-700 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                className="mt-3 block border-t border-slate-100 pt-3 text-sm font-semibold text-blue-700 underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
               >
                 모든 계산기 보기 →
               </Link>

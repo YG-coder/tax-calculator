@@ -48,7 +48,7 @@ export default function GiftTaxCalculatorPage() {
               aria-invalid={amountError(giftAmount) !== null}
               aria-describedby={amountError(giftAmount) ? 'gift-amount-error' : undefined}
               placeholder="예: 100,000,000" className="calc-input pr-8" />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
           </div>
           {amountError(giftAmount) && (
             <p id="gift-amount-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(giftAmount)}</p>
@@ -78,7 +78,7 @@ export default function GiftTaxCalculatorPage() {
                   aria-invalid={amountError(customDeduct) !== null}
                   aria-describedby={amountError(customDeduct) ? 'custom-deduct-error' : undefined}
                   placeholder="공제금액 직접 입력" className="calc-input pr-8" />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
               </div>
               {amountError(customDeduct) && (
                 <p id="custom-deduct-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(customDeduct)}</p>
@@ -102,7 +102,7 @@ export default function GiftTaxCalculatorPage() {
         <div className="mt-6 space-y-4 animate-slide-up" aria-live="polite">
           {taxBase > 0 ? (
             <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
-              <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">예상 증여세 (산출세액)</p>
+              <p className="text-blue-100 text-xs font-semibold uppercase tracking-widest mb-1">예상 증여세 (산출세액)</p>
               <p className="text-4xl font-black tabular-nums">{fmt(tax)}<span className="text-2xl font-bold ml-1">원</span></p>
               <div className="mt-3 pt-3 border-t border-white/20 text-sm text-blue-100">
                 과세표준 {fmt(taxBase)}원 기준 · 기한 내 신고 시 신고세액공제(3%) 적용 약 {fmt(afterCredit)}원
@@ -135,7 +135,7 @@ export default function GiftTaxCalculatorPage() {
           )}
         </div>
       ) : (
-        <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 text-sm">
+        <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-500 text-sm">
           {hasError ? '입력 오류를 수정하면 계산 결과를 확인할 수 있습니다' : '증여금액을 입력하면 계산됩니다'}
         </div>
       )}
@@ -180,7 +180,7 @@ export default function GiftTaxCalculatorPage() {
 
         <div>
           <h2 className="text-lg font-bold text-slate-800 mb-3">2026년 증여세 세율표</h2>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto" tabIndex={0}>
             <table className="w-full text-xs border-collapse min-w-[320px]">
               <thead><tr className="bg-slate-50">
                 <th className="px-3 py-2 text-left font-semibold text-slate-600">과세표준</th>

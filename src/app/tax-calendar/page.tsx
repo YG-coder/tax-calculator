@@ -80,7 +80,7 @@ export default function TaxCalendarPage() {
                                         {item.calculator && (
                                             <Link
                                                 href={calculatorHref(item.calculator)}
-                                                className="font-semibold text-blue-700 hover:underline"
+                                                className="font-semibold text-blue-700 underline"
                                             >
                                                 {calculatorBySlug(item.calculator).title} →
                                             </Link>
@@ -88,7 +88,7 @@ export default function TaxCalendarPage() {
                                         {item.guide && guideBySlug(item.guide) && (
                                             <Link
                                                 href={guideHref(item.guide)}
-                                                className="font-semibold text-blue-700 hover:underline"
+                                                className="font-semibold text-blue-700 underline"
                                             >
                                                 {guideBySlug(item.guide)!.title} →
                                             </Link>
@@ -128,11 +128,11 @@ export default function TaxCalendarPage() {
                             <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
                                 <Link
                                     href={calculatorHref(item.calculator)}
-                                    className="font-semibold text-blue-700 hover:underline"
+                                    className="font-semibold text-blue-700 underline"
                                 >
                                     {calculatorBySlug(item.calculator).title} →
                                 </Link>
-                                <Link href={guideHref(item.guide)} className="font-semibold text-blue-700 hover:underline">
+                                <Link href={guideHref(item.guide)} className="font-semibold text-blue-700 underline">
                                     {guideBySlug(item.guide)?.title ?? '가이드'} →
                                 </Link>
                                 <a
@@ -154,13 +154,13 @@ export default function TaxCalendarPage() {
                 <ul className="list-disc space-y-1 pl-5">
                     <li>
                         국세(종합소득세·부가가치세·양도소득세·상속세·증여세·종합부동산세):{' '}
-                        <a href="https://www.hometax.go.kr" target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href="https://www.hometax.go.kr" target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             국세청 홈택스
                         </a>
                     </li>
                     <li>
                         지방세(자동차세·재산세):{' '}
-                        <a href="https://www.wetax.go.kr" target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href="https://www.wetax.go.kr" target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             위택스
                         </a>{' '}
                         또는 관할 지방자치단체

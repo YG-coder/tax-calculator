@@ -239,7 +239,7 @@ export default function TaxFreeIncomeCalculatorPage() {
               aria-invalid={amountError(base) !== null}
               aria-describedby={amountError(base) ? 'base-error' : undefined}
               placeholder="예: 3,000,000" className="calc-input pr-8" />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
           </div>
           {amountError(base) && (
             <p id="base-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(base)}</p>
@@ -249,14 +249,14 @@ export default function TaxFreeIncomeCalculatorPage() {
 
         {/* 식대 */}
         <div className="border-t border-slate-100 pt-5">
-          <label htmlFor="meal" className="calc-label">식대 <span className="text-slate-400 font-normal">(월 20만원 한도)</span></label>
+          <label htmlFor="meal" className="calc-label">식대 <span className="text-slate-500 font-normal">(월 20만원 한도)</span></label>
           <div className="relative">
             <input type="text" inputMode="numeric" pattern="[0-9,]*" id="meal" value={formatAmount(meal)}
               onChange={(e) => setMeal(e.target.value)}
               aria-invalid={amountError(meal) !== null}
               aria-describedby={amountError(meal) ? 'meal-error' : undefined}
               placeholder="예: 200,000" className="calc-input pr-8" />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
           </div>
           {amountError(meal) && (
             <p id="meal-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(meal)}</p>
@@ -270,14 +270,14 @@ export default function TaxFreeIncomeCalculatorPage() {
 
         {/* 자가운전보조금 */}
         <div className="border-t border-slate-100 pt-5">
-          <label htmlFor="car" className="calc-label">자가운전보조금 <span className="text-slate-400 font-normal">(월 20만원 한도)</span></label>
+          <label htmlFor="car" className="calc-label">자가운전보조금 <span className="text-slate-500 font-normal">(월 20만원 한도)</span></label>
           <div className="relative">
             <input type="text" inputMode="numeric" pattern="[0-9,]*" id="car" value={formatAmount(car)}
               onChange={(e) => setCar(e.target.value)}
               aria-invalid={amountError(car) !== null}
               aria-describedby={amountError(car) ? 'car-error' : undefined}
               placeholder="예: 200,000" className="calc-input pr-8" />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
           </div>
           {amountError(car) && (
             <p id="car-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(car)}</p>
@@ -303,14 +303,14 @@ export default function TaxFreeIncomeCalculatorPage() {
 
         {/* 출산·보육수당 */}
         <div className="border-t border-slate-100 pt-5">
-          <label htmlFor="childcare" className="calc-label">출산·보육수당 <span className="text-slate-400 font-normal">(6세 이하 자녀 1인당 월 20만원)</span></label>
+          <label htmlFor="childcare" className="calc-label">출산·보육수당 <span className="text-slate-500 font-normal">(6세 이하 자녀 1인당 월 20만원)</span></label>
           <div className="relative">
             <input type="text" inputMode="numeric" pattern="[0-9,]*" id="childcare" value={formatAmount(childcare)}
               onChange={(e) => setChildcare(e.target.value)}
               aria-invalid={amountError(childcare) !== null}
               aria-describedby={amountError(childcare) ? 'childcare-error' : undefined}
               placeholder="예: 200,000" className="calc-input pr-8" />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
           </div>
           {amountError(childcare) && (
             <p id="childcare-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(childcare)}</p>
@@ -330,14 +330,14 @@ export default function TaxFreeIncomeCalculatorPage() {
 
         {/* 연구보조비 */}
         <div className="border-t border-slate-100 pt-5">
-          <label htmlFor="research" className="calc-label">연구보조비·연구활동비 <span className="text-slate-400 font-normal">(월 20만원 한도)</span></label>
+          <label htmlFor="research" className="calc-label">연구보조비·연구활동비 <span className="text-slate-500 font-normal">(월 20만원 한도)</span></label>
           <div className="relative">
             <input type="text" inputMode="numeric" pattern="[0-9,]*" id="research" value={formatAmount(research)}
               onChange={(e) => setResearch(e.target.value)}
               aria-invalid={amountError(research) !== null}
               aria-describedby={amountError(research) ? 'research-error' : undefined}
               placeholder="예: 200,000" className="calc-input pr-8" />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
           </div>
           {amountError(research) && (
             <p id="research-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(research)}</p>
@@ -358,7 +358,7 @@ export default function TaxFreeIncomeCalculatorPage() {
               aria-invalid={amountError(overseas) !== null}
               aria-describedby={amountError(overseas) ? 'overseas-error' : undefined}
               placeholder="예: 1,000,000" className="calc-input pr-8" />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
           </div>
           {amountError(overseas) && (
             <p id="overseas-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(overseas)}</p>
@@ -382,14 +382,14 @@ export default function TaxFreeIncomeCalculatorPage() {
 
         {/* 생산직 초과근로수당 */}
         <div className="border-t border-slate-100 pt-5">
-          <label htmlFor="production" className="calc-label">생산직 연장·야간·휴일근로수당 <span className="text-slate-400 font-normal">(연 240만원 누적 한도)</span></label>
+          <label htmlFor="production" className="calc-label">생산직 연장·야간·휴일근로수당 <span className="text-slate-500 font-normal">(연 240만원 누적 한도)</span></label>
           <div className="relative">
             <input type="text" inputMode="numeric" pattern="[0-9,]*" id="production" value={formatAmount(production)}
               onChange={(e) => setProduction(e.target.value)}
               aria-invalid={amountError(production) !== null}
               aria-describedby={amountError(production) ? 'production-error' : undefined}
               placeholder="이번 달 지급액 예: 500,000" className="calc-input pr-8" />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
           </div>
           {amountError(production) && (
             <p id="production-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(production)}</p>
@@ -398,7 +398,7 @@ export default function TaxFreeIncomeCalculatorPage() {
           <div className="mt-2 rounded-xl border border-blue-100 bg-blue-50 p-3 text-xs leading-relaxed text-slate-600">
             <p>2026년 1월부터 지급받는 급여에는 월정액급여 260만원·직전연도 총급여 3,700만원 기준을 적용합니다.</p>
             <p className="mt-1">일반 생산직 근로자의 수당을 지원합니다. 광산근로자·일용근로자는 연 240만원 한도 대신 해당 수당 전액에 관한 별도 규정이 적용되므로 이 항목의 지원 범위에서 제외합니다.</p>
-            <p className="mt-1">생산직 기준 확인일: <time dateTime={PRODUCTION_RULES_VERIFIED_AT}>{PRODUCTION_RULES_VERIFIED_AT}</time> · <a href={PRODUCTION_AMENDMENT_URL} className="font-semibold text-blue-700 hover:underline">2026년 개정문·부칙 제3조</a></p>
+            <p className="mt-1">생산직 기준 확인일: <time dateTime={PRODUCTION_RULES_VERIFIED_AT}>{PRODUCTION_RULES_VERIFIED_AT}</time> · <a href={PRODUCTION_AMENDMENT_URL} className="font-semibold text-blue-700 underline">2026년 개정문·부칙 제3조</a></p>
           </div>
           <label className="flex items-start gap-2 mt-2 cursor-pointer">
             <input type="checkbox" checked={prodIsProduction} onChange={(e) => setProdIsProduction(e.target.checked)}
@@ -416,7 +416,7 @@ export default function TaxFreeIncomeCalculatorPage() {
                       aria-invalid={amountError(prodFixedPay) !== null}
                       aria-describedby={amountError(prodFixedPay) ? 'prod-fixed-pay-error' : undefined}
                       placeholder="예: 2,000,000" className="calc-input pr-8 text-sm" />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none">원</span>
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none">원</span>
                   </div>
                   {amountError(prodFixedPay) && (
                     <p id="prod-fixed-pay-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(prodFixedPay)}</p>
@@ -431,7 +431,7 @@ export default function TaxFreeIncomeCalculatorPage() {
                       aria-invalid={amountError(prodPrevSalary) !== null}
                       aria-describedby={amountError(prodPrevSalary) ? 'prod-prev-salary-error' : undefined}
                       placeholder="예: 28,000,000" className="calc-input pr-8 text-sm" />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none">원</span>
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none">원</span>
                   </div>
                   {amountError(prodPrevSalary) && (
                     <p id="prod-prev-salary-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(prodPrevSalary)}</p>
@@ -447,7 +447,7 @@ export default function TaxFreeIncomeCalculatorPage() {
                     aria-invalid={amountError(prodYtdFree) !== null}
                     aria-describedby={amountError(prodYtdFree) ? 'prod-ytd-free-error' : undefined}
                     placeholder="예: 0 (없으면 0)" className="calc-input pr-8 text-sm" />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none">원</span>
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-xs pointer-events-none">원</span>
                 </div>
                 {amountError(prodYtdFree) && (
                   <p id="prod-ytd-free-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(prodYtdFree)}</p>
@@ -467,7 +467,7 @@ export default function TaxFreeIncomeCalculatorPage() {
               aria-invalid={amountError(other) !== null}
               aria-describedby={amountError(other) ? 'other-error' : undefined}
               placeholder="예: 0" className="calc-input pr-8" />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
           </div>
           {amountError(other) && (
             <p id="other-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(other)}</p>
@@ -484,7 +484,7 @@ export default function TaxFreeIncomeCalculatorPage() {
       {hasValue ? (
         <div className="mt-6 space-y-4 animate-slide-up" aria-live="polite">
           <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
-            <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">월 비과세 금액</p>
+            <p className="text-blue-100 text-xs font-semibold uppercase tracking-widest mb-1">월 비과세 금액</p>
             <p className="text-4xl font-black tabular-nums">{fmt(monthlyFree)}<span className="text-2xl font-bold ml-1">원</span></p>
             <div className="mt-3 pt-3 border-t border-white/20 flex flex-wrap gap-x-4 gap-y-1 text-sm text-blue-100">
               <span>월 지급총액 {fmt(monthlyGross)}원</span>
@@ -501,20 +501,20 @@ export default function TaxFreeIncomeCalculatorPage() {
                   <div className="flex justify-between items-center">
                     <span className="text-slate-700 font-medium">{r.label}</span>
                     <span className="tabular-nums">
-                      <span className={r.free > 0 ? 'font-bold text-blue-600' : 'text-slate-400'}>비과세 {fmt(r.free)}원</span>
+                      <span className={r.free > 0 ? 'font-bold text-blue-600' : 'text-slate-500'}>비과세 {fmt(r.free)}원</span>
                       {r.paid - r.free > 0 && (
-                        <span className="text-slate-400"> · 과세 {fmt(r.paid - r.free)}원</span>
+                        <span className="text-slate-600"> · 과세 {fmt(r.paid - r.free)}원</span>
                       )}
                     </span>
                   </div>
-                  <p className={`text-xs mt-0.5 ${r.eligible ? 'text-slate-400' : 'text-amber-600'}`}>{r.note}</p>
+                  <p className={`text-xs mt-0.5 ${r.eligible ? 'text-slate-500' : 'text-amber-600'}`}>{r.note}</p>
                 </li>
               ))}
               {rows.every((r) => r.paid === 0) && (
-                <li className="text-sm text-slate-400">입력한 비과세 항목이 없습니다.</li>
+                <li className="text-sm text-slate-500">입력한 비과세 항목이 없습니다.</li>
               )}
             </ul>
-            <p className="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-400">
+            <p className="mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500">
               ※ 각 항목은 <strong>입력하신 요건(체크박스·자녀 수·근무유형 등)을 충족한다고 가정한 참고값</strong>입니다.
               실제 비과세 인정 여부는 회사 급여규정·지급 명목·증빙에 따라 달라질 수 있습니다.
             </p>
@@ -555,14 +555,14 @@ export default function TaxFreeIncomeCalculatorPage() {
                 <p className="text-sm font-bold text-blue-700 tabular-nums">−{fmt(annualFree)}</p>
               </div>
             </div>
-            <p className="mt-3 text-xs text-slate-400">
+            <p className="mt-3 text-xs text-slate-500">
               ※ 위 금액은 <strong>과세대상 급여의 감소분</strong>이며, 실제 줄어드는 소득세·4대보험료는 개인의 한계세율·공제 구조에 따라 달라집니다.
-              월별 예상 세액은 <Link href="/withholding-calculator" className="text-blue-600 hover:underline">원천징수세액 계산기</Link>로 확인하세요.
+              월별 예상 세액은 <Link href="/withholding-calculator" className="text-blue-600 underline">원천징수세액 계산기</Link>로 확인하세요.
             </p>
           </div>
         </div>
       ) : (
-        <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 text-sm text-center px-4">
+        <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-500 text-sm text-center px-4">
           {hasError ? '입력 오류를 수정하면 계산 결과를 확인할 수 있습니다' : '월 기본급과 비과세 항목을 입력하면 과세대상 급여가 계산됩니다'}
         </div>
       )}
@@ -571,7 +571,7 @@ export default function TaxFreeIncomeCalculatorPage() {
       <div className="mt-6 rounded-2xl border border-blue-100 bg-blue-50/60 p-5">
         <p className="text-sm font-bold text-slate-800 mb-1">비과세 항목별 조건이 헷갈리시나요?</p>
         <p className="text-sm text-slate-600 mb-3">각 항목의 적용 요건·한도·자주 틀리는 사례를 정리한 가이드를 참고하세요.</p>
-        <Link href="/guide/tax-free-income" className="text-sm text-blue-700 font-semibold hover:underline">
+        <Link href="/guide/tax-free-income" className="text-sm text-blue-700 font-semibold underline">
           → 근로소득 비과세 판정 방법 가이드
         </Link>
       </div>
@@ -600,7 +600,7 @@ export default function TaxFreeIncomeCalculatorPage() {
 
         <div>
           <h2 className="text-lg font-bold text-slate-800 mb-3">2026년 항목별 비과세 한도</h2>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto" tabIndex={0}>
             <table className="w-full text-xs border-collapse min-w-[360px]">
               <thead><tr className="bg-slate-50">
                 <th className="px-3 py-2 text-left font-semibold text-slate-600">항목</th>

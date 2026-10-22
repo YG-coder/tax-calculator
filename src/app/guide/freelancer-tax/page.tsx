@@ -178,16 +178,16 @@ export default function FreelancerTaxGuidePage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 계산기</h2>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/freelancer-tax-calculator" className="text-blue-700 hover:underline font-semibold">
+              <Link href="/freelancer-tax-calculator" className="text-blue-700 underline font-semibold">
                 → 프리랜서 3.3% 계산기
               </Link>
-              <span className="text-slate-500"> · 계약금액에서 실수령액을 즉시 확인</span>
+              <span className="text-slate-600"> · 계약금액에서 실수령액을 즉시 확인</span>
             </li>
             <li>
-              <Link href="/income-tax-calculator" className="text-blue-700 hover:underline font-semibold">
+              <Link href="/income-tax-calculator" className="text-blue-700 underline font-semibold">
                 → 종합소득세 계산기
               </Link>
-              <span className="text-slate-500"> · 연 수입과 경비로 예상 세액 계산</span>
+              <span className="text-slate-600"> · 연 수입과 경비로 예상 세액 계산</span>
             </li>
           </ul>
         </section>

@@ -101,7 +101,7 @@ export default function TaxFreeIncomeGuidePage() {
           비과세와 소득공제·세액공제·감면의 차이, 항목별 적용 조건, 자주 틀리는 사례까지 한 번에 확인하세요.
         </p>
         <p className="mt-3 text-xs text-slate-500 rounded-lg bg-slate-50 px-3 py-2">
-          👉 항목별 <strong>한도만 빠르게</strong> 확인하려면 <Link href="/guide/non-taxable-allowance" className="text-blue-600 hover:underline">비과세 수당 종류와 한도</Link> 페이지를,
+          👉 항목별 <strong>한도만 빠르게</strong> 확인하려면 <Link href="/guide/non-taxable-allowance" className="text-blue-600 underline">비과세 수당 종류와 한도</Link> 페이지를,
           <strong>내 사례가 비과세인지 판정</strong>하려면 이 가이드를 참고하세요.
         </p>
       </div>
@@ -131,7 +131,7 @@ export default function TaxFreeIncomeGuidePage() {
             네 가지는 세금을 줄인다는 점은 같지만 <strong>적용되는 계산 단계가 다릅니다</strong>. 이를 섞으면 계산이
             틀어지므로 구분이 중요합니다.
           </p>
-          <div className="overflow-x-auto mt-3">
+          <div className="overflow-x-auto mt-3" tabIndex={0}>
             <table className="w-full text-xs border-collapse min-w-[420px]">
               <thead><tr className="bg-slate-50">
                 <th className="px-3 py-2 text-left font-semibold text-slate-600">구분</th>
@@ -163,7 +163,7 @@ export default function TaxFreeIncomeGuidePage() {
         {/* 3~5. 종류·조건·한도 */}
         <section>
           <h2 className="text-lg font-bold text-slate-800 mb-2">3. 주요 비과세 종류와 적용 조건·한도</h2>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto" tabIndex={0}>
             <table className="w-full text-xs border-collapse min-w-[520px]">
               <thead><tr className="bg-slate-50">
                 <th className="px-3 py-2 text-left font-semibold text-slate-600">항목</th>
@@ -248,16 +248,16 @@ export default function TaxFreeIncomeGuidePage() {
           </p>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/tax-free-income-calculator" className="text-blue-700 hover:underline font-semibold">→ 근로소득 비과세 계산기</Link>
-              <span className="text-slate-500"> · 항목별 요건 확인 후 비과세 금액 산출</span>
+              <Link href="/tax-free-income-calculator" className="text-blue-700 underline font-semibold">→ 근로소득 비과세 계산기</Link>
+              <span className="text-slate-600"> · 항목별 요건 확인 후 비과세 금액 산출</span>
             </li>
             <li>
-              <Link href="/withholding-calculator" className="text-blue-700 hover:underline font-semibold">→ 원천징수세액 계산기</Link>
-              <span className="text-slate-500"> · 월 급여 기준 예상 원천징수 확인</span>
+              <Link href="/withholding-calculator" className="text-blue-700 underline font-semibold">→ 원천징수세액 계산기</Link>
+              <span className="text-slate-600"> · 월 급여 기준 예상 원천징수 확인</span>
             </li>
             <li>
-              <Link href="/income-tax-calculator" className="text-blue-700 hover:underline font-semibold">→ 종합소득세 계산기</Link>
-              <span className="text-slate-500"> · 합산 소득 예상 세액</span>
+              <Link href="/income-tax-calculator" className="text-blue-700 underline font-semibold">→ 종합소득세 계산기</Link>
+              <span className="text-slate-600"> · 합산 소득 예상 세액</span>
             </li>
           </ul>
         </section>
@@ -265,9 +265,9 @@ export default function TaxFreeIncomeGuidePage() {
         <section className="rounded-xl border border-slate-100 bg-slate-50 p-5">
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 가이드</h2>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/guide/non-taxable-allowance" className="text-blue-700 hover:underline font-semibold">→ 비과세 수당 종류와 한도</Link></li>
-            <li><Link href="/guide/withholding-year-end" className="text-blue-700 hover:underline font-semibold">→ 원천징수와 연말정산은 어떻게 연결되나</Link></li>
-            <li><Link href="/guide/income-tax-may" className="text-blue-700 hover:underline font-semibold">→ 5월 종합소득세 신고 가이드</Link></li>
+            <li><Link href="/guide/non-taxable-allowance" className="text-blue-700 underline font-semibold">→ 비과세 수당 종류와 한도</Link></li>
+            <li><Link href="/guide/withholding-year-end" className="text-blue-700 underline font-semibold">→ 원천징수와 연말정산은 어떻게 연결되나</Link></li>
+            <li><Link href="/guide/income-tax-may" className="text-blue-700 underline font-semibold">→ 5월 종합소득세 신고 가이드</Link></li>
           </ul>
         </section>
 

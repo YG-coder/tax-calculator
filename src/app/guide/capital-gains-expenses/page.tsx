@@ -123,8 +123,8 @@ export default function CapitalGainsExpensesGuidePage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 계산기</h2>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/capital-gains-tax-calculator" className="text-blue-700 hover:underline font-semibold">→ 양도소득세 계산기</Link>
-              <span className="text-slate-500"> · 필요경비를 반영해 예상 세액 계산</span>
+              <Link href="/capital-gains-tax-calculator" className="text-blue-700 underline font-semibold">→ 양도소득세 계산기</Link>
+              <span className="text-slate-600"> · 필요경비를 반영해 예상 세액 계산</span>
             </li>
           </ul>
         </section>
@@ -132,8 +132,8 @@ export default function CapitalGainsExpensesGuidePage() {
         <section className="rounded-xl border border-slate-100 bg-slate-50 p-5">
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 가이드</h2>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/guide/long-term-holding-deduction" className="text-blue-700 hover:underline font-semibold">→ 장기보유특별공제 계산 방법</Link></li>
-            <li><Link href="/guide/one-house-exemption" className="text-blue-700 hover:underline font-semibold">→ 1세대 1주택 양도세 비과세 요건 총정리</Link></li>
+            <li><Link href="/guide/long-term-holding-deduction" className="text-blue-700 underline font-semibold">→ 장기보유특별공제 계산 방법</Link></li>
+            <li><Link href="/guide/one-house-exemption" className="text-blue-700 underline font-semibold">→ 1세대 1주택 양도세 비과세 요건 총정리</Link></li>
           </ul>
         </section>
 

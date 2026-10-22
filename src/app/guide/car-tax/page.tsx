@@ -38,7 +38,7 @@ export default function CarTaxGuidePage() {
                         자동차세(소유분)는 연세액을 절반씩 나눠 1년에 두 번 냅니다. 제1기분은 1월부터 6월까지에 해당하고
                         납기는 6월 16일부터 6월 30일까지, 제2기분은 7월부터 12월까지에 해당하고 납기는 12월 16일부터
                         12월 31일까지입니다. (
-                        <a href={law('지방세법', '제128조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href={law('지방세법', '제128조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             지방세법 제128조 제1항
                         </a>
                         )
@@ -57,7 +57,7 @@ export default function CarTaxGuidePage() {
                         비영업용 승용자동차는 1,000cc 이하 80원, 1,600cc 이하 140원, 1,600cc 초과 200원을 배기량에 곱해
                         연세액을 구합니다. 영업용은 1,600cc 이하 18원, 2,000cc 이하 19원, 2,500cc 이하 19원, 2,500cc 초과
                         24원입니다. (
-                        <a href={law('지방세법', '제127조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href={law('지방세법', '제127조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             지방세법 제127조 제1항 제1호
                         </a>
                         )
@@ -74,12 +74,12 @@ export default function CarTaxGuidePage() {
                         차령이 3년 이상인 <strong>비영업용 승용자동차</strong>는 기분세액이 매년 5%씩 줄어듭니다. 계산식은{' '}
                         <span className="font-mono text-xs">A / 2 − (A / 2 × 5 / 100) × (n − 2)</span> 이고 A는 연세액,
                         n은 차령입니다. 차령이 12년을 넘으면 12년으로 보므로 경감률은 50%에서 멈춥니다. (
-                        <a href={law('지방세법', '제127조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href={law('지방세법', '제127조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             지방세법 제127조 제1항 제2호
                         </a>
                         )
                     </p>
-                    <div className="mt-3 overflow-x-auto">
+                    <div className="mt-3 overflow-x-auto" tabIndex={0}>
                         <table className="w-full min-w-[360px] border-collapse text-xs">
                             <thead>
                                 <tr className="bg-slate-50">
@@ -124,16 +124,16 @@ export default function CarTaxGuidePage() {
                     <p>
                         연세액을 한꺼번에 납부하면 공제를 받습니다. 흔히 &lsquo;5% 할인&rsquo;이라고 부르지만 정확히는
                         고정 할인율이 아니라 남은 기간에 대한 이자를 돌려주는 구조입니다. 이자율 5%는{' '}
-                        <a href={law('지방세법 시행령', '제125조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href={law('지방세법 시행령', '제125조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             지방세법 시행령 제125조 제6항
                         </a>
                         에 규정돼 있고, 계산식은{' '}
-                        <a href={law('지방세법', '제128조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href={law('지방세법', '제128조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             지방세법 제128조 제3항
                         </a>
                         의 표에 신청 시기별로 따로 정해져 있습니다.
                     </p>
-                    <div className="mt-3 overflow-x-auto">
+                    <div className="mt-3 overflow-x-auto" tabIndex={0}>
                         <table className="w-full min-w-[540px] border-collapse text-xs">
                             <thead>
                                 <tr className="bg-slate-50">
@@ -180,7 +180,7 @@ export default function CarTaxGuidePage() {
                     <p>
                         연세액이 10만원 이하인 자동차는 지방자치단체가 제1기분을 부과할 때 전액을 한 번에 부과·징수할 수
                         있습니다. 이 경우에도 제2기분 세액에 이자율을 곱한 금액이 공제됩니다. (
-                        <a href={law('지방세법', '제128조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href={law('지방세법', '제128조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             지방세법 제128조 제4항
                         </a>
                         ) 실제 고지 방식은 지자체마다 다를 수 있습니다.
@@ -193,7 +193,7 @@ export default function CarTaxGuidePage() {
                         연도 중간에 자동차를 새로 등록하거나 말소하면 그 기분의 세액을 일할계산합니다. 신규등록은 등록일부터
                         기분 말일까지, 말소등록은 기분 초일부터 말소등록일까지입니다. 일할계산한 세액이 2천원 미만이면
                         징수하지 않습니다. (
-                        <a href={law('지방세법', '제130조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">
+                        <a href={law('지방세법', '제130조')} target="_blank" rel="noopener noreferrer" className="text-blue-700 underline">
                             지방세법 제130조
                         </a>
                         )
@@ -228,13 +228,13 @@ export default function CarTaxGuidePage() {
                 <section className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
                     <h2 className="mb-2 text-base font-bold text-slate-800">계산해 보기</h2>
                     <div className="flex flex-col gap-2 text-sm">
-                        <Link href="/car-tax-calculator" className="font-semibold text-blue-700 hover:underline">
+                        <Link href="/car-tax-calculator" className="font-semibold text-blue-700 underline">
                             자동차세 계산기 — 배기량·차령·연납까지 반영 →
                         </Link>
-                        <Link href="/tax-calendar" className="font-semibold text-blue-700 hover:underline">
+                        <Link href="/tax-calendar" className="font-semibold text-blue-700 underline">
                             세금 납부 일정 달력 →
                         </Link>
-                        <a href="https://www.wetax.go.kr" target="_blank" rel="noopener noreferrer" className="font-semibold text-blue-700 hover:underline">
+                        <a href="https://www.wetax.go.kr" target="_blank" rel="noopener noreferrer" className="font-semibold text-blue-700 underline">
                             위택스에서 실제 고지액 조회·납부 →
                         </a>
                     </div>

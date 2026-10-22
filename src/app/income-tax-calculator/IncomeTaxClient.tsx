@@ -42,7 +42,7 @@ export default function IncomeTaxClient() {
               aria-invalid={amountError(income) !== null}
               aria-describedby={amountError(income) ? 'income-error' : undefined}
               placeholder="예: 50,000,000" className="calc-input pr-8" />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
           </div>
           {amountError(income) && (
             <p id="income-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(income)}</p>
@@ -51,14 +51,14 @@ export default function IncomeTaxClient() {
         </div>
 
         <div>
-          <label htmlFor="expense" className="calc-label">필요경비 / 공제액 <span className="text-xs font-normal text-slate-400">(선택)</span></label>
+          <label htmlFor="expense" className="calc-label">필요경비 / 공제액 <span className="text-xs font-normal text-slate-500">(선택)</span></label>
           <div className="relative">
             <input type="text" inputMode="numeric" pattern="[0-9,]*" id="expense" value={formatAmount(expense)}
               onChange={(e) => setExpense(e.target.value)}
               aria-invalid={amountError(expense) !== null}
               aria-describedby={amountError(expense) ? 'expense-error' : undefined}
               placeholder="예: 10,000,000" className="calc-input pr-8" />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
           </div>
           {amountError(expense) && (
             <p id="expense-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(expense)}</p>
@@ -80,7 +80,7 @@ export default function IncomeTaxClient() {
       {hasValue ? (
         <div className="mt-6 space-y-4 animate-slide-up" aria-live="polite">
           <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
-            <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">총 세액</p>
+            <p className="text-blue-100 text-xs font-semibold uppercase tracking-widest mb-1">총 세액</p>
             <p className="text-4xl font-black tabular-nums">{fmt(totalTax)}<span className="text-2xl font-bold ml-1">원</span></p>
             <div className="mt-3 pt-3 border-t border-white/20 flex flex-wrap gap-x-4 gap-y-1 text-sm text-blue-100">
               <span>실효세율 {effectiveRate}%</span>
@@ -90,11 +90,11 @@ export default function IncomeTaxClient() {
 
           <div className="grid grid-cols-2 gap-3">
             <div className="calc-card p-4">
-              <p className="text-xs font-semibold text-slate-400 mb-1">세후 소득</p>
+              <p className="text-xs font-semibold text-slate-500 mb-1">세후 소득</p>
               <p className="text-lg font-bold text-emerald-600 tabular-nums">{fmt(netIncome)}원</p>
             </div>
             <div className="calc-card p-4">
-              <p className="text-xs font-semibold text-slate-400 mb-1">과세표준</p>
+              <p className="text-xs font-semibold text-slate-500 mb-1">과세표준</p>
               <p className="text-lg font-bold text-slate-900 tabular-nums">{fmt(taxBase)}원</p>
             </div>
           </div>
@@ -119,7 +119,7 @@ export default function IncomeTaxClient() {
           </div>
         </div>
       ) : (
-        <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 text-sm">
+        <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-500 text-sm">
           {hasError ? '입력 오류를 수정하면 계산 결과를 확인할 수 있습니다' : '소득을 입력하면 계산됩니다'}
         </div>
       )}
@@ -147,7 +147,7 @@ export default function IncomeTaxClient() {
 
         <div>
           <h2 className="text-lg font-bold text-slate-800 mb-3">2026년 종합소득세 세율표</h2>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto" tabIndex={0}>
             <table className="w-full text-xs border-collapse min-w-[320px]">
               <thead><tr className="bg-slate-50">
                 <th className="px-3 py-2 text-left font-semibold text-slate-600">과세표준</th>
@@ -191,7 +191,7 @@ export default function IncomeTaxClient() {
               <li>소득세 = 84만 + (3,500만 − 1,400만) × 15% = <strong>399만 원</strong></li>
               <li>지방소득세 = 39.9만 원</li>
               <li>총 세액 ≈ <strong>438.9만 원</strong></li>
-              <li className="text-xs text-slate-500 mt-1">3.3%로 이미 165만 원 원천징수됐다면 약 274만 원 추가 납부</li>
+              <li className="text-xs text-slate-600 mt-1">3.3%로 이미 165만 원 원천징수됐다면 약 274만 원 추가 납부</li>
             </ul>
           </div>
 
@@ -212,7 +212,7 @@ export default function IncomeTaxClient() {
               <li>소득세 = 1,536만 + (1.1억 − 8,800만) × 35% = <strong>2,306만 원</strong></li>
               <li>지방소득세 = 230.6만 원</li>
               <li>총 세액 ≈ <strong>2,536.6만 원</strong></li>
-              <li className="text-xs text-slate-500 mt-1">실효세율 약 16.9%</li>
+              <li className="text-xs text-slate-600 mt-1">실효세율 약 16.9%</li>
             </ul>
           </div>
         </div>

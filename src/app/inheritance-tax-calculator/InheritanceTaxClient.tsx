@@ -63,7 +63,7 @@ export default function InheritanceTaxCalculatorPage() {
               aria-invalid={amountError(estate) !== null}
               aria-describedby={amountError(estate) ? 'estate-error' : undefined}
               placeholder="예: 1,000,000,000" className="calc-input pr-8" />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
           </div>
           {amountError(estate) && (
             <p id="estate-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(estate)}</p>
@@ -79,7 +79,7 @@ export default function InheritanceTaxCalculatorPage() {
               aria-invalid={amountError(debts) !== null}
               aria-describedby={amountError(debts) ? 'debts-error' : undefined}
               placeholder="예: 100,000,000" className="calc-input pr-8" />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
           </div>
           {amountError(debts) && (
             <p id="debts-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(debts)}</p>
@@ -100,7 +100,7 @@ export default function InheritanceTaxCalculatorPage() {
                     : 'bg-white border-slate-200 text-slate-600 hover:border-blue-300'
                 }`}>
                 <span>{label}</span>
-                {desc && <span className={`block text-xs mt-0.5 ${deductPreset === value ? 'text-blue-200' : 'text-slate-400'}`}>{desc}</span>}
+                {desc && <span className={`block text-xs mt-0.5 ${deductPreset === value ? 'text-white' : 'text-slate-500'}`}>{desc}</span>}
               </button>
             ))}
           </div>
@@ -112,7 +112,7 @@ export default function InheritanceTaxCalculatorPage() {
                   aria-invalid={amountError(customDeduct) !== null}
                   aria-describedby={amountError(customDeduct) ? 'custom-deduct-error' : undefined}
                   placeholder="공제금액 직접 입력" className="calc-input pr-8" />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
               </div>
               {amountError(customDeduct) && (
                 <p id="custom-deduct-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(customDeduct)}</p>
@@ -162,7 +162,7 @@ export default function InheritanceTaxCalculatorPage() {
                     aria-invalid={amountError(spouseShare) !== null}
                     aria-describedby={amountError(spouseShare) ? 'spouse-share-error' : undefined}
                     placeholder="예: 600,000,000" className="calc-input pr-8" />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm pointer-events-none">원</span>
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm pointer-events-none">원</span>
                 </div>
                 {amountError(spouseShare) && (
                   <p id="spouse-share-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">{amountError(spouseShare)}</p>
@@ -211,7 +211,7 @@ export default function InheritanceTaxCalculatorPage() {
         <div className="mt-6 space-y-4 animate-slide-up" aria-live="polite">
           {taxBase > 0 ? (
             <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
-              <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">예상 상속세 (산출세액)</p>
+              <p className="text-blue-100 text-xs font-semibold uppercase tracking-widest mb-1">예상 상속세 (산출세액)</p>
               <p className="text-4xl font-black tabular-nums">{fmt(totalTax)}<span className="text-2xl font-bold ml-1">원</span></p>
               <p className="mt-2 text-sm text-blue-100">과세표준 {fmt(taxBase)}원 기준 · 지방소득세 없음</p>
             </div>
@@ -254,7 +254,7 @@ export default function InheritanceTaxCalculatorPage() {
           )}
         </div>
       ) : (
-        <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 text-sm">
+        <div className="mt-6 h-36 border-2 border-dashed border-slate-200 rounded-2xl flex items-center justify-center text-slate-500 text-sm">
           {hasError ? '입력 오류를 수정하면 계산 결과를 확인할 수 있습니다' : '상속재산을 입력하면 계산됩니다'}
         </div>
       )}
@@ -296,7 +296,7 @@ export default function InheritanceTaxCalculatorPage() {
 
         <div>
           <h2 className="text-lg font-bold text-slate-800 mb-3">2026년 상속세 세율표</h2>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto" tabIndex={0}>
             <table className="w-full text-xs border-collapse min-w-[320px]">
               <thead><tr className="bg-slate-50">
                 <th className="px-3 py-2 text-left font-semibold text-slate-600">과세표준</th>
@@ -353,7 +353,7 @@ export default function InheritanceTaxCalculatorPage() {
               <li>배우자공제 = min(실제 6억, 한도 6.4억) = <strong>6억 원</strong></li>
               <li>총 공제 = 일괄공제 5억 + 배우자공제 6억 = <strong>11억 원</strong></li>
               <li>과세표준 = 15억 − 11억 = <strong>4억 원</strong> → 산출세액 = 4억 × 20% − 1,000만 = <strong>7,000만 원</strong></li>
-              <li className="text-xs text-slate-500 mt-1">같은 15억이라도 배우자가 실제로 얼마를 상속받느냐에 따라 세액이 달라집니다.</li>
+              <li className="text-xs text-slate-600 mt-1">같은 15억이라도 배우자가 실제로 얼마를 상속받느냐에 따라 세액이 달라집니다.</li>
             </ul>
           </div>
         </div>

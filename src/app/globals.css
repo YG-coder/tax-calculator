@@ -7,6 +7,16 @@
   body {
     @apply bg-slate-50 text-slate-900 antialiased;
   }
+  /*
+   * body 는 세로 flex 컨테이너라서 flex 항목인 main 의 최소 너비가 기본값(auto)이면
+   * 넓은 표(min-w-[540px] 등)의 최소 너비를 따라 main 과 문서 전체가 뷰포트보다 넓어진다.
+   * 최소 너비를 0으로 두면 main 은 뷰포트 폭에 맞고, 표는 overflow-x-auto 래퍼 안에서만
+   * 가로 스크롤된다. 문서 전체 overflow-x:hidden 으로 내용을 숨기지 않는다.
+   */
+  body > main {
+    min-width: 0;
+    width: 100%;
+  }
 }
 
 @layer components {
@@ -26,7 +36,7 @@
     @apply block text-sm font-semibold text-slate-700 mb-1.5;
   }
   .calc-hint {
-    @apply text-xs text-slate-400 mt-1;
+    @apply text-xs text-slate-600 mt-1;
   }
   .calc-btn {
     @apply inline-flex items-center justify-center px-6 py-3 rounded-xl

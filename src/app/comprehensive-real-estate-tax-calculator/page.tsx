@@ -61,7 +61,7 @@ export default function Page() {
 
                 <div className="rounded-2xl border border-slate-200 bg-white p-5">
                     <h3 className="text-sm font-semibold text-slate-800">주택분 세율 (법 제9조 제1항)</h3>
-                    <div className="mt-3 overflow-x-auto">
+                    <div className="mt-3 overflow-x-auto" tabIndex={0}>
                         <table className="w-full min-w-[420px] border-collapse text-xs">
                             <thead>
                                 <tr className="bg-slate-50">
@@ -165,16 +165,16 @@ export default function Page() {
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
                     <h3 className="text-sm font-semibold text-slate-800">함께 보면 좋은 문서</h3>
                     <div className="mt-2 flex flex-col gap-2 text-sm">
-                        <Link href="/guide/comprehensive-real-estate-tax" className="font-semibold text-blue-700 hover:underline">
+                        <Link href="/guide/comprehensive-real-estate-tax" className="font-semibold text-blue-700 underline">
                             종합부동산세 계산 방법과 12월 납부기간 →
                         </Link>
-                        <Link href="/property-tax-calculator" className="font-semibold text-blue-700 hover:underline">
+                        <Link href="/property-tax-calculator" className="font-semibold text-blue-700 underline">
                             재산세 계산기 — 7월·9월 납부액 →
                         </Link>
-                        <Link href="/capital-gains-tax-calculator" className="font-semibold text-blue-700 hover:underline">
+                        <Link href="/capital-gains-tax-calculator" className="font-semibold text-blue-700 underline">
                             양도소득세 계산기 — 팔 때의 세금 →
                         </Link>
-                        <Link href="/tax-calendar" className="font-semibold text-blue-700 hover:underline">
+                        <Link href="/tax-calendar" className="font-semibold text-blue-700 underline">
                             세금 납부 일정 달력 →
                         </Link>
                     </div>

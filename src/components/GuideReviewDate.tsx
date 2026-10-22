@@ -10,7 +10,7 @@ function displayDate(date: string): string {
 }
 
 /** 가이드 레지스트리에 기록된 실제 최근 검토일을 표시한다. */
-export default function GuideReviewDate({ slug, className = 'text-xs text-slate-400' }: GuideReviewDateProps) {
+export default function GuideReviewDate({ slug, className = 'text-xs text-slate-500' }: GuideReviewDateProps) {
   const date = GUIDE_LAST_MODIFIED[slug]
 
   return (

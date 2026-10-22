@@ -305,16 +305,16 @@ export default function PropertyTaxCalculatorClient() {
 
         {/* 가이드 링크 */}
         <div className="space-y-2 text-sm">
-          <Link href="/guide/property-tax" className="block font-semibold text-blue-700 hover:underline">
+          <Link href="/guide/property-tax" className="block font-semibold text-blue-700 underline">
             → {TAX_YEAR}년 재산세 계산 방법과 7월·9월 납부기간 가이드
           </Link>
           <Link
             href="/comprehensive-real-estate-tax-calculator"
-            className="block font-semibold text-blue-700 hover:underline"
+            className="block font-semibold text-blue-700 underline"
           >
             → 공시가격이 9억원(1세대 1주택 12억원)을 넘는다면 종합부동산세 계산기
           </Link>
-          <Link href="/tax-calendar" className="block font-semibold text-blue-700 hover:underline">
+          <Link href="/tax-calendar" className="block font-semibold text-blue-700 underline">
             → 세금 납부 일정 달력
           </Link>
         </div>

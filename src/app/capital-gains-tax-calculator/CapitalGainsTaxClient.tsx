@@ -182,7 +182,7 @@ export default function CapitalGainsTaxClient() {
                                 placeholder="예: 500,000,000"
                                 className="calc-input pr-8"
                             />
-                            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">원</span>
+                            <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">원</span>
                         </div>
                         {amountError(value) && (
                             <p id={`${id}-error`} role="alert" className="mt-1 text-xs font-semibold text-red-600">
@@ -258,7 +258,7 @@ export default function CapitalGainsTaxClient() {
                                         placeholder="예: 24"
                                         className="calc-input pr-14"
                                     />
-                                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">개월</span>
+                                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500">개월</span>
                                 </div>
                                 {monthsError && (
                                     <p id="residenceMonths-error" role="alert" className="mt-1 text-xs font-semibold text-red-600">
@@ -322,7 +322,7 @@ export default function CapitalGainsTaxClient() {
             </div>
 
             {result === null ? (
-                <div className="mt-6 flex h-36 items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 text-sm text-slate-400">
+                <div className="mt-6 flex h-36 items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 text-sm text-slate-500">
                     양도가액·취득가액과 취득일·양도일을 입력하면 계산됩니다
                 </div>
             ) : !result.ok ? (
@@ -335,7 +335,7 @@ export default function CapitalGainsTaxClient() {
             ) : (
                 <div className="animate-slide-up mt-6 space-y-4" aria-live="polite">
                     <div className="rounded-2xl p-6 text-white" style={{ background: 'linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%)' }}>
-                        <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-blue-200">
+                        <p className="mb-1 text-xs font-semibold uppercase tracking-widest text-blue-100">
                             예상 총 부담세액 (지방소득세 포함)
                         </p>
                         <p className="text-4xl font-black tabular-nums">
@@ -415,7 +415,7 @@ export default function CapitalGainsTaxClient() {
                                 {result.rate.compared.map((c) => (
                                     <li key={c.label} className="flex justify-between text-sm">
                                         <span className="text-slate-600">{c.label}</span>
-                                        <span className={`font-bold tabular-nums ${c.tax === result.incomeTax ? 'text-blue-600' : 'text-slate-400'}`}>
+                                        <span className={`font-bold tabular-nums ${c.tax === result.incomeTax ? 'text-blue-600' : 'text-slate-500'}`}>
                                             {won(c.tax)}
                                         </span>
                                     </li>
@@ -434,7 +434,7 @@ export default function CapitalGainsTaxClient() {
                                 {result.thresholds.map((t) => (
                                     <li key={t.years} className="flex justify-between text-sm">
                                         <span className="text-slate-600">{t.years}년 충족일</span>
-                                        <span className={`font-semibold tabular-nums ${t.met ? 'text-emerald-600' : 'text-slate-400'}`}>
+                                        <span className={`font-semibold tabular-nums ${t.met ? 'text-emerald-600' : 'text-slate-500'}`}>
                                             {t.date} {t.met ? '충족' : '미충족'}
                                         </span>
                                     </li>
@@ -495,7 +495,7 @@ export default function CapitalGainsTaxClient() {
 
                 <div>
                     <h2 className="mb-3 text-lg font-bold text-slate-800">보유기간별 세율 (「소득세법」 제104조 제1항)</h2>
-                    <div className="overflow-x-auto">
+                    <div className="overflow-x-auto" tabIndex={0}>
                         <table className="w-full min-w-[420px] border-collapse text-xs">
                             <thead>
                                 <tr className="bg-slate-50">
@@ -530,7 +530,7 @@ export default function CapitalGainsTaxClient() {
                         1세대 1주택이면서 보유기간 중 거주기간이 2년 이상이면 표 2(보유 최대 40% + 거주 최대 40% = 최대 80%)를
                         적용합니다.
                     </p>
-                    <div className="overflow-x-auto">
+                    <div className="overflow-x-auto" tabIndex={0}>
                         <table className="w-full min-w-[440px] border-collapse text-xs">
                             <thead>
                                 <tr className="bg-slate-50">
@@ -646,22 +646,22 @@ export default function CapitalGainsTaxClient() {
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
                     <h2 className="mb-2 text-base font-bold text-slate-800">함께 보면 좋은 문서</h2>
                     <div className="flex flex-col gap-2 text-sm">
-                        <Link href="/guide/one-house-exemption" className="font-semibold text-blue-700 hover:underline">
+                        <Link href="/guide/one-house-exemption" className="font-semibold text-blue-700 underline">
                             1세대 1주택 양도세 비과세 요건 총정리 →
                         </Link>
-                        <Link href="/guide/long-term-holding-deduction" className="font-semibold text-blue-700 hover:underline">
+                        <Link href="/guide/long-term-holding-deduction" className="font-semibold text-blue-700 underline">
                             장기보유특별공제 완전 정리 →
                         </Link>
-                        <Link href="/guide/capital-gains-expenses" className="font-semibold text-blue-700 hover:underline">
+                        <Link href="/guide/capital-gains-expenses" className="font-semibold text-blue-700 underline">
                             양도세 필요경비, 인정되는 것과 안 되는 것 →
                         </Link>
-                        <Link href="/property-tax-calculator" className="font-semibold text-blue-700 hover:underline">
+                        <Link href="/property-tax-calculator" className="font-semibold text-blue-700 underline">
                             재산세 계산기 — 보유할 때의 세금 →
                         </Link>
-                        <Link href="/comprehensive-real-estate-tax-calculator" className="font-semibold text-blue-700 hover:underline">
+                        <Link href="/comprehensive-real-estate-tax-calculator" className="font-semibold text-blue-700 underline">
                             종합부동산세 계산기 →
                         </Link>
-                        <Link href="/tax-calendar" className="font-semibold text-blue-700 hover:underline">
+                        <Link href="/tax-calendar" className="font-semibold text-blue-700 underline">
                             세금 납부 일정 달력 →
                         </Link>
                     </div>

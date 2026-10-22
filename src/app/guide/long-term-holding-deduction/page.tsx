@@ -52,7 +52,7 @@ export default function LongTermHoldingDeductionGuidePage() {
             토지·건물 및 1세대 1주택이 아닌 주택에 적용됩니다. 3년부터 6%, 이후 1년당 2%p씩 늘어
             15년 이상이면 30%입니다.
           </p>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto" tabIndex={0}>
             <table className="w-full text-xs border-collapse min-w-[320px]">
               <thead><tr className="bg-slate-50">
                 <th className="px-3 py-2 text-left font-semibold text-slate-600">보유기간</th>
@@ -83,7 +83,7 @@ export default function LongTermHoldingDeductionGuidePage() {
             1세대 1주택으로서 <strong>2년 이상 거주</strong>한 경우 적용됩니다. 보유기간 공제율과
             거주기간 공제율을 <strong>합산</strong>합니다(각각 최대 40%, 합산 최대 80%).
           </p>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto" tabIndex={0}>
             <table className="w-full text-xs border-collapse min-w-[360px]">
               <thead><tr className="bg-slate-50">
                 <th className="px-3 py-2 text-left font-semibold text-slate-600">기간</th>
@@ -176,8 +176,8 @@ export default function LongTermHoldingDeductionGuidePage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 계산기</h2>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/capital-gains-tax-calculator" className="text-blue-700 hover:underline font-semibold">→ 양도소득세 계산기</Link>
-              <span className="text-slate-500"> · 취득·양도가액으로 예상 세액 계산</span>
+              <Link href="/capital-gains-tax-calculator" className="text-blue-700 underline font-semibold">→ 양도소득세 계산기</Link>
+              <span className="text-slate-600"> · 취득·양도가액으로 예상 세액 계산</span>
             </li>
           </ul>
         </section>
@@ -185,8 +185,8 @@ export default function LongTermHoldingDeductionGuidePage() {
         <section className="rounded-xl border border-slate-100 bg-slate-50 p-5">
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 가이드</h2>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/guide/one-house-exemption" className="text-blue-700 hover:underline font-semibold">→ 1세대 1주택 양도세 비과세 요건 총정리</Link></li>
-            <li><Link href="/guide/capital-gains-expenses" className="text-blue-700 hover:underline font-semibold">→ 양도세 필요경비, 인정되는 것과 안 되는 것</Link></li>
+            <li><Link href="/guide/one-house-exemption" className="text-blue-700 underline font-semibold">→ 1세대 1주택 양도세 비과세 요건 총정리</Link></li>
+            <li><Link href="/guide/capital-gains-expenses" className="text-blue-700 underline font-semibold">→ 양도세 필요경비, 인정되는 것과 안 되는 것</Link></li>
           </ul>
         </section>
 

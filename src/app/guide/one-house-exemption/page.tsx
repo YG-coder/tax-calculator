@@ -138,8 +138,8 @@ export default function OneHouseExemptionGuidePage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 계산기</h2>
           <ul className="space-y-2 text-sm">
             <li>
-              <Link href="/capital-gains-tax-calculator" className="text-blue-700 hover:underline font-semibold">→ 양도소득세 계산기</Link>
-              <span className="text-slate-500"> · 취득·양도가액으로 예상 세액 계산</span>
+              <Link href="/capital-gains-tax-calculator" className="text-blue-700 underline font-semibold">→ 양도소득세 계산기</Link>
+              <span className="text-slate-600"> · 취득·양도가액으로 예상 세액 계산</span>
             </li>
           </ul>
         </section>
@@ -147,7 +147,7 @@ export default function OneHouseExemptionGuidePage() {
         <section className="rounded-xl border border-slate-100 bg-slate-50 p-5">
           <h2 className="text-base font-bold text-slate-800 mb-2">관련 가이드</h2>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/guide/income-tax-may" className="text-blue-700 hover:underline font-semibold">→ 5월 종합소득세 신고 가이드</Link></li>
+            <li><Link href="/guide/income-tax-may" className="text-blue-700 underline font-semibold">→ 5월 종합소득세 신고 가이드</Link></li>
           </ul>
         </section>
 

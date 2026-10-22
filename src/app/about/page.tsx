@@ -68,7 +68,7 @@ export default function AboutPage() {
             일반 사용자의 관점에서 정리하고, 국세청 공개 자료와 관련 법령 기준을 참고하여
             계산기 구조와 안내 문구를 구성했습니다. 동일한 운영자가 만든
             {' '}<Link href={SALARY_SITE_URL} target="_blank" rel="noopener noreferrer"
-                       className="text-blue-600 hover:underline">{withParticle(SALARY_SITE_NAME, "과/와")}</Link>
+                       className="text-blue-600 underline">{withParticle(SALARY_SITE_NAME, "과/와")}</Link>
              함께 한국 세금·급여 계산 도구 라인업을 구성하고 있습니다.
           </p>
         </section>
@@ -102,7 +102,7 @@ export default function AboutPage() {
             </li>
             <li>
               <strong>오류 제보 채널 운영</strong> — 계산 결과나 안내 문구에 오류가
-              확인되면 <Link href="/contact" className="text-blue-600 hover:underline">문의 페이지</Link>
+              확인되면 <Link href="/contact" className="text-blue-600 underline">문의 페이지</Link>
               {' '}또는 이메일로 제보를 받아 빠르게 검토·수정합니다.
             </li>
           </ul>
@@ -132,8 +132,8 @@ export default function AboutPage() {
             본 사이트의 모든 계산기는 다음 공식 자료를 기준으로 작성되었습니다.
           </p>
           <ul className="list-disc pl-5 space-y-1 mt-2">
-            <li>국세청 홈택스 (<a href="https://www.hometax.go.kr" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">www.hometax.go.kr</a>) — 신고·납부 기준</li>
-            <li>국세법령정보시스템 (<a href="https://taxlaw.nts.go.kr" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">taxlaw.nts.go.kr</a>) — 세법 본문 및 시행령</li>
+            <li>국세청 홈택스 (<a href="https://www.hometax.go.kr" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">www.hometax.go.kr</a>) — 신고·납부 기준</li>
+            <li>국세법령정보시스템 (<a href="https://taxlaw.nts.go.kr" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">taxlaw.nts.go.kr</a>) — 세법 본문 및 시행령</li>
             <li>소득세법 제55조 — 종합소득세 누진세율</li>
             <li>소득세법 시행령 별표 2 (제189조제1항 관련) — 근로소득 간이세액표</li>
             <li>소득세법 제12조 및 시행령 — 근로소득 비과세</li>
@@ -172,7 +172,7 @@ export default function AboutPage() {
               <li key={href} className="flex gap-3">
                 <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-blue-400 mt-[7px]" />
                 <span>
-                  <Link href={href} className="font-semibold text-blue-600 hover:underline">
+                  <Link href={href} className="font-semibold text-blue-600 underline">
                     {label}
                   </Link>
                   <span className="text-slate-500"> — {desc}</span>
@@ -187,7 +187,7 @@ export default function AboutPage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">세금 가이드</h2>
           <p>
             계산기뿐 아니라 신고 시기, 절세 팁, 자주 하는 실수 등을 정리한
-            <Link href="/guide" className="text-blue-600 hover:underline mx-1">세금 가이드</Link>
+            <Link href="/guide" className="text-blue-600 underline mx-1">세금 가이드</Link>
             도 함께 운영하고 있습니다. 프리랜서 종합소득세 신고법, 부가세 신고 체크리스트,
             5월 종소세 신고 가이드 등이 포함되어 있습니다.
           </p>
@@ -218,7 +218,7 @@ export default function AboutPage() {
           <h2 className="text-base font-bold text-slate-800 mb-2">문의</h2>
           <p>
             계산 오류 신고, 기능 제안, 광고 문의 등은
-            <Link href="/contact" className="text-blue-600 hover:underline mx-1">문의 페이지</Link>
+            <Link href="/contact" className="text-blue-600 underline mx-1">문의 페이지</Link>
             또는 이메일(<span className="font-medium text-slate-800">support@taxsim.kr</span>)
             로 연락 부탁드립니다.
           </p>

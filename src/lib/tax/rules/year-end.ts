@@ -78,7 +78,19 @@ export function cardDeduction2026(salary: number, children: number, card: YearEn
     threshold -= used
     return (amount - used) * rate / 100
   }
-  const raw = Math.floor(tier(credit, 15) + tier(debit + culture, 30) + tier(card.market + card.transit, 40))
+  // 원 단위 정수 입력이면 문턱·공제액을 100배한 정수로 모아 한 번만 내림한다.
+  // 세 구간 공제액(각각 ×15·30·40%)의 합이 정확히 정수일 때 부동소수 합이 0.999…가 되어 1원이 빠지지 않게 한다.
+  const exactCard = [salary, credit, debit + culture, card.market + card.transit].every(Number.isSafeInteger)
+  let rest100 = salary * 25
+  const tier100 = (amount: number, rate: number) => {
+    const amount100 = amount * 100
+    const used = Math.min(amount100, rest100)
+    rest100 -= used
+    return (amount100 - used) * rate
+  }
+  const raw = exactCard
+    ? Math.floor((tier100(credit, 15) + tier100(debit + culture, 30) + tier100(card.market + card.transit, 40)) / 10_000)
+    : Math.floor(tier(credit, 15) + tier(debit + culture, 30) + tier(card.market + card.transit, 40))
   const cap = (low ? R.cardLowSalaryCaps : R.cardHighSalaryCaps)[Math.max(0, Math.min(2, Math.floor(children)))]
   const special = percent(card.market + card.transit, 40) + percent(culture, 30)
   const extra = Math.min(Math.max(0, raw - cap), special, low ? R.cardLowExtraLimit : R.cardHighExtraLimit)

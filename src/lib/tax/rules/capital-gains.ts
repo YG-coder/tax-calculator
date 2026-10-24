@@ -340,6 +340,17 @@ const pct = (r: number) => {
   return `${Number.isInteger(v) ? v : v.toFixed(2)}%`;
 };
 
+/**
+ * 과세표준 × 단일세율(70%·60%·50%·40%)의 원 미만 내림.
+ * 0.7 같은 세율은 이진수로 정확히 표현되지 않아 과세표준이 10원 단위면 산출세액이 1원 적게 나온다.
+ * 세율을 천분율 정수로 바꿔 정수로 계산한다.
+ */
+function floorByFlatRate(taxBase: number, rate: number): number {
+  const permille = Math.round(rate * 1000);
+  if (!Number.isSafeInteger(taxBase) || Math.abs(rate * 1000 - permille) > 1e-9) return Math.floor(taxBase * rate);
+  return Number((BigInt(taxBase) * BigInt(permille)) / BigInt(1000));
+}
+
 export function calculateCapitalGains(input: CapitalGainsInput): CapitalGainsResult {
   const errors: string[] = [];
   const notes: string[] = [];
@@ -429,6 +440,8 @@ export function calculateCapitalGains(input: CapitalGainsInput): CapitalGainsRes
   /* ② 1세대 1주택 비과세 — 법 제89조 제1항 제3호, 영 제154조 제1항 */
   let exemption: CapitalGainsSuccess["exemption"] = null;
   let taxableRatio = 1;
+  // 고가주택 과세비율을 분자·분모 정수로도 보관해 내림을 정확히 계산한다.
+  let taxableRatioParts: [number, number] | null = null;
 
   if (isHouse && input.oneHouseOneHousehold) {
     const reasons: string[] = [];
@@ -449,6 +462,7 @@ export function calculateCapitalGains(input: CapitalGainsInput): CapitalGainsRes
       reasons.push(`양도가액이 ${won(rules.highPriceThreshold)} 이하이므로 전액 비과세입니다.`);
     } else if (eligible && isHighPrice) {
       taxableRatio = (input.transferPrice - rules.highPriceThreshold) / input.transferPrice;
+      taxableRatioParts = [input.transferPrice - rules.highPriceThreshold, input.transferPrice];
       reasons.push(
         `양도가액이 ${withParticle(won(rules.highPriceThreshold), "을/를")} 초과하는 고가주택이므로 초과분만 과세합니다. (영 제160조)`,
       );
@@ -462,7 +476,11 @@ export function calculateCapitalGains(input: CapitalGainsInput): CapitalGainsRes
     };
   }
 
-  const taxableGain = Math.floor(positiveGain * taxableRatio);
+  // 양도차익 × (양도가액 − 12억) ÷ 양도가액. 이진 부동소수로 곱하면 정확히 정수인 과세 양도차익에서 1원이 빠진다.
+  const taxableGain =
+    taxableRatioParts && [positiveGain, ...taxableRatioParts].every(Number.isSafeInteger) && taxableRatioParts[1] > 0
+      ? Number((BigInt(positiveGain) * BigInt(taxableRatioParts[0])) / BigInt(taxableRatioParts[1]))
+      : Math.floor(positiveGain * taxableRatio);
 
   /* ③ 중과 판정 — 법 제104조 제7항 */
   const housesOwned: HouseCount = input.housesOwned ?? 1;
@@ -577,7 +595,7 @@ export function calculateCapitalGains(input: CapitalGainsInput): CapitalGainsRes
     const heavyTax = Math.floor(basicIncomeTax(taxBase) + taxBase * surcharge);
     compared.push({ label: `기본세율 + ${(surcharge * 100).toFixed(0)}%p (중과)`, tax: heavyTax });
     if (flatShort !== null) {
-      const shortTax = Math.floor(taxBase * flatShort);
+      const shortTax = floorByFlatRate(taxBase, flatShort);
       compared.push({ label: `단기 보유 ${pct(flatShort)}`, tax: shortTax });
     }
     incomeTax = Math.max(...compared.map((c) => c.tax));
@@ -593,7 +611,7 @@ export function calculateCapitalGains(input: CapitalGainsInput): CapitalGainsRes
       compared,
     };
   } else if (flatShort !== null) {
-    incomeTax = Math.floor(taxBase * flatShort);
+    incomeTax = floorByFlatRate(taxBase, flatShort);
     compared.push({ label: `단기 보유 ${pct(flatShort)}`, tax: incomeTax });
     rateInfo = {
       kind: "flat",
@@ -603,7 +621,7 @@ export function calculateCapitalGains(input: CapitalGainsInput): CapitalGainsRes
       compared,
     };
   } else if (flatLong !== null) {
-    incomeTax = Math.floor(taxBase * flatLong);
+    incomeTax = floorByFlatRate(taxBase, flatLong);
     compared.push({ label: `단일세율 ${pct(flatLong)}`, tax: incomeTax });
     rateInfo = {
       kind: "flat",

@@ -1,13 +1,12 @@
 import type { SalaryInput, SalaryResult } from "../types";
 import { PENSION_LIMITS } from "../config/verified/pension-limits.ts";
 import { lookupWithholdingTax } from "../rules/withholding-engine.ts";
+import { getLongTermCareRate } from "../config/verified/long-term-care-rates.ts";
 
 const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 const DAY_MS = 24 * 60 * 60 * 1000;
 // 고용보험 근로자 요율 0.009 = 1000분의 9
 const EMPLOYMENT_RATE_PER_1000 = 9;
-// 장기요양보험료율(건강보험료 대비) 0.1314 = 1만분의 1314
-const LTC_RATE_PER_10000 = 1314;
 
 // 기간 경계는 한국 달력으로 읽는다. 날짜만 적힌 시작일은 그날 한국 시각 0시, 날짜만 적힌 종료일은 그날 끝까지다.
 // 시간대가 적힌 시각은 그 시각을 그대로 쓴다. 한국은 일광절약시간이 없어 하루를 24시간으로 센다.
@@ -26,7 +25,8 @@ export function simulateSalary(input: SalaryInput, targetDate: Date = new Date()
         target >= periodStartMs(config.startDate) && target <= periodEndMs(config.endDate)
     );
 
-    if (!pensionConfig) return null;
+    const longTermCareRate = getLongTermCareRate(targetDate);
+    if (!pensionConfig || !longTermCareRate) return null;
 
     const monthlyGross = Math.floor(input.annualSalary / 12);
     // 비과세액이 월급보다 클 경우를 대비해 하한선 0 설정
@@ -39,8 +39,8 @@ export function simulateSalary(input: SalaryInput, targetDate: Date = new Date()
     const pension = Math.floor((pBase * pensionConfig.rate) / 10) * 10;
 
     const health = Math.floor((taxableMonthly * 0.03595) / 10) * 10;
-    // 0.1314를 부동소수로 곱하면 나눠떨어지는 일부 값(예: 건강보험료 50,000원 → 6,570원)이 10원 내려가므로 정수로 곱한 뒤 나눈다(10원 미만 버림은 그대로).
-    const ltc = Math.floor((health * LTC_RATE_PER_10000) / 100_000) * 10;
+    // 월분별 비율을 정수로 곱해 부동소수 곱셈의 10원 오차를 방지한다. 기존 근로자분 기준·10원 미만 버림은 유지한다.
+    const ltc = Math.floor((health * longTermCareRate.healthPremiumRatePer10000) / 100_000) * 10;
     // 0.009를 부동소수로 곱하면 10원 경계에서 값이 내려가므로 정수로 곱한 뒤 나눈다(10원 미만 버림은 그대로).
     const employment = Math.floor((taxableMonthly * EMPLOYMENT_RATE_PER_1000) / 10_000) * 10;
 

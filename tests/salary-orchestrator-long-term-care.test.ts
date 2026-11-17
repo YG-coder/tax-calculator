@@ -24,8 +24,8 @@ test('simulateSalary 장기요양: 건강보험료 50,000원이면 6,570원이�
     // 같은 건강보험료 구간의 끝 값도 같다
     assert.equal(run(1_391_098)?.monthly.health, 50_000);
     assert.equal(run(1_391_098)?.monthly.longTermCare, 6_570);
-    // 2027년 구간에서도 같다(장기요양은 날짜와 무관)
-    assert.equal(run(taxable, 0, new Date('2027-01-15T12:00:00+09:00'))?.monthly.longTermCare, 6_570);
+    // 2027년 월분은 복지부 발표의 건강보험료 대비 13.90%를 적용한다.
+    assert.equal(run(taxable, 0, new Date('2027-01-15T12:00:00+09:00'))?.monthly.longTermCare, 6_950);
 });
 
 test('simulateSalary 장기요양: 보고된 건강보험료 사례가 정확한 값이다', () => {
